@@ -3,6 +3,7 @@
 #include <tello/command.hpp>
 #include <tello/logger/logger.hpp>
 #include "response_factory.hpp"
+#include <tello/command_type.hpp>
 
 #define TELLO_IP_ADDRESS (ULONG)0xC0A80A01 // 192.168.10.1
 #define COMMAND_RECEIVE_PORT 8889
@@ -26,7 +27,7 @@ tello::Commander::~Commander() {
 unique_ptr<Response> tello::Commander::exec(const Command& command) {
     if (!command.isValid()) {
         Logger::instance().get(LoggerType::DEFAULT)->warn(
-                string("Command of type [") + string("] is not valid!"));
+                string("Command of type [") + NAMES.find(command.type())->second + string("] is not valid!"));
         return std::make_unique<Response>(Status::FAIL);
     }
 
@@ -36,7 +37,7 @@ unique_ptr<Response> tello::Commander::exec(const Command& command) {
     sendto(_defaultConnection.fileDescriptor, commandString.c_str(), commandString.length(),
            0, (const sockaddr*) &_defaultConnection.cliaddr, len);
     Logger::instance().get(LoggerType::DEFAULT)->info(
-            string("Command of type [") + string("] is sent!"));
+            string("Command of type [") + NAMES.find(command.type())->second + string("] is sent!"));
 
     char buffer[BUFFER_LENGTH];
     int n;

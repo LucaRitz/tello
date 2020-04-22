@@ -31,8 +31,6 @@ namespace tello {
 
     private:
         static const unordered_map<const CommandType, CommandBuildType, EnumClassHash> MAPPING;
-        static const unordered_map<const CommandType, string, EnumClassHash> NAMES;
         static unordered_map<const CommandType, CommandBuildType, EnumClassHash> createMap();
-        static unordered_map<const CommandType, string, EnumClassHash> createNamesMap();
     };
 }

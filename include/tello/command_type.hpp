@@ -1,5 +1,11 @@
 #pragma once
 
+#include <unordered_map>
+#include <string>
+
+using std::unordered_map;
+using std::string;
+
 namespace tello {
 
     struct EnumClassHash
@@ -14,4 +20,7 @@ namespace tello {
     enum class CommandType {
         COMMAND
     };
+
+    unordered_map<const CommandType, string, EnumClassHash> createNamesMap();
+    static const unordered_map<const CommandType, string, EnumClassHash> NAMES = createNamesMap();
 }

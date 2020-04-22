@@ -10,18 +10,10 @@ using tello::EnumClassHash;
 using tello::Logger;
 
 const unordered_map<const CommandType, CommandBuildType, EnumClassHash> tello::CommandFactory::MAPPING = CommandFactory::createMap();
-const unordered_map<const CommandType, string, EnumClassHash> tello::CommandFactory::NAMES = CommandFactory::createNamesMap();
 
 unordered_map<const CommandType, CommandBuildType, EnumClassHash> tello::CommandFactory::createMap() {
     unordered_map<const CommandType, CommandBuildType, EnumClassHash> mapping;
     mapping[CommandType::COMMAND] = command::CommandCommand::create;
-    // TODO: Add Command-Mappings
-    return mapping;
-}
-
-unordered_map<const CommandType, string, EnumClassHash> tello::CommandFactory::createNamesMap() {
-    unordered_map<const CommandType, string, EnumClassHash> mapping;
-    mapping[CommandType::COMMAND] = string("COMMAND");
     // TODO: Add Command-Mappings
     return mapping;
 }

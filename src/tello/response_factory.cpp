@@ -1,6 +1,7 @@
 #include "response_factory.hpp"
 #include <tello/response.hpp>
 #include <tello/logger/logger.hpp>
+#include <tello/command_type.hpp>
 
 using tello::Response;
 using tello::ResponseBuildType;
@@ -26,7 +27,7 @@ unique_ptr<Response> tello::ResponseFactory::build(const CommandType& commandTyp
     }
 
     Logger::instance().get(LoggerType::DEFAULT)->critical(
-            std::string("Response with value [") + response + std::string("] not found!"));
+            std::string("Response for type [") + NAMES.find(commandType)->second + std::string("] not found!"));
     return std::make_unique<Response>(Status::FAIL);
 }
 
