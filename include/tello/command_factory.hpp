@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <memory>
 #include <optional>
+#include "command_type.hpp"
 
 using std::vector;
 using std::string;
@@ -16,20 +17,7 @@ namespace tello {
 
     class Command;
 
-    using CommandBuildType = unique_ptr<Command> (*)(vector<string>&);
-
-    enum class CommandType {
-        COMMAND
-    };
-
-    struct EnumClassHash
-    {
-        template <typename T>
-        std::size_t operator()(T t) const
-        {
-            return static_cast<std::size_t>(t);
-        }
-    };
+    using CommandBuildType = unique_ptr<Command> (*)(const CommandType&, vector<string>&);
 
     class CommandFactory {
 

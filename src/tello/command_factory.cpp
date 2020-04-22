@@ -3,8 +3,6 @@
 #include <tello/logger/logger.hpp>
 #include "command/command_command.hpp"
 
-#define APPEND(map, command)  map[command] = #command
-
 using tello::Command;
 using tello::CommandBuildType;
 using tello::CommandType;
@@ -39,7 +37,7 @@ tello::CommandFactory::build(const tello::CommandType& commandType, vector<strin
     if (value != tello::CommandFactory::MAPPING.end()) {
         Logger::instance().get(LoggerType::DEFAULT)->info(
                 std::string("Creating command [") + NAMES.find(commandType)->second + std::string("]"));
-        return std::make_optional<unique_ptr<Command>>(value->second(arguments));
+        return std::make_optional<unique_ptr<Command>>(value->second(commandType, arguments));
     }
 
     Logger::instance().get(LoggerType::DEFAULT)->critical(
