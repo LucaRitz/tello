@@ -16,6 +16,10 @@ using tello::ConnectionData;
 using tello::Logger;
 using tello::Status;
 
+tello::ConnectionData::ConnectionData(int fileDescriptor, struct sockaddr_in servaddr, struct sockaddr_in cliaddr) :
+        fileDescriptor(fileDescriptor), servaddr(servaddr), cliaddr(cliaddr)
+        {}
+
 tello::Commander::Commander() : _defaultConnection(init(COMMAND_RECEIVE_PORT)) {
 
 }
@@ -24,7 +28,7 @@ tello::Commander::~Commander() {
 
 }
 
-unique_ptr<Response> tello::Commander::exec(const Command& command) {
+unique_ptr<Response> tello::Commander::exec(const Command& command) const {
     if (!command.isValid()) {
         Logger::instance().get(LoggerType::DEFAULT)->warn(
                 string("Command of type [") + NAMES.find(command.type())->second + string("] is not valid!"));

@@ -11,6 +11,8 @@ namespace tello {
     class Response;
 
     struct ConnectionData {
+        ConnectionData(int fileDescriptor, struct sockaddr_in servaddr, struct sockaddr_in cliaddr);
+
         int fileDescriptor;
         struct sockaddr_in servaddr, cliaddr;
     };
@@ -20,7 +22,7 @@ namespace tello {
         static const Commander& instance();
         ~Commander();
 
-        unique_ptr<Response> exec(const Command& command);
+        unique_ptr<Response> exec(const Command& command) const;
 
     private:
         Commander();

@@ -11,4 +11,4 @@ set_target_properties(spdlog_lib PROPERTIES
         IMPORTED_LOCATION "${spdlog_dir}/spdlog.lib"
         )
 
-set(TELLO_LIBS tello_lib spdlog_lib)
+set(TELLO_LIBS tello_lib spdlog_lib ws2_32)
