@@ -43,6 +43,7 @@ unique_ptr<Response> tello::Commander::exec(const Command& command) {
     int n;
     n = recvfrom(_defaultConnection.fileDescriptor, (char*) buffer, BUFFER_LENGTH, MSG_WAITALL,
                  (struct sockaddr*) &_defaultConnection.cliaddr, &len);
+    buffer[n] = '\0';
 
     string responseString(buffer);
     return ResponseFactory::build(command.type(), responseString);
