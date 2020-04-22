@@ -24,7 +24,7 @@ namespace tello {
 
     private:
         Commander();
-        ConnectionData init(int port);
+        static ConnectionData init(int port);
 
         const ConnectionData _defaultConnection;
     };
