@@ -27,17 +27,11 @@ TEST(Commander, SimpleCaseBerger) {
     // ComPtr takeoff = CommandFactory::build(CommandType::TAKEOFF);
     // std::unique_ptr<Response> responseTakeoff = Commander::instance().exec(*(takeoff->get()));
     // ASSERT_EQ(Status::OK, responseTakeoff->status());
+
     std::chrono::seconds duration(5);
     std::this_thread::sleep_for(duration);
+
     // ComPtr land = CommandFactory::build(CommandType::LAND);
     // std::unique_ptr<Response> responseLand = Commander::instance().exec(*(land->get()));
     // ASSERT_EQ(Status::OK, responseLand->status());
-
-    // Act
-    ComPtr result = CommandFactory::build(CommandType::COMMAND);
-
-    // Act
-    ASSERT_TRUE(result);
-    ASSERT_TRUE(result.value()->isValid());
-    ASSERT_EQ(std::string("Command"), result.value()->build());
 }
