@@ -1,4 +1,4 @@
-#include <command.hpp>
+#include <tello/command.hpp>
 
 tello::Command::Command(vector<string> arguments) : _arguments(std::move(arguments)) {}
 
