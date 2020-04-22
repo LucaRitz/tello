@@ -4,11 +4,13 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
+#include <optional>
 
 using std::vector;
 using std::string;
 using std::unordered_map;
 using std::unique_ptr;
+using std::optional;
 
 namespace tello {
 
@@ -32,7 +34,8 @@ namespace tello {
     class CommandFactory {
 
     public:
-        static unique_ptr<Command> build(const CommandType& commandType, vector<string>& arguments);
+        static optional<unique_ptr<Command>> build(const CommandType& commandType);
+        static optional<unique_ptr<Command>> build(const CommandType& commandType, vector<string>& arguments);
 
     private:
         static const unordered_map<const CommandType, CommandBuildType, EnumClassHash> MAPPING;

@@ -16,6 +16,16 @@ unordered_map<const CommandType, CommandBuildType, EnumClassHash> tello::Command
     return mapping;
 }
 
-unique_ptr<Command> tello::CommandFactory::build(const tello::CommandType& commandType, vector<string>& arguments) {
-    return tello::CommandFactory::MAPPING.find(commandType)->second(arguments);
+optional<unique_ptr<Command>> tello::CommandFactory::build(const CommandType& commandType) {
+    vector<string> arguments;
+    return CommandFactory::build(commandType, arguments);
+}
+
+optional<unique_ptr<Command>>
+tello::CommandFactory::build(const tello::CommandType& commandType, vector<string>& arguments) {
+    auto value = tello::CommandFactory::MAPPING.find(commandType);
+    if (value != tello::CommandFactory::MAPPING.end()) {
+        return std::make_optional<unique_ptr<Command>>(value->second(arguments));
+    }
+    return std::nullopt;
 }

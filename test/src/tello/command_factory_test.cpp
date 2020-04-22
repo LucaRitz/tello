@@ -6,15 +6,14 @@ using tello::CommandFactory;
 using tello::Command;
 using tello::CommandType;
 using std::string;
-using ComPtr = std::unique_ptr<Command>;
+using ComPtr = std::optional<std::unique_ptr<Command>>;
 
 TEST(CommandFactory, CommandCommand) {
-    std::vector<string> arguments;
+    // Act
+    ComPtr result = CommandFactory::build(CommandType::COMMAND);
 
     // Act
-    ComPtr result = CommandFactory::build(CommandType::COMMAND, arguments);
-
-    // Act
-    ASSERT_TRUE(result->isValid());
-    ASSERT_EQ(std::string("Command"), result->build());
+    ASSERT_TRUE(result);
+    ASSERT_TRUE(result.value()->isValid());
+    ASSERT_EQ(std::string("Command"), result.value()->build());
 }
