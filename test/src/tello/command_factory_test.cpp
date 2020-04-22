@@ -9,10 +9,10 @@ using std::string;
 using ComPtr = std::unique_ptr<Command>;
 
 TEST(CommandFactory, CommandCommand) {
-    std::list<string> arguments;
+    std::vector<string> arguments;
 
     // Act
-    ComPtr result = CommandFactory::buildCommand(CommandType::COMMAND, arguments);
+    ComPtr result = CommandFactory::build(CommandType::COMMAND, arguments);
 
     // Act
     ASSERT_TRUE(result->isValid());

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <list>
+#include <vector>
 #include <string>
 #include <unordered_map>
 #include <memory>
 
-using std::list;
+using std::vector;
 using std::string;
 using std::unordered_map;
 using std::unique_ptr;
@@ -14,7 +14,7 @@ namespace tello {
 
     class Command;
 
-    using CommandBuildType = unique_ptr<Command> (*)(list<string>&);
+    using CommandBuildType = unique_ptr<Command> (*)(vector<string>&);
 
     enum class CommandType {
         COMMAND
@@ -32,7 +32,7 @@ namespace tello {
     class CommandFactory {
 
     public:
-        static unique_ptr<Command> buildCommand(const CommandType& commandType, list<string>& arguments);
+        static unique_ptr<Command> build(const CommandType& commandType, vector<string>& arguments);
 
     private:
         static const unordered_map<const CommandType, CommandBuildType, EnumClassHash> MAPPING;
