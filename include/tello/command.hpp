@@ -20,8 +20,8 @@ namespace tello {
         virtual bool isValid() const;
         [[nodiscard]]
         virtual string build() const = 0;
-
-        const CommandType& type() const;
+        [[nodiscard]]
+        inline const CommandType& type() const { return _type; }
 
     protected:
         const vector<string> _arguments;
