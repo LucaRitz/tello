@@ -5,7 +5,6 @@
 #include <tello/response.hpp>
 #include <chrono>
 #include <thread>
-#include "logging.hpp"
 
 using tello::CommandFactory;
 using tello::Command;
@@ -15,11 +14,8 @@ using tello::Response;
 using tello::Status;
 using std::string;
 using ComPtr = std::optional<std::unique_ptr<Command>>;
-using tello::test::initLogging;
 
 TEST(Commander, SimpleCaseBerger) {
-    initLogging();
-
     ComPtr command = CommandFactory::build(CommandType::COMMAND);
     std::unique_ptr<Response> responseCommand = Commander::instance().exec(*(command->get()));
     ASSERT_EQ(Status::OK, responseCommand->status());
