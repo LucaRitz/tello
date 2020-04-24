@@ -1,6 +1,6 @@
 set(tello_lib_location ${tello_BINARY_DIR}/lib/tello.lib)
 if(EXISTS "${tello_BINARY_DIR}/Release/tello.lib")
-    set(tello_lib_location ${tello_BINARY_DIR}/Release/lib/tello.lib)
+    set(tello_lib_location ${tello_BINARY_DIR}/Release/tello.lib)
 endif()
 
 message("-- Use tello-lib-location: ${tello_lib_location}")
