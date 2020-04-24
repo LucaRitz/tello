@@ -22,5 +22,3 @@ add_subdirectory(src)
 
 target_link_libraries(${PROJECT_NAME} gtest gtest_main gmock gmock_main)
 target_link_libraries(${PROJECT_NAME} ${TELLO_LIBS})
-
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/libs)

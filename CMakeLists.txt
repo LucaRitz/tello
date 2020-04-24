@@ -11,6 +11,8 @@ find_package(spdlog REQUIRED)
 
 add_library(tello STATIC)
 set_target_properties(tello PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)
+set_target_properties(tello PROPERTIES
         VERSION ${PROJECT_VERSION}
         SOVERSION 1)
 
