@@ -16,6 +16,8 @@ const unordered_map<const CommandType, ResponseBuildType, EnumClassHash> tello::
 unordered_map<const CommandType, ResponseBuildType, EnumClassHash> tello::ResponseFactory::createMap() {
     unordered_map<const CommandType, ResponseBuildType, EnumClassHash> mapping;
     mapping[CommandType::COMMAND] = ResponseFactory::simpleResponse;
+    mapping[CommandType::TAKE_OFF] = ResponseFactory::simpleResponse;
+    mapping[CommandType::LAND] = ResponseFactory::simpleResponse;
     // TODO: Add Command-Mappings
     return mapping;
 }

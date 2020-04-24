@@ -18,7 +18,9 @@ namespace tello {
     };
 
     enum class CommandType {
-        COMMAND
+        COMMAND,
+        TAKE_OFF,
+        LAND
     };
 
     unordered_map<const CommandType, string, EnumClassHash> createNamesMap();

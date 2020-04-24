@@ -2,6 +2,8 @@
 #include <tello/command.hpp>
 #include <tello/logger/logger.hpp>
 #include "command/command_command.hpp"
+#include "command/takeoff_command.hpp"
+#include "command/land_command.hpp"
 
 using tello::Command;
 using tello::CommandBuildType;
@@ -14,6 +16,8 @@ const unordered_map<const CommandType, CommandBuildType, EnumClassHash> tello::C
 unordered_map<const CommandType, CommandBuildType, EnumClassHash> tello::CommandFactory::createMap() {
     unordered_map<const CommandType, CommandBuildType, EnumClassHash> mapping;
     mapping[CommandType::COMMAND] = command::CommandCommand::create;
+    mapping[CommandType::TAKE_OFF] = command::TakeoffCommand::create;
+    mapping[CommandType::LAND] = command::LandCommand::create;
     // TODO: Add Command-Mappings
     return mapping;
 }
