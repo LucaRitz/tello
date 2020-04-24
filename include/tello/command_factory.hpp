@@ -28,6 +28,7 @@ namespace tello {
 
         static optional<unique_ptr<Command>> build(const CommandType& commandType);
         static optional<unique_ptr<Command>> build(const CommandType& commandType, vector<string>& arguments);
+        static optional<unique_ptr<Command>> build(const CommandType& commandType, vector<string>&& arguments);
 
     private:
         static const unordered_map<const CommandType, CommandBuildType, EnumClassHash> MAPPING;

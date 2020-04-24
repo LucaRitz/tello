@@ -23,12 +23,17 @@ unordered_map<const CommandType, CommandBuildType, EnumClassHash> tello::Command
 }
 
 optional<unique_ptr<Command>> tello::CommandFactory::build(const CommandType& commandType) {
-    vector<string> arguments;
-    return CommandFactory::build(commandType, arguments);
+    return CommandFactory::build(commandType, vector<string>{});
 }
 
 optional<unique_ptr<Command>>
 tello::CommandFactory::build(const tello::CommandType& commandType, vector<string>& arguments) {
+    return CommandFactory::build(commandType, std::move(arguments));
+}
+
+
+optional<unique_ptr<Command>>
+tello::CommandFactory::build(const tello::CommandType& commandType, vector<string>&& arguments) {
     auto value = tello::CommandFactory::MAPPING.find(commandType);
     if (value != tello::CommandFactory::MAPPING.end()) {
         Logger::instance().get(LoggerType::DEFAULT)->info(
