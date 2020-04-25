@@ -10,32 +10,31 @@ using spdlog::logger;
 namespace tello {
     struct LoggerSettings {
     public:
-        LoggerSettings(const string& defaultFileLocation, const string& videoFileLocation,
-                       const string& statusFileLocation);
+        LoggerSettings(string commandFileLocation, string videoFileLocation,
+                       string statusFileLocation);
 
-        const string _defaultFileLocation;
+        const string _commandFileLocation;
         const string _videoFileLocation;
         const string _statusFileLocation;
     };
 
     enum class LoggerType {
-        DEFAULT,
+        COMMAND,
         VIDEO,
         STATUS
     };
 
     class Logger {
     public:
-        static tello::Logger& instance();
-
         [[nodiscard]]
-        std::shared_ptr<logger> get(const LoggerType& loggerType) const;
-        void initialize(const LoggerSettings& settings);
-    private:
-        Logger() = default;
+        static std::shared_ptr<logger> get(const LoggerType& loggerType);
+        static void initialize(const LoggerSettings& settings);
 
-        std::shared_ptr<logger> _defaultLogger;
-        std::shared_ptr<logger> _videoLogger;
-        std::shared_ptr<logger> _statusLogger;
+    private:
+        Logger() = delete;
+
+        static std::shared_ptr<logger> _commandLogger;
+        static std::shared_ptr<logger> _videoLogger;
+        static std::shared_ptr<logger> _statusLogger;
     };
 }

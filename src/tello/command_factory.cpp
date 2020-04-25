@@ -36,12 +36,12 @@ optional<unique_ptr<Command>>
 tello::CommandFactory::build(const tello::CommandType& commandType, vector<string>&& arguments) {
     auto value = tello::CommandFactory::MAPPING.find(commandType);
     if (value != tello::CommandFactory::MAPPING.end()) {
-        Logger::instance().get(LoggerType::DEFAULT)->info(
+        Logger::get(LoggerType::COMMAND)->info(
                 std::string("Creating command [") + NAMES.find(commandType)->second + std::string("]"));
         return std::make_optional<unique_ptr<Command>>(value->second(commandType, arguments));
     }
 
-    Logger::instance().get(LoggerType::DEFAULT)->critical(
+    Logger::get(LoggerType::COMMAND)->critical(
             std::string("Command [") + NAMES.find(commandType)->second + std::string("] not found!"));
     return std::nullopt;
 }

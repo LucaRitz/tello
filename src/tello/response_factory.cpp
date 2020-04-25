@@ -28,7 +28,7 @@ unique_ptr<Response> tello::ResponseFactory::build(const CommandType& commandTyp
         return value->second(commandType, response);
     }
 
-    Logger::instance().get(LoggerType::DEFAULT)->critical(
+    Logger::get(LoggerType::COMMAND)->critical(
             std::string("Response for type [") + NAMES.find(commandType)->second + std::string("] not found!"));
     return std::make_unique<Response>(Status::FAIL);
 }
