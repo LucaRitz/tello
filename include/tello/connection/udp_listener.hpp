@@ -45,7 +45,7 @@ namespace tello {
         static void listen(const tello::ConnectionData& connectionData,
                     unordered_map<ip_address, const Tello*>& telloMapping,
                     future<void> exitListener) {
-            Logger::get(LoggerType::STATUS)->error(
+            Logger::get(LoggerType::STATUS)->info(
                     string("Start listen to port {0:d}"), ntohs(connectionData._servaddr.sin_port));
             while (exitListener.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout) {
 
@@ -61,7 +61,7 @@ namespace tello {
 
                 auto telloIt = telloMapping.find(sender.sin_addr.s_addr);
                 if (telloIt == telloMapping.end()) {
-                    Logger::get(LoggerType::STATUS)->error(string("Received data from unknown Tello {0:x}"),
+                    Logger::get(LoggerType::STATUS)->warn(string("Received data from unknown Tello {0:x}"),
                                                            sender.sin_addr.s_addr);
                     continue;
                 }
@@ -71,7 +71,7 @@ namespace tello {
             }
 
 
-            Logger::get(LoggerType::STATUS)->error(
+            Logger::get(LoggerType::STATUS)->info(
                     string("Stop listen to port {0:d}"), ntohs(connectionData._servaddr.sin_port));
 
             // TODO: Close connection
