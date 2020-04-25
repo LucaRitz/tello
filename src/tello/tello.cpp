@@ -4,6 +4,7 @@
 #include <tello/logger/logger.hpp>
 #include "response_factory.hpp"
 #include <tello/command_type.hpp>
+#include <WinSock2.h>
 
 #define DEFAULT_TELLO_IP_ADDRESS (ULONG)0xC0A80A01 // 192.168.10.1
 #define COMMAND_PORT 8889
@@ -16,21 +17,25 @@ using tello::ConnectionData;
 using tello::Logger;
 using tello::Status;
 
-tello::ConnectionData::ConnectionData(int fileDescriptor, struct sockaddr_in servaddr) :
-        _fileDescriptor(fileDescriptor), _servaddr(servaddr)
-        {}
-
 const ConnectionData tello::Tello::_commandConnection = Tello::connectToPort(COMMAND_PORT);
 const ConnectionData tello::Tello::_statusConnection = Tello::connectToPort(STATUS_PORT);
 const ConnectionData tello::Tello::_videoConnection = Tello::connectToPort(VIDEO_PORT);
-unordered_map<ip_address, const tello::Tello*> tello::Tello::_telloMapping {};
+unordered_map<ip_address, const tello::Tello*> tello::Tello::_telloMapping{};
+UdpListener<StatusResponse, tello::Tello::statusResponseFactory, tello::Tello::invokeStatusListener> tello::Tello::_statusListener{
+        _commandConnection, _telloMapping};
 
-tello::Tello::Tello(ip_address telloIp) : _clientaddr(sockaddrOf(telloIp)) {
+tello::Tello::Tello(ip_address telloIp) : _clientaddr(sockaddrOf(telloIp)),
+                                          _statusHandler(nullptr){
     _telloMapping[telloIp] = this;
 }
 
 tello::Tello::~Tello() {
+    tello::Tello::_statusListener.stop();
     // TODO: Close connections
+}
+
+void tello::Tello::setStatusHandler(status_handler statusHandler) {
+    this->_statusHandler = statusHandler;
 }
 
 unique_ptr<Response> tello::Tello::exec(const Command& command) {
@@ -101,11 +106,21 @@ ConnectionData tello::Tello::connectToPort(int port) {
 }
 
 sockaddr_in tello::Tello::sockaddrOf(ip_address telloIp) {
-    sockaddr_in cliaddr;
+    sockaddr_in cliaddr{};
     memset(&cliaddr, 0, sizeof(cliaddr));
 
     cliaddr.sin_family = AF_INET;
     cliaddr.sin_addr.s_addr = telloIp;
 
     return cliaddr;
+}
+
+StatusResponse tello::Tello::statusResponseFactory(char* result) {
+    return StatusResponse{string(result)};
+}
+
+void tello::Tello::invokeStatusListener(const StatusResponse& response, const tello::Tello& tello) {
+    if (tello._statusHandler != nullptr) {
+        tello._statusHandler(response);
+    }
 }

@@ -1,5 +1,7 @@
 add_subdirectory(logger)
 add_subdirectory(command)
+add_subdirectory(connection)
+add_subdirectory(response)
 
 target_sources(${PROJECT_NAME} PUBLIC
         ${TELLO_INCLUDE}/tello/command.hpp
