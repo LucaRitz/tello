@@ -29,9 +29,12 @@ tello::Commander::~Commander() {
 }
 
 unique_ptr<Response> tello::Commander::exec(const Command& command) const {
-    if (!command.isValid()) {
+    string errorMessage = command.validate();
+    if (!errorMessage.empty()) {
         Logger::instance().get(LoggerType::DEFAULT)->warn(
                 string("Command of type [") + NAMES.find(command.type())->second + string("] is not valid!"));
+        Logger::instance().get(LoggerType::DEFAULT)->warn(
+                string("Message is: ") + errorMessage);
         return std::make_unique<Response>(Status::FAIL);
     }
 

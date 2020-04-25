@@ -17,7 +17,7 @@ namespace tello {
         virtual ~Command() = default;
 
         [[nodiscard]]
-        virtual bool isValid() const;
+        virtual string validate() const;
         [[nodiscard]]
         virtual string build() const = 0;
         [[nodiscard]]
