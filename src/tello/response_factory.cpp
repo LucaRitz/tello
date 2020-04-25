@@ -29,10 +29,10 @@ unique_ptr<Response> tello::ResponseFactory::build(const CommandType& commandTyp
     }
 
     Logger::get(LoggerType::COMMAND)->critical(
-            std::string("Response for type [") + NAMES.find(commandType)->second + std::string("] not found!"));
+            std::string("Response for type [{}] not found!"), NAMES.find(commandType)->second);
     return std::make_unique<Response>(Status::FAIL);
 }
 
 unique_ptr<Response> tello::ResponseFactory::simpleResponse(const CommandType& commandType, string& response) {
-    return std::make_unique<Response>(Status::OK);
+    return std::make_unique<Response>(response);
 }

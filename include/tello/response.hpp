@@ -15,13 +15,15 @@ namespace tello {
 
     class Response {
     public:
-        explicit Response(Status status);
+        explicit Response(const Status& status);
+        explicit Response(const string& response);
 
         Status status();
-        string param(string key);
+        [[nodiscard]]
+        string param(const string& key) const;
 
     protected:
-        void append(string key, string value);
+        void append(const string& key, const string& value);
 
     private:
         const Status _status;
