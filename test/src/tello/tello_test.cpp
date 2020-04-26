@@ -5,6 +5,7 @@
 #include <tello/response.hpp>
 #include <chrono>
 #include <thread>
+#include <tello/connection/network.hpp>
 
 #define TELLO_IP_ADDRESS (ULONG)0xC0A80A01 // 192.168.10.1
 
@@ -14,24 +15,29 @@ using tello::CommandType;
 using tello::Tello;
 using tello::Response;
 using tello::Status;
+using tello::Network;
 using std::string;
 using ComPtr = std::optional<std::unique_ptr<Command>>;
 
 TEST(Commander, SimpleCaseBerger) {
+
+    bool isConnected = Network::connect();
+    ASSERT_TRUE(isConnected);
+
     Tello tello(TELLO_IP_ADDRESS);
 
     ComPtr command = CommandFactory::build(CommandType::COMMAND);
-    std::unique_ptr<Response> responseCommand = Tello::exec(*(command->get()));
+    std::unique_ptr<Response> responseCommand = tello.exec(*(command->get()));
     ASSERT_EQ(Status::OK, responseCommand->status());
 
     ComPtr takeoff = CommandFactory::build(CommandType::TAKE_OFF);
-    std::unique_ptr<Response> responseTakeoff = Tello::exec(*(takeoff->get()));
+    std::unique_ptr<Response> responseTakeoff = tello.exec(*(takeoff->get()));
     ASSERT_EQ(Status::OK, responseTakeoff->status());
 
     std::chrono::seconds duration(5);
     std::this_thread::sleep_for(duration);
 
     ComPtr land = CommandFactory::build(CommandType::LAND);
-    std::unique_ptr<Response> responseLand = Tello::exec(*(land->get()));
+    std::unique_ptr<Response> responseLand = tello.exec(*(land->get()));
     ASSERT_EQ(Status::OK, responseLand->status());
 }

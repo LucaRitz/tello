@@ -25,7 +25,7 @@ namespace tello {
 
     class Tello;
 
-    template<typename Response, Response (* factory)(char*), void (* invoke)(const Response&, const Tello& tello)>
+    template<typename Response, Response (* factory)(const char* const), void (* invoke)(const Response&, const Tello& tello)>
     class UdpListener {
     public:
         UdpListener(const ConnectionData& connectionData,
@@ -48,6 +48,10 @@ namespace tello {
             Logger::get(LoggerType::STATUS)->info(
                     string("Start listen to port {0:d}"), ntohs(connectionData._servaddr.sin_port));
             while (exitListener.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout) {
+
+                if (connectionData._fileDescriptor == -1) {
+                    continue;
+                }
 
                 char buffer[BUFFER_LENGTH];
                 int n;
