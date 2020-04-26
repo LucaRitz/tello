@@ -19,7 +19,7 @@ using tello::Network;
 using std::string;
 using ComPtr = std::optional<std::unique_ptr<Command>>;
 
-TEST(Commander, SimpleCaseBerger) {
+TEST(Tello, SimpleCaseBerger) {
 
     bool isConnected = Network::connect();
     ASSERT_TRUE(isConnected);

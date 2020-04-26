@@ -9,15 +9,20 @@ using tello::ConnectionData;
 using tello::Logger;
 using tello::Status;
 
-unordered_map<ip_address, const tello::Tello*> tello::Tello::_telloMapping{};
+unordered_map<ip_address, const tello::Tello*> tello::Tello::_telloMapping;
+std::shared_mutex tello::Tello::_telloMappingMutex;
 
 tello::Tello::Tello(ip_address telloIp) : _clientaddr(sockaddrOf(telloIp)),
                                           _statusHandler(nullptr){
+    _telloMappingMutex.lock();
     _telloMapping[telloIp] = this;
+    _telloMappingMutex.unlock();
 }
 
 tello::Tello::~Tello() {
-
+    _telloMappingMutex.lock();
+    _telloMapping.erase(_clientaddr.sin_addr.s_addr);
+    _telloMappingMutex.unlock();
 }
 
 void tello::Tello::setStatusHandler(status_handler statusHandler) {

@@ -4,9 +4,11 @@
 #include <thread>
 #include <future>
 #include <string>
-#include <tello/logger/logger.hpp>
-#include <tello/connection/connection_data.hpp>
-#include <tello/response.hpp>
+#include "../logger/logger.hpp"
+#include "connection_data.hpp"
+#include "../response/status_response.hpp"
+#include <mutex>
+#include <shared_mutex>
 
 #include <WinSock2.h>
 
@@ -29,9 +31,11 @@ namespace tello {
     class UdpListener {
     public:
         UdpListener(const ConnectionData& connectionData,
-                    unordered_map<ip_address, const Tello*>& telloMapping)
+                    unordered_map<ip_address, const Tello*>& telloMapping, std::shared_mutex& telloMappingMutex,
+                    std::shared_mutex& connectionMutex)
                 : _exitSignal(),
-                  _worker(thread(&UdpListener::listen, connectionData, telloMapping, _exitSignal.get_future())) {
+                  _worker(thread(&UdpListener::listen, std::ref(connectionData), std::ref(telloMapping),
+                                 std::ref(telloMappingMutex), std::ref(connectionMutex), _exitSignal.get_future())) {
         }
 
         void stop() {
@@ -43,25 +47,32 @@ namespace tello {
         const thread _worker;
 
         static void listen(const tello::ConnectionData& connectionData,
-                    unordered_map<ip_address, const Tello*>& telloMapping,
-                    future<void> exitListener) {
+                           unordered_map<ip_address, const Tello*>& telloMapping, std::shared_mutex& telloMappingMutex,
+                           std::shared_mutex& connectionMutex, future<void> exitListener) {
             Logger::get(LoggerType::STATUS)->info(
                     string("Start listen to port {0:d}"), ntohs(connectionData._servaddr.sin_port));
+
+            char buffer[BUFFER_LENGTH];
+            int n;
+            int len = 0;
+            sockaddr_in sender{};
+            memset(&sender, 0, sizeof(sender));
+
             while (exitListener.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout) {
 
+                connectionMutex.lock_shared();
                 if (connectionData._fileDescriptor == -1) {
+                    connectionMutex.unlock_shared();
                     continue;
                 }
 
-                char buffer[BUFFER_LENGTH];
-                int n;
-                int len = 0;
-                sockaddr_in sender{};
-                memset(&sender, 0, sizeof(sender));
-
                 n = recvfrom(connectionData._fileDescriptor, (char*) buffer, BUFFER_LENGTH, MSG_WAITALL,
                              (struct sockaddr*) &sender, &len);
+                connectionMutex.unlock_shared();
+
                 buffer[n] = '\0';
+
+                telloMappingMutex.lock_shared();
 
                 auto telloIt = telloMapping.find(sender.sin_addr.s_addr);
                 if (telloIt == telloMapping.end()) {
@@ -69,16 +80,21 @@ namespace tello {
                                                            sender.sin_addr.s_addr);
                     continue;
                 }
-
                 Response res = factory(buffer);
                 invoke(res, *(telloIt->second));
+
+                telloMappingMutex.unlock_shared();
             }
 
 
+            connectionMutex.lock_shared();
             Logger::get(LoggerType::STATUS)->info(
                     string("Stop listen to port {0:d}"), ntohs(connectionData._servaddr.sin_port));
 
-            // TODO: Close connection
+            if (connectionData._fileDescriptor != -1) {
+                // TODO: Close connection
+            }
+            connectionMutex.unlock_shared();
         }
     };
 }

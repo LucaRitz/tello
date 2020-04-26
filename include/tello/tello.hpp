@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include "connection/connection_data.hpp"
 #include "response/status_response.hpp"
+#include <shared_mutex>
 
 using std::unique_ptr;
 using std::unordered_map;
@@ -31,6 +32,7 @@ namespace tello {
 
     private:
         static unordered_map<ip_address, const Tello*> _telloMapping;
+        static std::shared_mutex _telloMappingMutex;
 
         static sockaddr_in sockaddrOf(ip_address telloIp);
 

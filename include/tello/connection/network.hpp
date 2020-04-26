@@ -31,6 +31,7 @@ namespace tello {
         static ConnectionData _commandConnection;
         static ConnectionData _statusConnection;
         static ConnectionData _videoConnection;
+        static std::shared_mutex _connectionMutex;
 
         static StatusResponse statusResponseFactory(const char* const result);
         static void invokeStatusListener(const StatusResponse& response, const Tello& tello);

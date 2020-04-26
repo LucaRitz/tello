@@ -15,8 +15,10 @@ using tello::Logger;
 ConnectionData tello::Network::_commandConnection{-1, {}};
 ConnectionData tello::Network::_statusConnection = {-1, {}};
 ConnectionData tello::Network::_videoConnection = {-1, {}};
+std::shared_mutex tello::Network::_connectionMutex;
 UdpListener<StatusResponse, tello::Network::statusResponseFactory, tello::Network::invokeStatusListener> tello::Network::_statusListener{
-        _commandConnection, tello::Tello::_telloMapping};
+        _commandConnection, tello::Tello::_telloMapping, tello::Tello::_telloMappingMutex,
+        tello::Network::_connectionMutex};
 
 bool tello::Network::connect() {
 
@@ -27,21 +29,27 @@ bool tello::Network::connect() {
     bool isConnected = command && status && video;
 
     if (command) {
+        _connectionMutex.lock();
         _commandConnection = command.value();
+        _connectionMutex.unlock();
         Logger::get(LoggerType::COMMAND)->info(string("Command-Port connected"));
     } else {
         Logger::get(LoggerType::COMMAND)->info(string("Command-Port not connected"));
     }
 
     if (status) {
+        _connectionMutex.lock();
         _statusConnection = status.value();
+        _connectionMutex.unlock();
         Logger::get(LoggerType::STATUS)->info(string("Status-Port connected"));
     } else {
         Logger::get(LoggerType::STATUS)->info(string("Status-Port not connected"));
     }
 
     if (video) {
+        _connectionMutex.lock();
         _videoConnection = video.value();
+        _connectionMutex.unlock();
         Logger::get(LoggerType::VIDEO)->info(string("Video-Port connected"));
     } else {
         Logger::get(LoggerType::VIDEO)->info(string("Video-Port not connected"));
