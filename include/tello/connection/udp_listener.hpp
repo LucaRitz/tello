@@ -6,7 +6,6 @@
 #include <string>
 #include "../logger/logger.hpp"
 #include "connection_data.hpp"
-#include "../response/status_response.hpp"
 #include <mutex>
 #include <shared_mutex>
 
@@ -19,7 +18,6 @@ using std::promise;
 using std::future;
 using tello::Logger;
 using tello::LoggerType;
-using tello::Response;
 
 namespace tello {
 
@@ -30,11 +28,11 @@ namespace tello {
     public:
         UdpListener(const ConnectionData& connectionData,
                     unordered_map<ip_address, const Tello*>& telloMapping, std::shared_mutex& telloMappingMutex,
-                    std::shared_mutex& connectionMutex)
+                    std::shared_mutex& connectionMutex, LoggerType loggerType)
                 : _exitSignal(),
                   _worker(thread(&UdpListener::listen, std::ref(connectionData), std::ref(telloMapping),
                                  std::ref(telloMappingMutex), std::ref(connectionMutex),
-                                 _exitSignal.get_future())) {
+                                 _exitSignal.get_future(), loggerType)) {
         }
 
         void stop() {
@@ -47,7 +45,8 @@ namespace tello {
 
         static void listen(const tello::ConnectionData& connectionData,
                            unordered_map<ip_address, const Tello*>& telloMapping, std::shared_mutex& telloMappingMutex,
-                           std::shared_mutex& connectionMutex, future<void> exitListener) {
+                           std::shared_mutex& connectionMutex, future<void> exitListener,
+                           LoggerType loggerType) {
             char buffer[UDP_BUFFER_LENGTH];
             int n;
             sockaddr_in sender{};
@@ -61,8 +60,8 @@ namespace tello {
                     connectionMutex.unlock_shared();
                     continue;
                 } else if (isFirstAccessToFileDescriptor) {
-                    Logger::get(LoggerType::STATUS)->info(
-                            string("Start listen to port {0:d}"), ntohs(connectionData._servaddr.sin_port));
+                    Logger::get(loggerType)->info(string("Start listen to port {0:d}"),
+                                                  ntohs(connectionData._servaddr.sin_port));
                     isFirstAccessToFileDescriptor = false;
                 }
 
@@ -81,14 +80,14 @@ namespace tello {
                     Response res = factory(buffer);
                     invoke(res, *(telloIt->second));
                 } else {
-                    Logger::get(LoggerType::STATUS)->warn(string("Received data {0:d} from unknown Tello {0:x}"), n,
-                                                          sender.sin_addr.s_addr);
+                    Logger::get(loggerType)->warn(string("Received data {0:d} from unknown Tello {0:x}"), n,
+                                                  sender.sin_addr.s_addr);
                 }
                 telloMappingMutex.unlock_shared();
             }
 
-            Logger::get(LoggerType::STATUS)->info(
-                    string("Stop listen to port {0:d}"), ntohs(connectionData._servaddr.sin_port));
+            Logger::get(loggerType)->info(string("Stop listen to port {0:d}"),
+                                          ntohs(connectionData._servaddr.sin_port));
         }
     };
 }

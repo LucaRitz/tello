@@ -7,7 +7,6 @@ using tello::Logger;
 using tello::Network;
 
 tello::Environment::~Environment() {
-    Network::disconnect();
 }
 
 void tello::Environment::Environment::SetUp() {

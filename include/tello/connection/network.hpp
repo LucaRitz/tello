@@ -15,6 +15,7 @@ using std::unique_ptr;
 namespace tello {
 
     class Command;
+    class Response;
 
     class Network {
     public:

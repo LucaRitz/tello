@@ -3,6 +3,7 @@
 #include <tello/tello.hpp>
 #include <tello/command.hpp>
 #include "../response_factory.hpp"
+#include <tello/response.hpp>
 
 #define COMMAND_PORT 8889
 #define STATUS_PORT 8890
@@ -10,6 +11,7 @@
 #define BUFFER_LENGTH 1024
 
 using tello::Logger;
+using tello::Response;
 
 ConnectionData tello::Network::_commandConnection{-1, {}};
 ConnectionData tello::Network::_statusConnection = {-1, {}};
@@ -17,7 +19,7 @@ ConnectionData tello::Network::_videoConnection = {-1, {}};
 std::shared_mutex tello::Network::_connectionMutex;
 UdpListener<StatusResponse, tello::Network::statusResponseFactory, tello::Network::invokeStatusListener> tello::Network::_statusListener{
         _commandConnection, tello::Tello::_telloMapping, tello::Tello::_telloMappingMutex,
-        tello::Network::_connectionMutex};
+        tello::Network::_connectionMutex, LoggerType::STATUS};
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
 WSAData tello::Network::_wsaData;
