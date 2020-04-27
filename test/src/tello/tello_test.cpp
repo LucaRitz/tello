@@ -5,7 +5,6 @@
 #include <tello/response.hpp>
 #include <chrono>
 #include <thread>
-#include <tello/connection/network.hpp>
 
 #define TELLO_IP_ADDRESS (ULONG)0xC0A80A01 // 192.168.10.1
 
@@ -15,7 +14,6 @@ using tello::CommandType;
 using tello::Tello;
 using tello::Response;
 using tello::Status;
-using tello::Network;
 using std::string;
 using ComPtr = std::optional<std::unique_ptr<Command>>;
 
@@ -36,6 +34,4 @@ TEST(Tello, SimpleCaseBerger) {
     ComPtr land = CommandFactory::build(CommandType::LAND);
     std::unique_ptr<Response> responseLand = tello.exec(*(land->get()));
     ASSERT_EQ(Status::OK, responseLand->status());
-
-    Network::disconnect();
 }

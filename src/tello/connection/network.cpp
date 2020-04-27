@@ -120,7 +120,7 @@ unique_ptr<Response> tello::Network::exec(const Command& command, const Tello& t
         Logger::get(LoggerType::COMMAND)->info(
                 string("Command of type [{}] is sent!"), NAMES.find(command.type())->second);
         int senderAddrSize = sizeof(sender);
-        n = recvfrom(_commandConnection._fileDescriptor, (char*) buffer, BUFFER_LENGTH, MSG_WAITALL,
+        n = recvfrom(_commandConnection._fileDescriptor, (char*) buffer, BUFFER_LENGTH, 0,
                      (struct sockaddr*) &sender, &senderAddrSize);
         _connectionMutex.unlock_shared();
     }
@@ -154,6 +154,27 @@ optional<ConnectionData> tello::Network::connectToPort(int port, const Connectio
     if (bind(fileDescriptor, (const struct sockaddr*) &servaddr, sizeof(servaddr)) < 0) {
         Logger::get(LoggerType::COMMAND)->error(
                 string("Bind failed. Port {0:d}"), port);
+        closesocket(fileDescriptor);
+        return std::nullopt;
+    }
+
+    DWORD timeout = 3000;
+    struct timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = timeout;
+
+    if (setsockopt(fileDescriptor, SOL_SOCKET, SO_RCVTIMEO,
+        #if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
+                (const char*) &timeout,
+                sizeof(DWORD)
+        #else
+                reinterpret_cast<char*>(&tv),
+                sizeof(timeval) );
+        #endif
+    ) < 0) {
+        Logger::get(LoggerType::COMMAND)->error(
+                std::string("Cannot set receive timeout of {0:d} on port {0:d}"), timeout, port);
+        closesocket(fileDescriptor);
         return std::nullopt;
     }
 

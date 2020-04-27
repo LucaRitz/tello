@@ -1,23 +1,14 @@
-#define _WINSOCKAPI_
-
 #include "gtest/gtest.h"
-#include <tello/logger/logger.hpp>
-#include <tello/connection/network.hpp>
+#include "environment.hpp"
 
-using tello::LoggerSettings;
-using tello::Logger;
-using tello::Network;
+#define NDEBUG
+
+using tello::Environment;
 
 int main(int argc, char* argv[]) {
-    LoggerSettings settings {"./log/command_log.log", "./log/video_log.log", "./log/status_log.log"};
-    Logger::initialize(settings);
-
-    bool isConnected = Network::connect();
-    assert(isConnected);
-
     ::testing::InitGoogleTest(&argc, argv);
-    int returnVal = RUN_ALL_TESTS();
+    ::testing::Environment* const foo_env =
+            ::testing::AddGlobalTestEnvironment(new Environment());
 
-    Network::disconnect();
-    return returnVal;
+    return RUN_ALL_TESTS();
 }

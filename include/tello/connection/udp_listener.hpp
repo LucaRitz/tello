@@ -33,7 +33,8 @@ namespace tello {
                     std::shared_mutex& connectionMutex)
                 : _exitSignal(),
                   _worker(thread(&UdpListener::listen, std::ref(connectionData), std::ref(telloMapping),
-                                 std::ref(telloMappingMutex), std::ref(connectionMutex), _exitSignal.get_future())) {
+                                 std::ref(telloMappingMutex), std::ref(connectionMutex),
+                                 _exitSignal.get_future())) {
         }
 
         void stop() {
@@ -56,8 +57,7 @@ namespace tello {
             int senderAddrSize = sizeof(sender);
             memset(&sender, 0, sizeof(sender));
 
-            while (exitListener.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout) {
-
+            while (exitListener.wait_for(std::chrono::milliseconds(30)) == std::future_status::timeout) {
                 connectionMutex.lock_shared();
                 if (connectionData._fileDescriptor == -1) {
                     connectionMutex.unlock_shared();
