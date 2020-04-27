@@ -120,7 +120,8 @@ unique_ptr<Response> tello::Network::exec(const Command& command, const Tello& t
         _connectionMutex.unlock_shared();
     } else {
         Logger::get(LoggerType::COMMAND)->info(
-                string("Command of type [{}] is sent!"), NAMES.find(command.type())->second);
+                string("Command of type [{0}] is sent to {1:x}!"), NAMES.find(command.type())->second,
+                tello._clientaddr.sin_addr.s_addr);
         int senderAddrSize = sizeof(sender);
 
         bool correctSender = false;

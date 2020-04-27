@@ -4,6 +4,8 @@
 #include "response_factory.hpp"
 #include <tello/connection/network.hpp>
 
+#define COMMAND_PORT 8889
+
 using tello::Response;
 using tello::ConnectionData;
 using tello::Logger;
@@ -38,7 +40,8 @@ sockaddr_in tello::Tello::sockaddrOf(ip_address telloIp) {
     memset(&cliaddr, 0, sizeof(cliaddr));
 
     cliaddr.sin_family = AF_INET;
-    cliaddr.sin_addr.s_addr = telloIp;
+    cliaddr.sin_port = htons(COMMAND_PORT);
+    cliaddr.sin_addr.S_un.S_addr = htonl(telloIp);
 
     return cliaddr;
 }
