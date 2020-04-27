@@ -120,14 +120,26 @@ unique_ptr<Response> tello::Network::exec(const Command& command, const Tello& t
         Logger::get(LoggerType::COMMAND)->info(
                 string("Command of type [{}] is sent!"), NAMES.find(command.type())->second);
         int senderAddrSize = sizeof(sender);
-        n = recvfrom(_commandConnection._fileDescriptor, (char*) buffer, BUFFER_LENGTH, 0,
-                     (struct sockaddr*) &sender, &senderAddrSize);
-        _connectionMutex.unlock_shared();
 
-        if (n <= 0) {
-            Logger::get(LoggerType::COMMAND)->info(
-                    string("No data received after command [{}]"), NAMES.find(command.type())->second);
+        bool correctSender = false;
+        bool timeout = false;
+        while(!(correctSender || timeout)) {
+            n = recvfrom(_commandConnection._fileDescriptor, (char*) buffer, BUFFER_LENGTH, 0,
+                         (struct sockaddr*) &sender, &senderAddrSize);
+
+            timeout = sender.sin_addr.s_addr == 0;
+            correctSender = sender.sin_addr.s_addr == tello._clientaddr.sin_addr.s_addr;
+
+            if (timeout) {
+                Logger::get(LoggerType::COMMAND)->error(
+                        string("No data received after command [{}] - timeout"), NAMES.find(command.type())->second);
+            } else if (!correctSender) {
+                Logger::get(LoggerType::COMMAND)->error(
+                        string("Answer from wrong tello received {0:x}"), sender.sin_addr.s_addr);
+            }
         }
+
+        _connectionMutex.unlock_shared();
     }
 
     n = n >= 0 ? n : 0;
