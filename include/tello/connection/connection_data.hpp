@@ -1,6 +1,8 @@
 #pragma once
 
-#include <WinSock2.h>
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
+    #include <WinSock2.h>
+#endif
 
 namespace tello {
     struct ConnectionData {

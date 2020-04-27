@@ -33,6 +33,11 @@ namespace tello {
         static ConnectionData _videoConnection;
         static std::shared_mutex _connectionMutex;
 
+        #if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
+            static WSAData _wsaData;
+            static bool _initializedConnection;
+        #endif
+
         static StatusResponse statusResponseFactory(const char* const result);
         static void invokeStatusListener(const StatusResponse& response, const Tello& tello);
 

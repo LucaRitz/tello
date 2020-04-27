@@ -20,10 +20,6 @@ using std::string;
 using ComPtr = std::optional<std::unique_ptr<Command>>;
 
 TEST(Tello, SimpleCaseBerger) {
-
-    bool isConnected = Network::connect();
-    ASSERT_TRUE(isConnected);
-
     Tello tello(TELLO_IP_ADDRESS);
 
     ComPtr command = CommandFactory::build(CommandType::COMMAND);
@@ -40,4 +36,6 @@ TEST(Tello, SimpleCaseBerger) {
     ComPtr land = CommandFactory::build(CommandType::LAND);
     std::unique_ptr<Response> responseLand = tello.exec(*(land->get()));
     ASSERT_EQ(Status::OK, responseLand->status());
+
+    Network::disconnect();
 }

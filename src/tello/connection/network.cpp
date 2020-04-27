@@ -3,7 +3,6 @@
 #include <tello/tello.hpp>
 #include <tello/command.hpp>
 #include "../response_factory.hpp"
-#include <WinSock2.h>
 
 #define COMMAND_PORT 8889
 #define STATUS_PORT 8890
@@ -20,11 +19,29 @@ UdpListener<StatusResponse, tello::Network::statusResponseFactory, tello::Networ
         _commandConnection, tello::Tello::_telloMapping, tello::Tello::_telloMappingMutex,
         tello::Network::_connectionMutex};
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
+WSAData tello::Network::_wsaData;
+bool tello::Network::_initializedConnection = false;
+#endif
+
 bool tello::Network::connect() {
 
+    #if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
+        if (!_initializedConnection) {
+            int result = WSAStartup(MAKEWORD(2,2), &_wsaData);
+            if (result != 0) {
+                Logger::get(LoggerType::COMMAND)->info(string("Cannot initialize windows socket"));
+                return false;
+            }
+            _initializedConnection = true;
+        }
+    #endif
+
+    _connectionMutex.lock_shared();
     optional<ConnectionData> command = Network::connectToPort(COMMAND_PORT, _commandConnection);
     optional<ConnectionData> status = Network::connectToPort(STATUS_PORT, _statusConnection);
     optional<ConnectionData> video = Network::connectToPort(VIDEO_PORT, _videoConnection);
+    _connectionMutex.unlock_shared();
 
     bool isConnected = command && status && video;
 
@@ -60,6 +77,20 @@ bool tello::Network::connect() {
 
 void tello::Network::disconnect() {
     _statusListener.stop();
+    // TODO: stop video listener
+    _connectionMutex.lock_shared();
+    if (_commandConnection._fileDescriptor != -1) {
+        closesocket(_commandConnection._fileDescriptor);
+    }
+    if (_statusConnection._fileDescriptor != -1) {
+        closesocket(_statusConnection._fileDescriptor);
+    }
+    if (_videoConnection._fileDescriptor != -1) {
+        closesocket(_videoConnection._fileDescriptor);
+    }
+    _connectionMutex.unlock_shared();
+
+    WSACleanup();
 }
 
 unique_ptr<Response> tello::Network::exec(const Command& command, const Tello& tello) {
@@ -73,19 +104,28 @@ unique_ptr<Response> tello::Network::exec(const Command& command, const Tello& t
 
     string commandString = command.build();
 
-    int len = 0;
-    sendto(_commandConnection._fileDescriptor, commandString.c_str(), commandString.length(),
-           0, (const sockaddr*) &tello._clientaddr, len);
-    Logger::get(LoggerType::COMMAND)->info(
-            string("Command of type [{}] is sent!"), NAMES.find(command.type())->second);
-
     char buffer[BUFFER_LENGTH];
-    int n;
+    int n = 0;
     sockaddr_in sender{};
     memset(&sender, 0, sizeof(sender));
 
-    n = recvfrom(_commandConnection._fileDescriptor, (char*) buffer, BUFFER_LENGTH, MSG_WAITALL,
-                 (struct sockaddr*) &sender, &len);
+    _connectionMutex.lock_shared();
+    int sendResult = sendto(_commandConnection._fileDescriptor, commandString.c_str(), commandString.length(),
+           0, (const sockaddr*) &tello._clientaddr, sizeof(tello._clientaddr));
+    if (sendResult == SOCKET_ERROR) {
+        Logger::get(LoggerType::COMMAND)->info(
+                string("Command of type [{}] is not sent cause of socket error!"), NAMES.find(command.type())->second);
+        _connectionMutex.unlock_shared();
+    } else {
+        Logger::get(LoggerType::COMMAND)->info(
+                string("Command of type [{}] is sent!"), NAMES.find(command.type())->second);
+        int senderAddrSize = sizeof(sender);
+        n = recvfrom(_commandConnection._fileDescriptor, (char*) buffer, BUFFER_LENGTH, MSG_WAITALL,
+                     (struct sockaddr*) &sender, &senderAddrSize);
+        _connectionMutex.unlock_shared();
+    }
+
+    n = n >= 0 ? n : 0;
     buffer[n] = '\0';
 
     string responseString(buffer);
@@ -101,7 +141,7 @@ optional<ConnectionData> tello::Network::connectToPort(int port, const Connectio
     sockaddr_in servaddr{};
     memset(&servaddr, 0, sizeof(servaddr));
 
-    if ((fileDescriptor = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+    if ((fileDescriptor = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
         Logger::get(LoggerType::COMMAND)->error(
                 std::string("Socket creation failed. Port {0:d}"), port);
         return std::nullopt;
