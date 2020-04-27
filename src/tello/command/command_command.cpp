@@ -7,7 +7,7 @@ tello::command::CommandCommand::CommandCommand(const CommandType& commandType, v
         arguments) {}
 
 string tello::command::CommandCommand::build() const {
-    return std::string("Command");
+    return std::string("command");
 }
 
 unique_ptr<Command> tello::command::CommandCommand::create(const CommandType& commandType, vector<string>& arguments) {
