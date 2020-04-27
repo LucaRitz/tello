@@ -43,6 +43,7 @@ namespace tello {
 
         static UdpListener<StatusResponse, statusResponseFactory, invokeStatusListener> _statusListener;
 
-        static optional<ConnectionData> connectToPort(int port, const ConnectionData& connectionData);
+        static optional<ConnectionData>
+        connectToPort(int port, const ConnectionData& connectionData, const LoggerType& loggerType);
     };
 }

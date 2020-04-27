@@ -38,9 +38,9 @@ bool tello::Network::connect() {
     #endif
 
     _connectionMutex.lock_shared();
-    optional<ConnectionData> command = Network::connectToPort(COMMAND_PORT, _commandConnection);
-    optional<ConnectionData> status = Network::connectToPort(STATUS_PORT, _statusConnection);
-    optional<ConnectionData> video = Network::connectToPort(VIDEO_PORT, _videoConnection);
+    optional<ConnectionData> command = Network::connectToPort(COMMAND_PORT, _commandConnection, LoggerType::COMMAND);
+    optional<ConnectionData> status = Network::connectToPort(STATUS_PORT, _statusConnection, LoggerType::STATUS);
+    optional<ConnectionData> video = Network::connectToPort(VIDEO_PORT, _videoConnection, LoggerType::VIDEO);
     _connectionMutex.unlock_shared();
 
     bool isConnected = command && status && video;
@@ -123,6 +123,11 @@ unique_ptr<Response> tello::Network::exec(const Command& command, const Tello& t
         n = recvfrom(_commandConnection._fileDescriptor, (char*) buffer, BUFFER_LENGTH, 0,
                      (struct sockaddr*) &sender, &senderAddrSize);
         _connectionMutex.unlock_shared();
+
+        if (n <= 0) {
+            Logger::get(LoggerType::COMMAND)->info(
+                    string("No data received after command [{}]"), NAMES.find(command.type())->second);
+        }
     }
 
     n = n >= 0 ? n : 0;
@@ -132,9 +137,10 @@ unique_ptr<Response> tello::Network::exec(const Command& command, const Tello& t
     return ResponseFactory::build(command.type(), responseString);
 }
 
-optional<ConnectionData> tello::Network::connectToPort(int port, const ConnectionData& data) {
+optional<ConnectionData>
+tello::Network::connectToPort(int port, const ConnectionData& data, const LoggerType& loggerType) {
     if (data._fileDescriptor != -1) {
-        Logger::get(LoggerType::COMMAND)->warn(string("Is already connected!"));
+        Logger::get(loggerType)->warn(string("Is already connected!"));
         return std::make_optional<ConnectionData>(data);
     }
     int fileDescriptor;
@@ -152,7 +158,7 @@ optional<ConnectionData> tello::Network::connectToPort(int port, const Connectio
     servaddr.sin_port = htons(port);
 
     if (bind(fileDescriptor, (const struct sockaddr*) &servaddr, sizeof(servaddr)) < 0) {
-        Logger::get(LoggerType::COMMAND)->error(
+        Logger::get(loggerType)->error(
                 string("Bind failed. Port {0:d}"), port);
         closesocket(fileDescriptor);
         return std::nullopt;
@@ -172,7 +178,7 @@ optional<ConnectionData> tello::Network::connectToPort(int port, const Connectio
                 sizeof(timeval) );
         #endif
     ) < 0) {
-        Logger::get(LoggerType::COMMAND)->error(
+        Logger::get(loggerType)->error(
                 std::string("Cannot set receive timeout of {0:d} on port {0:d}"), timeout, port);
         closesocket(fileDescriptor);
         return std::nullopt;
