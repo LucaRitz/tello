@@ -15,7 +15,8 @@ unordered_map<ip_address, const tello::Tello*> tello::Tello::_telloMapping;
 std::shared_mutex tello::Tello::_telloMappingMutex;
 
 tello::Tello::Tello(ip_address telloIp) : _clientaddr(sockaddrOf(telloIp)),
-                                          _statusHandler(nullptr){
+                                          _ip(telloIp),
+                                          _statusHandler(nullptr) {
     _telloMappingMutex.lock();
     _telloMapping[telloIp] = this;
     _telloMappingMutex.unlock();
@@ -23,7 +24,7 @@ tello::Tello::Tello(ip_address telloIp) : _clientaddr(sockaddrOf(telloIp)),
 
 tello::Tello::~Tello() {
     _telloMappingMutex.lock();
-    _telloMapping.erase(_clientaddr.sin_addr.s_addr);
+    _telloMapping.erase(_ip);
     _telloMappingMutex.unlock();
 }
 

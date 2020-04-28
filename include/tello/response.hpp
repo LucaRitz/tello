@@ -10,7 +10,8 @@ namespace tello {
 
     enum class Status {
         OK,
-        FAIL
+        FAIL,
+        TIMEOUT
     };
 
     class Response {

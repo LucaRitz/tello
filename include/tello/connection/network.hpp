@@ -27,7 +27,8 @@ namespace tello {
         static void disconnect();
 
         static unique_ptr<Response> exec(const Command& command, const Tello& tello);
-
+        static unordered_map<ip_address, unique_ptr<Response>>
+        exec(const Command& command, unordered_map<ip_address, const Tello*> tellos);
     private:
         static ConnectionData _commandConnection;
         static ConnectionData _statusConnection;
@@ -46,5 +47,6 @@ namespace tello {
 
         static optional<ConnectionData>
         connectToPort(int port, const ConnectionData& connectionData, const LoggerType& loggerType);
+        static void disconnect(ConnectionData& connectionData, const LoggerType& loggerType);
     };
 }

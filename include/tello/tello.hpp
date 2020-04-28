@@ -37,6 +37,7 @@ namespace tello {
         static sockaddr_in sockaddrOf(ip_address telloIp);
 
         const sockaddr_in _clientaddr;
+        const ip_address _ip;
         status_handler _statusHandler;
     };
 }

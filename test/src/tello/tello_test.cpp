@@ -21,17 +21,17 @@ TEST(Tello, SimpleCaseBerger) {
     Tello tello(TELLO_IP_ADDRESS);
 
     ComPtr command = CommandFactory::build(CommandType::COMMAND);
-    std::unique_ptr<Response> responseCommand = tello.exec(*(command->get()));
-    ASSERT_EQ(Status::OK, responseCommand->status());
+    std::unique_ptr<Response> responseCommand = tello.exec(*(command.value()));
+    ASSERT_NE(Status::FAIL, responseCommand->status());
 
     ComPtr takeoff = CommandFactory::build(CommandType::TAKE_OFF);
     std::unique_ptr<Response> responseTakeoff = tello.exec(*(takeoff->get()));
-    ASSERT_EQ(Status::OK, responseTakeoff->status());
+    ASSERT_NE(Status::FAIL, responseTakeoff->status());
 
     std::chrono::seconds duration(5);
     std::this_thread::sleep_for(duration);
 
     ComPtr land = CommandFactory::build(CommandType::LAND);
     std::unique_ptr<Response> responseLand = tello.exec(*(land->get()));
-    ASSERT_EQ(Status::OK, responseLand->status());
+    ASSERT_NE(Status::FAIL, responseLand->status());
 }

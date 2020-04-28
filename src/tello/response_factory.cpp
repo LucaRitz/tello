@@ -33,6 +33,14 @@ unique_ptr<Response> tello::ResponseFactory::build(const CommandType& commandTyp
     return std::make_unique<Response>(Status::FAIL);
 }
 
+unique_ptr<Response> tello::ResponseFactory::timeout() {
+    return std::make_unique<Response>(Status::TIMEOUT);
+}
+
+unique_ptr<Response> tello::ResponseFactory::error() {
+    return std::make_unique<Response>(Status::FAIL);
+}
+
 unique_ptr<Response> tello::ResponseFactory::simpleResponse(const CommandType& commandType, string& response) {
     return std::make_unique<Response>(response);
 }

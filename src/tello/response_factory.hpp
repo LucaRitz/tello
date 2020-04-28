@@ -24,6 +24,8 @@ namespace tello {
         ResponseFactory(const ResponseFactory&&) = delete;
 
         static unique_ptr<Response> build(const CommandType& commandType, string& response);
+        static unique_ptr<Response> timeout();
+        static unique_ptr<Response> error();
 
     private:
         static const unordered_map<const CommandType, ResponseBuildType, EnumClassHash> MAPPING;
