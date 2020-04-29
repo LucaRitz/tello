@@ -115,7 +115,6 @@ tello::Network::exec(const Command& command, unordered_map<ip_address, const Tel
             _connectionMutex.lock_shared();
             int sendResult = networkInterface->send(_commandConnection._fileDescriptor, tello->second->_clientaddr,
                                                     commandString);
-
             _connectionMutex.unlock_shared();
             if (sendResult == SEND_ERROR_CODE) {
                 Logger::get(LoggerType::COMMAND)->info(

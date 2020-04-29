@@ -26,6 +26,7 @@ namespace tello {
 
         void setStatusHandler(status_handler statusHandler);
         unique_ptr<Response> exec(const Command& command);
+        [[nodiscard]] ip_address ip() const;
 
         friend class Network;
 

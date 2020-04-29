@@ -35,6 +35,10 @@ unique_ptr<Response> tello::Tello::exec(const Command& command) {
     return tello::Network::exec(command, *this);
 }
 
+ip_address tello::Tello::ip() const {
+    return _clientaddr._ip;
+}
+
 NetworkData tello::Tello::mapToNetworkData(ip_address telloIp) {
     return NetworkData(SIN_FAM::I_AF_INET, COMMAND_PORT, telloIp);
 }
