@@ -17,7 +17,7 @@ namespace tello {
 
     class Command;
 
-    using CommandBuildType = unique_ptr<Command> (*)(const CommandType&, vector<string>&);
+    using CommandBuildType = unique_ptr<Command> (*)(vector<string>&);
 
     class CommandFactory {
 

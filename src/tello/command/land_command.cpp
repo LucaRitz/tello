@@ -2,14 +2,14 @@
 
 using tello::Command;
 
-tello::command::LandCommand::LandCommand(const CommandType& commandType, vector<string>& arguments) : Command(
-        commandType,
+tello::command::LandCommand::LandCommand(vector<string>& arguments) : Command(
+        CommandType::LAND,
         arguments) {}
 
 string tello::command::LandCommand::build() const {
     return std::string("land");
 }
 
-unique_ptr<Command> tello::command::LandCommand::create(const CommandType& commandType, vector<string>& arguments) {
-    return std::make_unique<LandCommand>(LandCommand(commandType, arguments));
+unique_ptr<Command> tello::command::LandCommand::create(vector<string>& arguments) {
+    return std::make_unique<LandCommand>(LandCommand(arguments));
 }

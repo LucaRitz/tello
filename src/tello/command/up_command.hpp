@@ -1,15 +1,16 @@
 #pragma once
-
 #include <memory>
 #include <tello/command.hpp>
 
 using std::unique_ptr;
 
 namespace tello::command {
-    class LandCommand : public Command {
+    class UpCommand : public Command {
     public:
-        explicit LandCommand(vector<string>& arguments);
+        explicit UpCommand(vector<string>& arguments);
 
+        [[nodiscard]]
+        virtual string validate() const override;
         [[nodiscard]]
         string build() const override;
 

@@ -4,6 +4,7 @@
 #include "command/command_command.hpp"
 #include "command/takeoff_command.hpp"
 #include "command/land_command.hpp"
+#include "command/up_command.hpp"
 
 using tello::Command;
 using tello::CommandBuildType;
@@ -18,6 +19,7 @@ unordered_map<const CommandType, CommandBuildType, EnumClassHash> tello::Command
     mapping[CommandType::COMMAND] = command::CommandCommand::create;
     mapping[CommandType::TAKE_OFF] = command::TakeoffCommand::create;
     mapping[CommandType::LAND] = command::LandCommand::create;
+    mapping[CommandType::UP] = command::UpCommand::create;
     // TODO: Add Command-Mappings
     return mapping;
 }
@@ -38,7 +40,7 @@ tello::CommandFactory::build(const tello::CommandType& commandType, vector<strin
     if (value != tello::CommandFactory::MAPPING.end()) {
         Logger::get(LoggerType::COMMAND)->info(
                 std::string("Creating command [") + NAMES.find(commandType)->second + std::string("]"));
-        return std::make_optional<unique_ptr<Command>>(value->second(commandType, arguments));
+        return std::make_optional<unique_ptr<Command>>(value->second(arguments));
     }
 
     Logger::get(LoggerType::COMMAND)->critical(
