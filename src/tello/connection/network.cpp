@@ -179,13 +179,14 @@ tello::Network::exec(const Command& command, unordered_map<ip_address, const Tel
                 buffer[n] = '\0';
 
                 string bufferedAnswer{buffer};
-                if (bufferedAnswer.find("ok") != std::string::npos ||
-                    bufferedAnswer.find("error") != std::string::npos) {
-                    ip_address foundTelloIp = tellos.erase(senderIp);
-                    responses[foundTelloIp] = ResponseFactory::build(command.type(), bufferedAnswer);
+                responses[senderIp] = ResponseFactory::build(command.type(), bufferedAnswer);
+                if (Status::UNKNOWN != responses.find(senderIp)->second->status()) {
+                    tellos.erase(senderIp);
                 } else {
-                    Logger::get(LoggerType::COMMAND)->info(
-                            string("Received unknown answer from {0:x}! (answer is ignored)"), senderIp);
+                    responses.erase(senderIp);
+                    Logger::get(LoggerType::COMMAND)->warn(
+                            string("Received unknown answer from {0:x}! (answer is ignored) -- {1}"), senderIp,
+                            bufferedAnswer);
                 }
             }
         }

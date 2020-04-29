@@ -15,7 +15,7 @@ TEST(CommandFactory, CommandCommand) {
     // Act
     ASSERT_TRUE(result);
     ASSERT_TRUE(result.value()->validate().empty());
-    ASSERT_EQ(std::string("Command"), result.value()->build());
+    ASSERT_EQ(std::string("command"), result.value()->build());
 }
 
 TEST(CommandFactory, TakeoffCommand) {

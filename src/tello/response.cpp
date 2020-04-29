@@ -5,8 +5,10 @@ using tello::Status;
 tello::Response::Response(const Status& status) : _status(status) {}
 
 tello::Response::Response(const string& response) : Response(
-        response == string("ok") ? Status::OK : Status::FAIL
-        ) {}
+        response.find(string("ok")) != std::string::npos ? Status::OK : (response.find(string("error")) !=
+                                                                         std::string::npos ? Status::FAIL
+                                                                                           : Status::UNKNOWN)
+) {}
 
 Status tello::Response::status() {
     return _status;
