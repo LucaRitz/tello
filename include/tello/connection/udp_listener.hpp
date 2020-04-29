@@ -37,11 +37,12 @@ namespace tello {
 
         void stop() {
             _exitSignal.set_value();
+            _worker.join();
         }
 
     private:
         promise<void> _exitSignal;
-        const thread _worker;
+        thread _worker;
 
         static void listen(const tello::ConnectionData& connectionData, shared_ptr<NetworkInterface> networkInterface,
                            unordered_map<ip_address, const Tello*>& telloMapping, std::shared_mutex& telloMappingMutex,

@@ -3,7 +3,6 @@ project(tello_test)
 # Setup testing
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-add_definitions(-DBASE_LOG_PATH_CMAKE=${CMAKE_CURRENT_BINARY_DIR}/libs)
 
 find_package(tello_lib REQUIRED)
 

@@ -65,6 +65,7 @@ optional<ConnectionData> tello::windows::NetworkImpl::connect(const NetworkData&
 }
 
 bool tello::windows::NetworkImpl::disconnect(const int& fileDescriptor) {
+    shutdown(fileDescriptor, SD_BOTH);
     int result = closesocket(fileDescriptor);
     return result != SOCKET_ERROR;
 }
