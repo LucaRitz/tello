@@ -1,16 +1,18 @@
 #pragma once
 
-#include "connection_data.hpp"
 #include <optional>
 #include "udp_listener.hpp"
 #include "../response/status_response.hpp"
 #include <memory>
+#include "../native/network_interface.hpp"
 
 using tello::ConnectionData;
 using std::optional;
 using tello::UdpListener;
 using tello::StatusResponse;
+using std::shared_ptr;
 using std::unique_ptr;
+using tello::NetworkInterface;
 
 namespace tello {
 
@@ -34,19 +36,15 @@ namespace tello {
         static ConnectionData _statusConnection;
         static ConnectionData _videoConnection;
         static std::shared_mutex _connectionMutex;
+        static shared_ptr<NetworkInterface> networkInterface;
 
-        #if defined(WIN32) || defined(_WIN32) || defined(__WIN32)
-            static WSAData _wsaData;
-            static bool _initializedConnection;
-        #endif
-
-        static StatusResponse statusResponseFactory(const char* const result);
+        static StatusResponse statusResponseFactory(const NetworkResponse& networkResponse);
         static void invokeStatusListener(const StatusResponse& response, const Tello& tello);
 
         static UdpListener<StatusResponse, statusResponseFactory, invokeStatusListener> _statusListener;
 
         static optional<ConnectionData>
-        connectToPort(int port, const ConnectionData& connectionData, const LoggerType& loggerType);
+        connectToPort(unsigned short port, const ConnectionData& connectionData, const LoggerType& loggerType);
         static void disconnect(ConnectionData& connectionData, const LoggerType& loggerType);
     };
 }

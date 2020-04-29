@@ -2,15 +2,14 @@
 
 #include <memory>
 #include <unordered_map>
-#include "connection/connection_data.hpp"
+#include "native/network_interface.hpp"
 #include "response/status_response.hpp"
 #include <shared_mutex>
 
 using std::unique_ptr;
 using std::unordered_map;
 using tello::StatusResponse;
-
-using ip_address = unsigned long;
+using tello::NetworkData;
 
 namespace tello {
 
@@ -34,10 +33,9 @@ namespace tello {
         static unordered_map<ip_address, const Tello*> _telloMapping;
         static std::shared_mutex _telloMappingMutex;
 
-        static sockaddr_in sockaddrOf(ip_address telloIp);
+        static NetworkData mapToNetworkData(ip_address telloIp);
 
-        const sockaddr_in _clientaddr;
-        const ip_address _ip;
+        const NetworkData _clientaddr;
         status_handler _statusHandler;
     };
 }

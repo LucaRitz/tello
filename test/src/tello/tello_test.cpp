@@ -6,7 +6,7 @@
 #include <chrono>
 #include <thread>
 
-#define TELLO_IP_ADDRESS (ULONG)0xC0A80A01 // 192.168.10.1
+#define TELLO_IP_ADDRESS (ip_address)0xC0A80A01 // 192.168.10.1
 
 using tello::CommandFactory;
 using tello::Command;

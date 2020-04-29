@@ -14,8 +14,7 @@ using tello::Status;
 unordered_map<ip_address, const tello::Tello*> tello::Tello::_telloMapping;
 std::shared_mutex tello::Tello::_telloMappingMutex;
 
-tello::Tello::Tello(ip_address telloIp) : _clientaddr(sockaddrOf(telloIp)),
-                                          _ip(telloIp),
+tello::Tello::Tello(ip_address telloIp) : _clientaddr(mapToNetworkData(telloIp)),
                                           _statusHandler(nullptr) {
     _telloMappingMutex.lock();
     _telloMapping[telloIp] = this;
@@ -24,7 +23,7 @@ tello::Tello::Tello(ip_address telloIp) : _clientaddr(sockaddrOf(telloIp)),
 
 tello::Tello::~Tello() {
     _telloMappingMutex.lock();
-    _telloMapping.erase(_ip);
+    _telloMapping.erase(_clientaddr._ip);
     _telloMappingMutex.unlock();
 }
 
@@ -36,13 +35,6 @@ unique_ptr<Response> tello::Tello::exec(const Command& command) {
     return tello::Network::exec(command, *this);
 }
 
-sockaddr_in tello::Tello::sockaddrOf(ip_address telloIp) {
-    sockaddr_in cliaddr{};
-    memset(&cliaddr, 0, sizeof(cliaddr));
-
-    cliaddr.sin_family = AF_INET;
-    cliaddr.sin_port = htons(COMMAND_PORT);
-    cliaddr.sin_addr.S_un.S_addr = htonl(telloIp);
-
-    return cliaddr;
+NetworkData tello::Tello::mapToNetworkData(ip_address telloIp) {
+    return NetworkData(SIN_FAM::I_AF_INET, COMMAND_PORT, telloIp);
 }
