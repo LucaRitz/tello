@@ -46,6 +46,7 @@ namespace tello {
 
         virtual optional<ConnectionData> connect(const NetworkData& data, const LoggerType& logger) = 0;
         virtual bool disconnect(const int& fileDescriptor) = 0;
+        virtual bool setTimeout(const int& fileDescriptor, const unsigned int timeout, const LoggerType& logger) = 0;
 
         [[nodiscard]] virtual int
         send(const int& fileDescriptor, const NetworkData& receiver, const string& value) const = 0;

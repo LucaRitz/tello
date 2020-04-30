@@ -7,7 +7,7 @@ tello::command::TakeoffCommand::TakeoffCommand(vector<string>& arguments) : Comm
         arguments) {}
 
 t_forecast tello::command::TakeoffCommand::forecast() const {
-    return 5;
+    return 5000;
 }
 
 string tello::command::TakeoffCommand::build() const {

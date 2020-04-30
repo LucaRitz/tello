@@ -7,7 +7,7 @@
 using std::vector;
 using std::string;
 
-using t_forecast = unsigned short;
+using t_forecast = unsigned int;
 
 namespace tello {
 

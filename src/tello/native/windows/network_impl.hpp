@@ -11,6 +11,7 @@ namespace tello::windows {
 
         optional<ConnectionData> connect(const NetworkData& data, const LoggerType& logger) override;
         bool disconnect(const int& fileDescriptor) override;
+        bool setTimeout(const int& fileDescriptor, unsigned int timeout, const LoggerType& logger) override;
 
         [[nodiscard]] int
         send(const int& fileDescriptor, const NetworkData& receiver, const string& value) const override;

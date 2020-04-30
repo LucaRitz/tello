@@ -47,16 +47,9 @@ optional<ConnectionData> tello::windows::NetworkImpl::connect(const NetworkData&
         return std::nullopt;
     }
 
-    DWORD timeout = 1000;
-    if (setsockopt(fileDescriptor, SOL_SOCKET, SO_RCVTIMEO,
-                   (const char*) &timeout,
-                   sizeof(DWORD)
-    ) < 0) {
-        Logger::get(logger)->error(
-                std::string("Cannot set receive timeout of {0:d} on port {1:d}"), timeout, data._port);
+    if (!setTimeout(fileDescriptor, 1000, logger)) {
         closesocket(fileDescriptor);
-        return std::nullopt;
-    }
+    };
 
     return std::make_optional<ConnectionData>(ConnectionData{fileDescriptor,
                                                              NetworkData{SIN_FAM::I_AF_INET,
@@ -68,6 +61,20 @@ bool tello::windows::NetworkImpl::disconnect(const int& fileDescriptor) {
     shutdown(fileDescriptor, SD_BOTH);
     int result = closesocket(fileDescriptor);
     return result != SOCKET_ERROR;
+}
+
+bool tello::windows::NetworkImpl::setTimeout(const int& fileDescriptor, const unsigned int timeout,
+                                             const LoggerType& logger) {
+    DWORD timeoutD = timeout;
+    if (setsockopt(fileDescriptor, SOL_SOCKET, SO_RCVTIMEO,
+                   (const char*) &timeoutD,
+                   sizeof(DWORD)
+    ) < 0) {
+        Logger::get(logger)->error(
+                std::string("Cannot set receive timeout of {0:d}"), timeout);
+        return false;
+    }
+    return true;
 }
 
 int

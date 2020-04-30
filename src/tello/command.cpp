@@ -1,7 +1,7 @@
 #include <tello/command.hpp>
 #include <tello/response/status_response.hpp>
 
-#define DEFAULT_FORECAST 1
+#define DEFAULT_FORECAST 1000
 
 using tello::StatusResponse;
 

@@ -7,7 +7,7 @@ tello::command::LandCommand::LandCommand(vector<string>& arguments) : Command(
         arguments) {}
 
 t_forecast tello::command::LandCommand::forecast() const {
-    return 2;
+    return 2000;
 }
 
 t_forecast tello::command::LandCommand::forecast(const StatusResponse& status) const {
