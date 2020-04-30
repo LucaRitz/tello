@@ -28,7 +28,7 @@ namespace tello {
         void append(const string& key, const string& value);
 
     private:
-        const Status _status;
+        Status _status;
         unordered_map<string, string> _values;
     };
 }

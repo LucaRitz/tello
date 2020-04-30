@@ -7,7 +7,11 @@
 using std::vector;
 using std::string;
 
+using t_forecast = unsigned short;
+
 namespace tello {
+
+    class StatusResponse;
 
     class Command {
     public:
@@ -19,6 +23,10 @@ namespace tello {
         [[nodiscard]]
         virtual string validate() const;
         [[nodiscard]]
+        virtual t_forecast forecast() const;
+        [[nodiscard]]
+        virtual t_forecast forecast(const StatusResponse& status) const;
+        [[nodiscard]]
         virtual string build() const = 0;
         [[nodiscard]]
         inline const CommandType& type() const { return _type; }
@@ -26,6 +34,5 @@ namespace tello {
     protected:
         const vector<string> _arguments;
         const CommandType _type;
-
     };
 }

@@ -6,6 +6,10 @@ tello::command::TakeoffCommand::TakeoffCommand(vector<string>& arguments) : Comm
         CommandType::TAKE_OFF,
         arguments) {}
 
+t_forecast tello::command::TakeoffCommand::forecast() const {
+    return 5;
+}
+
 string tello::command::TakeoffCommand::build() const {
     return std::string("takeoff");
 }

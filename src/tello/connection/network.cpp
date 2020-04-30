@@ -9,7 +9,7 @@
 #define COMMAND_PORT 8889
 #define STATUS_PORT 8890
 #define VIDEO_PORT 11111
-#define MAX_TRIES 5
+#define SEND 3
 
 using tello::Logger;
 using tello::Response;
@@ -17,8 +17,10 @@ using tello::Response;
 ConnectionData tello::Network::_commandConnection{-1, {}};
 ConnectionData tello::Network::_statusConnection = {-1, {}};
 ConnectionData tello::Network::_videoConnection = {-1, {}};
-shared_ptr<NetworkInterface> tello::Network::networkInterface = tello::NetworkInterfaceFactory::build();
 std::shared_mutex tello::Network::_connectionMutex;
+shared_ptr<NetworkInterface> tello::Network::networkInterface = tello::NetworkInterfaceFactory::build();
+StatusResponse tello::Network::_statusResponse{""};
+std::shared_mutex tello::Network::_statusMutex;
 UdpListener<StatusResponse, tello::Network::statusResponseFactory, tello::Network::invokeStatusListener> tello::Network::_statusListener{
         _commandConnection, networkInterface, tello::Tello::_telloMapping, tello::Tello::_telloMappingMutex,
         tello::Network::_connectionMutex, LoggerType::STATUS};
@@ -106,66 +108,69 @@ tello::Network::exec(const Command& command, unordered_map<ip_address, const Tel
     }
 
     string commandString = command.build();
+    _statusMutex.lock_shared();
+    t_forecast computedForecast = command.forecast(_statusResponse);
+    _statusMutex.unlock_shared();
+
+    auto tello = tellos.begin();
+    while (tello != tellos.end()) {
+        _connectionMutex.lock_shared();
+        int sendResult = SEND_ERROR_CODE;
+        for (int i = 0; i < SEND; ++i) {
+            int result = networkInterface->send(_commandConnection._fileDescriptor, tello->second->_clientaddr,
+                                                commandString);
+            sendResult = result != SEND_ERROR_CODE ? result : SEND_ERROR_CODE;
+        }
+        _connectionMutex.unlock_shared();
+        if (sendResult == SEND_ERROR_CODE) {
+            Logger::get(LoggerType::COMMAND)->info(
+                    string("Command of type [{}] is not sent cause of socket error!"),
+                    NAMES.find(command.type())->second);
+            responses[tello->first] = ResponseFactory::error();
+            tellos.erase(tello->first);
+        } else {
+            Logger::get(LoggerType::COMMAND)->info(
+                    string("Command of type [{0}] is sent to {1:x}!"), NAMES.find(command.type())->second,
+                    tello->second->_clientaddr._ip);
+        }
+
+        ++tello;
+    }
 
     int tries = 0;
 
-    while (!tellos.empty() && tries < MAX_TRIES) {
-        auto tello = tellos.begin();
-        while (tello != tellos.end()) {
-            _connectionMutex.lock_shared();
-            int sendResult = networkInterface->send(_commandConnection._fileDescriptor, tello->second->_clientaddr,
-                                                    commandString);
-            _connectionMutex.unlock_shared();
-            if (sendResult == SEND_ERROR_CODE) {
-                Logger::get(LoggerType::COMMAND)->info(
-                        string("Command of type [{}] is not sent cause of socket error!"),
-                        NAMES.find(command.type())->second);
-                responses[tello->first] = ResponseFactory::error();
-                tellos.erase(tello->first);
+    while (tries < computedForecast && !tellos.empty()) {
+        _connectionMutex.lock_shared();
+        NetworkResponse networkResponse = networkInterface->read(_commandConnection._fileDescriptor);
+        _connectionMutex.unlock_shared();
+
+        ip_address senderIp = networkResponse._sender._ip;
+        bool timeout = senderIp == 0;
+        bool correctSender = tellos.find(senderIp) != tellos.end();
+
+        if (timeout) {
+            Logger::get(LoggerType::COMMAND)->error(
+                    string("Timeout after command [{}]"), NAMES.find(command.type())->second);
+            tries++;
+        } else if (!correctSender) {
+            Logger::get(LoggerType::COMMAND)->error(
+                    string("Answer from wrong tello received {0:x}"), senderIp);
+        } else {
+            string answer = networkResponse._response;
+            responses[senderIp] = ResponseFactory::build(command.type(), answer);
+            if (Status::UNKNOWN != responses.find(senderIp)->second->status()) {
+                tellos.erase(senderIp);
             } else {
-                Logger::get(LoggerType::COMMAND)->info(
-                        string("Command of type [{0}] is sent to {1:x}!"), NAMES.find(command.type())->second,
-                        tello->second->_clientaddr._ip);
-            }
-
-            ++tello;
-        }
-
-        bool timeout = false;
-        while(!timeout && !tellos.empty()) {
-            _connectionMutex.lock_shared();
-            NetworkResponse networkResponse = networkInterface->read(_commandConnection._fileDescriptor);
-            _connectionMutex.unlock_shared();
-
-            ip_address senderIp = networkResponse._sender._ip;
-            timeout = senderIp == 0;
-
-            bool correctSender = tellos.find(senderIp) != tellos.end();
-
-            if (timeout) {
-                Logger::get(LoggerType::COMMAND)->error(
-                        string("Timeout after command [{}]"), NAMES.find(command.type())->second);
-                tries++;
-            } else if (!correctSender) {
-                Logger::get(LoggerType::COMMAND)->error(
-                        string("Answer from wrong tello received {0:x}"), senderIp);
-            } else {
-                string answer = networkResponse._response;
-                responses[senderIp] = ResponseFactory::build(command.type(), answer);
-                if (Status::UNKNOWN != responses.find(senderIp)->second->status()) {
-                    tellos.erase(senderIp);
-                } else {
-                    responses.erase(senderIp);
-                    Logger::get(LoggerType::COMMAND)->warn(
-                            string("Received unknown answer from {0:x}! (answer is ignored) -- {1}"), senderIp,
-                            answer);
-                }
+                responses.erase(senderIp);
+                Logger::get(LoggerType::COMMAND)->warn(
+                        string("Received unknown answer from {0:x}! (answer is ignored) -- {1}"), senderIp,
+                        answer);
             }
         }
     }
 
-    for(auto tello : tellos) {
-        responses[tello.first] = ResponseFactory::timeout();
+    for(auto aTello : tellos) {
+        responses[aTello.first] = ResponseFactory::timeout();
     }
 
     return responses;
@@ -196,6 +201,9 @@ StatusResponse tello::Network::statusResponseFactory(const NetworkResponse& netw
 }
 
 void tello::Network::invokeStatusListener(const StatusResponse& response, const tello::Tello& tello) {
+    _statusMutex.lock();
+    _statusResponse = response;
+    _statusMutex.unlock();
     if (tello._statusHandler != nullptr) {
         tello._statusHandler(response);
     }

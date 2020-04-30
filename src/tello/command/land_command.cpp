@@ -6,6 +6,14 @@ tello::command::LandCommand::LandCommand(vector<string>& arguments) : Command(
         CommandType::LAND,
         arguments) {}
 
+t_forecast tello::command::LandCommand::forecast() const {
+    return 2;
+}
+
+t_forecast tello::command::LandCommand::forecast(const StatusResponse& status) const {
+    return forecast();
+}
+
 string tello::command::LandCommand::build() const {
     return std::string("land");
 }

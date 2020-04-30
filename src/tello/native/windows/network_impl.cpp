@@ -47,7 +47,7 @@ optional<ConnectionData> tello::windows::NetworkImpl::connect(const NetworkData&
         return std::nullopt;
     }
 
-    DWORD timeout = 2000;
+    DWORD timeout = 1000;
     if (setsockopt(fileDescriptor, SOL_SOCKET, SO_RCVTIMEO,
                    (const char*) &timeout,
                    sizeof(DWORD)

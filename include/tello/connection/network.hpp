@@ -37,6 +37,8 @@ namespace tello {
         static ConnectionData _videoConnection;
         static std::shared_mutex _connectionMutex;
         static shared_ptr<NetworkInterface> networkInterface;
+        static StatusResponse _statusResponse;
+        static std::shared_mutex _statusMutex;
 
         static StatusResponse statusResponseFactory(const NetworkResponse& networkResponse);
         static void invokeStatusListener(const StatusResponse& response, const Tello& tello);
