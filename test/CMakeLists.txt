@@ -14,7 +14,7 @@ add_subdirectory(lib/googletest-release-1.10.0)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include_directories(${gmock_SOURCE_DIR}/include ${gmock_SOURCE_DIR})
 
-include_directories(${tello_SOURCE_DIR}/include)
+include_directories(${TELLO_INCLUDE})
 
 add_executable(${PROJECT_NAME})
 add_subdirectory(src)

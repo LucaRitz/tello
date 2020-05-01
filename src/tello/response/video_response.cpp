@@ -1,9 +1,9 @@
 #include <tello/response/video_response.hpp>
 
-tello::VideoResponse::VideoResponse(const char* videoFrame) :
+tello::VideoResponse::VideoResponse(string videoFrame) :
         Response(Status::OK),
-        _videoFrame(videoFrame) {}
+        _videoFrame(std::move(videoFrame)) {}
 
-const char* const tello::VideoResponse::videoFrame() const {
+const string& tello::VideoResponse::videoFrame() const {
     return _videoFrame;
 }

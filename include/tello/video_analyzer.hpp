@@ -16,8 +16,7 @@ namespace tello {
         VideoAnalyzer(VideoAnalyzer&&) = delete;
         VideoAnalyzer& operator=(VideoAnalyzer&&) = delete;
 
-        void append(const string& framePart);
-        [[nodiscard]] bool finishedFrame() const;
+        bool append(const string& framePart);
         [[nodiscard]] string frame() const;
         void clean();
 

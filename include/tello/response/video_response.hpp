@@ -1,15 +1,19 @@
 #pragma once
 #include "../response.hpp"
 
+#include <string>
+
+using std::string;
+
 namespace tello {
 
     class VideoResponse : public Response {
     public:
-        explicit VideoResponse(const char* videoFrame);
+        explicit VideoResponse(string videoFrame);
 
-        [[nodiscard]] const char* const videoFrame() const;
+        [[nodiscard]] const string& videoFrame() const;
 
     private:
-        const char* const _videoFrame;
+        string _videoFrame;
     };
 }

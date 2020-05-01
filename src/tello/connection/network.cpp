@@ -229,14 +229,15 @@ string tello::Network::videoResponseFactory(const NetworkResponse& networkRespon
 }
 
 void tello::Network::invokeVideoListener(const string& response, const Tello& tello) {
-    _videoAnalyzer.append(response);
+    bool frameFull = _videoAnalyzer.append(response);
 
-    if (_videoAnalyzer.finishedFrame()) {
+    if (frameFull) {
         string frame = _videoAnalyzer.frame();
         _videoAnalyzer.clean();
 
         if (tello._videoHandler != nullptr) {
-            tello._videoHandler(frame);
+            VideoResponse videResponse = VideoResponse{frame};
+            tello._videoHandler(videResponse);
         }
     }
 }
