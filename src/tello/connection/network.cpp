@@ -123,7 +123,9 @@ tello::Network::exec(const Command& command, unordered_map<ip_address, const Tel
         for (int i = 0; i < SEND; ++i) {
             int result = networkInterface->send(_commandConnection._fileDescriptor, tello->second->_clientaddr,
                                                 commandString);
-            sendResult = result != SEND_ERROR_CODE ? result : SEND_ERROR_CODE;
+            if (sendResult == SEND_ERROR_CODE) {
+                sendResult = result != SEND_ERROR_CODE ? result : SEND_ERROR_CODE;
+            }
         }
         _connectionMutex.unlock_shared();
         if (sendResult == SEND_ERROR_CODE) {
