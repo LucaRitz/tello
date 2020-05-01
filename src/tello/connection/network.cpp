@@ -21,9 +21,14 @@ std::shared_mutex tello::Network::_connectionMutex;
 shared_ptr<NetworkInterface> tello::Network::networkInterface = tello::NetworkInterfaceFactory::build();
 StatusResponse tello::Network::_statusResponse{""};
 std::shared_mutex tello::Network::_statusMutex;
+VideoAnalyzer tello::Network::_videoAnalyzer;
 UdpListener<StatusResponse, tello::Network::statusResponseFactory, tello::Network::invokeStatusListener> tello::Network::_statusListener{
-        _commandConnection, networkInterface, tello::Tello::_telloMapping, tello::Tello::_telloMappingMutex,
+        _statusConnection, networkInterface, tello::Tello::_telloMapping, tello::Tello::_telloMappingMutex,
         tello::Network::_connectionMutex, LoggerType::STATUS};
+
+UdpListener<string, tello::Network::videoResponseFactory, tello::Network::invokeVideoListener> tello::Network::_videoListener {
+    _videoConnection, networkInterface, tello::Tello::_telloMapping, tello::Tello::_telloMappingMutex,
+        tello::Network::_connectionMutex, LoggerType::VIDEO};
 
 bool tello::Network::connect() {
     _connectionMutex.lock_shared();
@@ -66,7 +71,7 @@ bool tello::Network::connect() {
 
 void tello::Network::disconnect() {
     _statusListener.stop();
-    // TODO: stop video listener
+    _videoListener.stop();
 
     _connectionMutex.lock();
     if (_commandConnection._fileDescriptor != -1) {
@@ -118,8 +123,8 @@ tello::Network::exec(const Command& command, unordered_map<ip_address, const Tel
 
     auto tello = tellos.begin();
     while (tello != tellos.end()) {
-        _connectionMutex.lock_shared();
         int sendResult = SEND_ERROR_CODE;
+        _connectionMutex.lock_shared();
         for (int i = 0; i < SEND; ++i) {
             int result = networkInterface->send(_commandConnection._fileDescriptor, tello->second->_clientaddr,
                                                 commandString);
@@ -216,5 +221,22 @@ void tello::Network::invokeStatusListener(const StatusResponse& response, const 
     _statusMutex.unlock();
     if (tello._statusHandler != nullptr) {
         tello._statusHandler(response);
+    }
+}
+
+string tello::Network::videoResponseFactory(const NetworkResponse& networkResponse) {
+    return networkResponse._response;
+}
+
+void tello::Network::invokeVideoListener(const string& response, const Tello& tello) {
+    _videoAnalyzer.append(response);
+
+    if (_videoAnalyzer.finishedFrame()) {
+        string frame = _videoAnalyzer.frame();
+        _videoAnalyzer.clean();
+
+        if (tello._videoHandler != nullptr) {
+            tello._videoHandler(frame);
+        }
     }
 }

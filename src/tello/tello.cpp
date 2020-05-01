@@ -31,6 +31,10 @@ void tello::Tello::setStatusHandler(status_handler statusHandler) {
     this->_statusHandler = statusHandler;
 }
 
+void tello::Tello::setVideoHandler(video_handler videoHandler) {
+    this->_videoHandler = videoHandler;
+}
+
 unique_ptr<Response> tello::Tello::exec(const Command& command) {
     return tello::Network::exec(command, *this);
 }

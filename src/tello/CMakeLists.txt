@@ -18,4 +18,6 @@ target_sources(${PROJECT_NAME} PUBLIC
         ${TELLO_INCLUDE}/tello/command_type.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/command_type.cpp
         ${TELLO_INCLUDE}/tello/swarm.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/swarm.cpp)
+        ${CMAKE_CURRENT_SOURCE_DIR}/swarm.cpp
+        ${TELLO_INCLUDE}/tello/video_analyzer.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/video_analyzer.cpp)
