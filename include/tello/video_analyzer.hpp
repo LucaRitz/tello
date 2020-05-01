@@ -22,7 +22,6 @@ namespace tello {
         void clean();
 
     private:
-        vector<string> _frames;
-        int _currentSize;
+        string _frame;
     };
 }

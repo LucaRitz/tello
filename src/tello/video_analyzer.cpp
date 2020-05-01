@@ -7,24 +7,17 @@
 using std::string;
 
 void tello::VideoAnalyzer::append(const string& framePart) {
-    _currentSize += framePart.size();
-    _frames.push_back(framePart);
+    _frame += framePart;
 }
 
 bool tello::VideoAnalyzer::finishedFrame() const {
-    return _currentSize % VIDEO_PACKET_LENGTH != 0;
+    return _frame.size() % VIDEO_PACKET_LENGTH != 0;
 }
 
 string tello::VideoAnalyzer::frame() const {
-    std::string frame;
-    for (const string& framePart : _frames) {
-        frame += framePart;
-    }
-
-    return frame;
+    return _frame;
 }
 
 void tello::VideoAnalyzer::clean() {
-    _frames.clear();
-    _currentSize = 0;
+    _frame.clear();
 }
