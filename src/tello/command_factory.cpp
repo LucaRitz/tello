@@ -5,6 +5,8 @@
 #include "command/takeoff_command.hpp"
 #include "command/land_command.hpp"
 #include "command/up_command.hpp"
+#include "command/streamon_command.hpp"
+#include "command/streamoff_command.hpp"
 
 using tello::Command;
 using tello::CommandBuildType;
@@ -20,6 +22,8 @@ unordered_map<const CommandType, CommandBuildType, EnumClassHash> tello::Command
     mapping[CommandType::TAKE_OFF] = command::TakeoffCommand::create;
     mapping[CommandType::LAND] = command::LandCommand::create;
     mapping[CommandType::UP] = command::UpCommand::create;
+    mapping[CommandType::STREAM_ON] = command::StreamOnCommand::create;
+    mapping[CommandType::STREAM_OFF] = command::StreamOffCommand::create;
     // TODO: Add Command-Mappings
     return mapping;
 }

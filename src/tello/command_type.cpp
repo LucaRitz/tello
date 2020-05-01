@@ -9,6 +9,8 @@ unordered_map<const CommandType, string, EnumClassHash> tello::createNamesMap() 
     mapping[CommandType::TAKE_OFF] = string("TAKE_OFF");
     mapping[CommandType::LAND] = string("LAND");
     mapping[CommandType::UP] = string("UP");
+    mapping[CommandType::STREAM_ON] = string("STREAM_ON");
+    mapping[CommandType::STREAM_OFF] = string("STREAM_OFF");
     // TODO: Add Command-Mappings
     return mapping;
 }

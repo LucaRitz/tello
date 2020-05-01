@@ -21,7 +21,9 @@ namespace tello {
         COMMAND,
         TAKE_OFF,
         LAND,
-        UP
+        UP,
+        STREAM_ON,
+        STREAM_OFF
     };
 
     unordered_map<const CommandType, string, EnumClassHash> createNamesMap();

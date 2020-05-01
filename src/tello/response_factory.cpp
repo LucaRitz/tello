@@ -19,6 +19,8 @@ unordered_map<const CommandType, ResponseBuildType, EnumClassHash> tello::Respon
     mapping[CommandType::TAKE_OFF] = ResponseFactory::simpleResponse;
     mapping[CommandType::LAND] = ResponseFactory::simpleResponse;
     mapping[CommandType::UP] = ResponseFactory::simpleResponse;
+    mapping[CommandType::STREAM_ON] = ResponseFactory::simpleResponse;
+    mapping[CommandType::STREAM_OFF] = ResponseFactory::simpleResponse;
     // TODO: Add Command-Mappings
     return mapping;
 }
