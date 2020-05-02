@@ -5,10 +5,16 @@
 #include "command/command_command.hpp"
 #include "command/takeoff_command.hpp"
 #include "command/land_command.hpp"
-#include "command/up_command.hpp"
 #include "command/streamon_command.hpp"
 #include "command/streamoff_command.hpp"
+#include "command/up_command.hpp"
+#include "command/down_command.hpp"
+#include "command/left_command.hpp"
+#include "command/right_command.hpp"
+#include "command/forward_command.hpp"
+#include "command/back_command.hpp"
 #include "command/clockwise_turn_command.hpp"
+#include "command/counterclockwise_turn_command.hpp"
 #include "command/wifi_command.hpp"
 
 #define COMMAND_PORT 8889
@@ -64,11 +70,6 @@ unique_ptr<Response> tello::Tello::land() const {
     return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
 }
 
-unique_ptr<Response> tello::Tello::up(int x) const {
-    UpCommand command{x};
-    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
-}
-
 unique_ptr<Response> tello::Tello::streamon() const {
     StreamOnCommand command;
     return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
@@ -79,8 +80,43 @@ unique_ptr<Response> tello::Tello::streamoff() const {
     return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
 }
 
+unique_ptr<Response> tello::Tello::up(int x) const {
+    UpCommand command{ x };
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+}
+
+unique_ptr<Response> tello::Tello::down(int x) const {
+    DownCommand command{ x };
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+}
+
+unique_ptr<Response> tello::Tello::left(int x) const {
+    LeftCommand command{ x };
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+}
+
+unique_ptr<Response> tello::Tello::right(int x) const {
+    RightCommand command{ x };
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+}
+
+unique_ptr<Response> tello::Tello::forward(int x) const {
+    ForwardCommand command{ x };
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+}
+
+unique_ptr<Response> tello::Tello::back(int x) const {
+    BackCommand command{ x };
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+}
+
 unique_ptr<Response> tello::Tello::clockwise_turn(int x) const {
     ClockwiseTurnCommand command{x};
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+}
+
+unique_ptr<Response> tello::Tello::counterclockwise_turn(int x) const {
+    CounterclockwiseTurnCommand command{ x };
     return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
 }
 
