@@ -6,6 +6,7 @@
 #include <memory>
 #include "../native/network_interface.hpp"
 #include "../video_analyzer.hpp"
+#include "command_strategy.hpp"
 
 using tello::ConnectionData;
 using std::optional;
@@ -15,6 +16,7 @@ using std::shared_ptr;
 using std::unique_ptr;
 using tello::NetworkInterface;
 using tello::VideoAnalyzer;
+using tello::CommandStrategy;
 
 namespace tello {
 
@@ -30,9 +32,9 @@ namespace tello {
         static bool connect();
         static void disconnect();
 
-        static unique_ptr<Response> exec(const Command& command, const Tello& tello);
+        static unique_ptr<Response> exec(const Command& command, const Tello& tello, const CommandStrategy& strategy);
         static unordered_map<ip_address, unique_ptr<Response>>
-        exec(const Command& command, unordered_map<ip_address, const Tello*> tellos);
+        exec(const Command& command, unordered_map<ip_address, const Tello*> tellos, const CommandStrategy& strategy);
     private:
         static ConnectionData _commandConnection;
         static ConnectionData _statusConnection;

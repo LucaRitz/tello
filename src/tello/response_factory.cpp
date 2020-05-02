@@ -44,6 +44,10 @@ unique_ptr<Response> tello::ResponseFactory::error() {
     return std::make_unique<Response>(Status::FAIL);
 }
 
+unique_ptr<Response> tello::ResponseFactory::unknown() {
+    return std::make_unique<Response>(Status::UNKNOWN);
+}
+
 unique_ptr<Response> tello::ResponseFactory::simpleResponse(const CommandType& commandType, string& response) {
     return std::make_unique<Response>(response);
 }

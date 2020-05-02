@@ -2,9 +2,8 @@
 
 using tello::Command;
 
-tello::command::TakeoffCommand::TakeoffCommand(vector<string>& arguments) : Command(
-        CommandType::TAKE_OFF,
-        arguments) {}
+tello::command::TakeoffCommand::TakeoffCommand() : Command(
+        CommandType::TAKE_OFF) {}
 
 t_forecast tello::command::TakeoffCommand::forecast() const {
     return 5000;
@@ -12,8 +11,4 @@ t_forecast tello::command::TakeoffCommand::forecast() const {
 
 string tello::command::TakeoffCommand::build() const {
     return std::string("takeoff");
-}
-
-unique_ptr<Command> tello::command::TakeoffCommand::create(vector<string>& arguments) {
-    return std::make_unique<TakeoffCommand>(TakeoffCommand(arguments));
 }

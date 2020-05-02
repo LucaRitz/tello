@@ -2,14 +2,9 @@
 
 using tello::Command;
 
-tello::command::CommandCommand::CommandCommand(vector<string>& arguments) : Command(
-        CommandType::COMMAND,
-        arguments) {}
+tello::command::CommandCommand::CommandCommand() : Command(
+        CommandType::COMMAND) {}
 
 string tello::command::CommandCommand::build() const {
     return std::string("command");
-}
-
-unique_ptr<Command> tello::command::CommandCommand::create(vector<string>& arguments) {
-    return std::make_unique<CommandCommand>(CommandCommand(arguments));
 }

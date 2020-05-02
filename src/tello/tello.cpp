@@ -1,8 +1,14 @@
 #include <tello/tello.hpp>
-#include <tello/response.hpp>
 #include <tello/command.hpp>
 #include "response_factory.hpp"
 #include <tello/connection/network.hpp>
+
+#include "command/command_command.hpp"
+#include "command/takeoff_command.hpp"
+#include "command/land_command.hpp"
+#include "command/up_command.hpp"
+#include "command/streamon_command.hpp"
+#include "command/streamoff_command.hpp"
 
 #define COMMAND_PORT 8889
 
@@ -11,10 +17,13 @@ using tello::ConnectionData;
 using tello::Logger;
 using tello::Status;
 
+using namespace tello::command;
+
 unordered_map<ip_address, const tello::Tello*> tello::Tello::_telloMapping;
 std::shared_mutex tello::Tello::_telloMappingMutex;
 
-tello::Tello::Tello(ip_address telloIp) : _clientaddr(mapToNetworkData(telloIp)),
+tello::Tello::Tello(ip_address telloIp) : TelloInterface(CommandStrategy::COMMAND_AND_WAIT),
+                                          _clientaddr(mapToNetworkData(telloIp)),
                                           _statusHandler(nullptr) {
     _telloMappingMutex.lock();
     _telloMapping[telloIp] = this;
@@ -35,9 +44,43 @@ void tello::Tello::setVideoHandler(video_handler videoHandler) {
     this->_videoHandler = videoHandler;
 }
 
-unique_ptr<Response> tello::Tello::exec(const Command& command) {
-    return tello::Network::exec(command, *this);
+/////////////////////////////////////////////////////////////
+///// COMMANDS //////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+
+unique_ptr<Response> tello::Tello::command() const {
+    CommandCommand command;
+    return Network::exec(command, *this, _strategy);
 }
+
+unique_ptr<Response> tello::Tello::takeoff() const {
+    TakeoffCommand command;
+    return Network::exec(command, *this, _strategy);
+}
+
+unique_ptr<Response> tello::Tello::land() const {
+    LandCommand command;
+    return Network::exec(command, *this, _strategy);
+}
+
+unique_ptr<Response> tello::Tello::up(int x) const {
+    UpCommand command{x};
+    return Network::exec(command, *this, _strategy);
+}
+
+unique_ptr<Response> tello::Tello::streamon() const {
+    StreamOnCommand command;
+    return Network::exec(command, *this, _strategy);
+}
+
+unique_ptr<Response> tello::Tello::streamoff() const {
+    StreamOffCommand command;
+    return Network::exec(command, *this, _strategy);
+}
+
+/////////////////////////////////////////////////////////////
+///// END COMMANDS //////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 
 ip_address tello::Tello::ip() const {
     return _clientaddr._ip;
