@@ -6,7 +6,7 @@ using tello::CommandStrategy;
 
 namespace tello {
 
-    template<typename Response>
+    template<typename Response, typename QueryResponse>
     class TelloInterface {
     public:
         virtual Response command() const = 0;
@@ -16,12 +16,14 @@ namespace tello {
         virtual Response streamon() const = 0;
         virtual Response streamoff() const = 0;
 
+        virtual QueryResponse wifi() const = 0;
+
         void setCommandStrategy(CommandStrategy strategy) {
             _strategy = strategy;
         }
 
     protected:
-        TelloInterface(CommandStrategy strategy) : _strategy(strategy) {}
+        explicit TelloInterface(CommandStrategy strategy) : _strategy(strategy) {}
 
         CommandStrategy _strategy;
     };

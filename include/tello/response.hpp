@@ -2,9 +2,11 @@
 
 #include <unordered_map>
 #include <string>
+#include <memory>
 
 using std::unordered_map;
 using std::string;
+using std::unique_ptr;
 
 namespace tello {
 
@@ -20,15 +22,13 @@ namespace tello {
         explicit Response(const Status& status);
         explicit Response(const string& response);
 
-        Status status();
-        [[nodiscard]]
-        string param(const string& key) const;
+        [[nodiscard]] Status status() const;
+
+        static unique_ptr<Response> error();
+        static unique_ptr<Response> timeout();
+        static unique_ptr<Response> of(const string& arg);
 
     protected:
-        void append(const string& key, const string& value);
-
-    private:
         Status _status;
-        unordered_map<string, string> _values;
     };
 }

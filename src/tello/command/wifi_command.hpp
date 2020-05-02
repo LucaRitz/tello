@@ -1,11 +1,15 @@
 #pragma once
 
 #include <tello/command.hpp>
+#include <tello/response/query_response.hpp>
+
+using tello::QueryResponse;
 
 namespace tello::command {
-    class CommandCommand : public Command {
+
+    class WifiCommand : public Command {
     public:
-        CommandCommand();
+        WifiCommand();
 
         [[nodiscard]]
         string build() const override;
