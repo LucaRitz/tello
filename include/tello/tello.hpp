@@ -21,11 +21,12 @@ namespace tello {
     class Command;
     class Response;
     class Network;
+    class QueryResponse;
 
     using status_handler = void (*)(const StatusResponse&);
     using video_handler = void (*)(const VideoResponse& frame);
 
-    class Tello : public TelloInterface<unique_ptr<Response>> {
+    class Tello : public TelloInterface<unique_ptr<Response>, unique_ptr<QueryResponse>> {
     public:
         explicit Tello(ip_address telloIp);
         ~Tello();
@@ -44,6 +45,8 @@ namespace tello {
         [[nodiscard]] unique_ptr<Response> up(int x) const override;
         [[nodiscard]] unique_ptr<Response> streamon() const override;
         [[nodiscard]] unique_ptr<Response> streamoff() const override;
+
+        [[nodiscard]] unique_ptr<QueryResponse> wifi() const override;
 
         /////////////////////////////////////////////////////////////
         ///// END COMMANDS //////////////////////////////////////////

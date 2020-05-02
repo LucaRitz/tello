@@ -11,8 +11,6 @@ target_sources(${PROJECT_NAME} PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/tello.cpp
         ${TELLO_INCLUDE}/tello/response.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/response.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/response_factory.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/response_factory.cpp
         ${TELLO_INCLUDE}/tello/command_type.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/command_type.cpp
         ${TELLO_INCLUDE}/tello/swarm.hpp

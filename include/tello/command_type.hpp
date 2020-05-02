@@ -23,7 +23,9 @@ namespace tello {
         LAND,
         UP,
         STREAM_ON,
-        STREAM_OFF
+        STREAM_OFF,
+
+        QUERY_WIFI
     };
 
     unordered_map<const CommandType, string, EnumClassHash> createNamesMap();

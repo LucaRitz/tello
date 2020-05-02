@@ -1,6 +1,5 @@
 #include <tello/tello.hpp>
 #include <tello/command.hpp>
-#include "response_factory.hpp"
 #include <tello/connection/network.hpp>
 
 #include "command/command_command.hpp"
@@ -9,6 +8,7 @@
 #include "command/up_command.hpp"
 #include "command/streamon_command.hpp"
 #include "command/streamoff_command.hpp"
+#include "command/wifi_command.hpp"
 
 #define COMMAND_PORT 8889
 
@@ -49,33 +49,39 @@ void tello::Tello::setVideoHandler(video_handler videoHandler) {
 /////////////////////////////////////////////////////////////
 
 unique_ptr<Response> tello::Tello::command() const {
-    CommandCommand command;
-    return Network::exec(command, *this, _strategy);
+    const CommandCommand command;
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
 }
 
 unique_ptr<Response> tello::Tello::takeoff() const {
     TakeoffCommand command;
-    return Network::exec(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
 }
 
 unique_ptr<Response> tello::Tello::land() const {
     LandCommand command;
-    return Network::exec(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
 }
 
 unique_ptr<Response> tello::Tello::up(int x) const {
     UpCommand command{x};
-    return Network::exec(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
 }
 
 unique_ptr<Response> tello::Tello::streamon() const {
     StreamOnCommand command;
-    return Network::exec(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
 }
 
 unique_ptr<Response> tello::Tello::streamoff() const {
     StreamOffCommand command;
-    return Network::exec(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+}
+
+unique_ptr<QueryResponse> tello::Tello::wifi() const {
+    WifiCommand command;
+    return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::timeout, QueryResponse::of>(command, *this,
+                                                                                                         _strategy);
 }
 
 /////////////////////////////////////////////////////////////

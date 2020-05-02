@@ -8,8 +8,10 @@
 #include "command/up_command.hpp"
 #include "command/streamon_command.hpp"
 #include "command/streamoff_command.hpp"
+#include "command/wifi_command.hpp"
 
 using tello::Response;
+using tello::QueryResponse;
 using tello::Command;
 using tello::Network;
 using tello::Tello;
@@ -28,32 +30,39 @@ void tello::Swarm::add(const Tello &tello) {
 
 unordered_map<ip_address, unique_ptr<Response>> tello::Swarm::command() const {
     CommandCommand command;
-    return Network::exec(command, _tellos, _strategy);
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, _tellos, _strategy);
 }
 
 unordered_map<ip_address, unique_ptr<Response>> tello::Swarm::takeoff() const {
     TakeoffCommand command;
-    return Network::exec(command, _tellos, _strategy);
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, _tellos, _strategy);
 }
 
 unordered_map<ip_address, unique_ptr<Response>> tello::Swarm::land() const {
     LandCommand command;
-    return Network::exec(command, _tellos, _strategy);
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, _tellos, _strategy);
 }
 
 unordered_map<ip_address, unique_ptr<Response>> tello::Swarm::up(int x) const {
     UpCommand command{x};
-    return Network::exec(command, _tellos, _strategy);
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, _tellos, _strategy);
 }
 
 unordered_map<ip_address, unique_ptr<Response>> tello::Swarm::streamon() const {
     StreamOnCommand command;
-    return Network::exec(command, _tellos, _strategy);
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, _tellos, _strategy);
 }
 
 unordered_map<ip_address, unique_ptr<Response>> tello::Swarm::streamoff() const {
     StreamOffCommand command;
-    return Network::exec(command, _tellos, _strategy);
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, _tellos, _strategy);
+}
+
+unordered_map<ip_address, unique_ptr<QueryResponse>> tello::Swarm::wifi() const {
+    WifiCommand command;
+    return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::timeout, QueryResponse::of>(command,
+                                                                                                         _tellos,
+                                                                                                         _strategy);
 }
 
 /////////////////////////////////////////////////////////////

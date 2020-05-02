@@ -10,19 +10,18 @@ tello::Response::Response(const string& response) : Response(
                                                                                            : Status::UNKNOWN)
 ) {}
 
-Status tello::Response::status() {
+Status tello::Response::status() const {
     return _status;
 }
 
-string tello::Response::param(const string& key) const {
-    auto it = _values.find(key);
-    if (it != _values.end()) {
-        return _values.find(key)->second;
-    }
-
-    return string("");
+unique_ptr<tello::Response> tello::Response::error() {
+    return std::make_unique<Response>(Status::FAIL);
 }
 
-void tello::Response::append(const string& key, const string& value) {
-    _values[key] = value;
+unique_ptr<tello::Response> tello::Response::timeout() {
+    return std::make_unique<Response>(Status::TIMEOUT);
+}
+
+unique_ptr<tello::Response> tello::Response::of(const string& arg) {
+    return std::make_unique<Response>(arg);
 }
