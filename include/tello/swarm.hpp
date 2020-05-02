@@ -2,10 +2,13 @@
 
 #include <unordered_map>
 #include <memory>
-#include <tello/native/network_interface.hpp>
+#include "tello_interface.hpp"
+#include "native/network_interface.hpp"
+#include "connection/command_strategy.hpp"
 
 using std::unordered_map;
 using std::unique_ptr;
+using tello::CommandStrategy;
 
 namespace tello {
 
@@ -13,13 +16,27 @@ namespace tello {
     class Response;
     class Command;
 
-    class Swarm {
+    class Swarm : public TelloInterface<unordered_map<ip_address, unique_ptr<Response>>> {
     public:
-        Swarm() = default;
+        Swarm();
 
         void add(const Tello& tello);
-        unordered_map<ip_address, unique_ptr<Response>> exec(const Command& command);
         [[nodiscard]] const unordered_map<ip_address, const Tello*>& tellos() const;
+
+        /////////////////////////////////////////////////////////////
+        ///// COMMANDS //////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////
+
+        unordered_map<ip_address, unique_ptr<Response>> command() const;
+        unordered_map<ip_address, unique_ptr<Response>> takeoff() const;
+        unordered_map<ip_address, unique_ptr<Response>> land() const;
+        unordered_map<ip_address, unique_ptr<Response>> up(int x) const;
+        unordered_map<ip_address, unique_ptr<Response>> streamon() const;
+        unordered_map<ip_address, unique_ptr<Response>> streamoff() const;
+
+        /////////////////////////////////////////////////////////////
+        ///// END COMMANDS //////////////////////////////////////////
+        /////////////////////////////////////////////////////////////
 
         Swarm& operator<<(const Tello&);
 

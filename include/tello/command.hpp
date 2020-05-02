@@ -15,7 +15,7 @@ namespace tello {
 
     class Command {
     public:
-        explicit Command(const CommandType& commandType, vector<string> arguments);
+        explicit Command(const CommandType& commandType);
         Command(const Command& other) = default;
         Command(Command&& other) = default;
         virtual ~Command() = default;
@@ -32,7 +32,6 @@ namespace tello {
         inline const CommandType& type() const { return _type; }
 
     protected:
-        const vector<string> _arguments;
         const CommandType _type;
     };
 }

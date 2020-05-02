@@ -86,18 +86,19 @@ void tello::Network::disconnect() {
     _connectionMutex.unlock();
 }
 
-unique_ptr<Response> tello::Network::exec(const Command& command, const Tello& tello) {
+unique_ptr<Response> tello::Network::exec(const Command& command, const Tello& tello, const CommandStrategy& strategy) {
     unordered_map<ip_address, const Tello*> tellos{};
     ip_address telloAddress = tello._clientaddr._ip;
     tellos[telloAddress] = &tello;
 
-    unordered_map<ip_address, unique_ptr<Response>> answers = exec(command, tellos);
+    unordered_map<ip_address, unique_ptr<Response>> answers = exec(command, tellos, strategy);
     auto answer = answers.find(telloAddress);
     return std::move(answer->second);
 }
 
 unordered_map<ip_address, unique_ptr<Response>>
-tello::Network::exec(const Command& command, unordered_map<ip_address, const Tello*> tellos) {
+tello::Network::exec(const Command& command, unordered_map<ip_address, const Tello*> tellos,
+                     const CommandStrategy& strategy) {
     unordered_map<ip_address, unique_ptr<Response>> responses{};
     string errorMessage = command.validate();
     if (!errorMessage.empty()) {
@@ -121,8 +122,7 @@ tello::Network::exec(const Command& command, unordered_map<ip_address, const Tel
     networkInterface->setTimeout(_commandConnection._fileDescriptor, computedForecast, LoggerType::COMMAND);
     _connectionMutex.unlock_shared();
 
-    auto tello = tellos.begin();
-    while (tello != tellos.end()) {
+    for(auto tello = tellos.begin(); tello != tellos.end(); ++tello) {
         int sendResult = SEND_ERROR_CODE;
         _connectionMutex.lock_shared();
         for (int i = 0; i < SEND; ++i) {
@@ -144,10 +144,18 @@ tello::Network::exec(const Command& command, unordered_map<ip_address, const Tel
                     string("Command of type [{0}] is sent to {1:x}!"), NAMES.find(command.type())->second,
                     tello->second->_clientaddr._ip);
         }
-
-        ++tello;
     }
 
+    //// COMMAND_AND_RETURN
+    /*if(CommandStrategy::COMMAND_AND_RETURN == strategy) {
+        for(auto& tello : tellos) {
+            responses[tello.first] = ResponseFactory::unknown();
+        }
+
+        return responses;
+    }*/
+
+    //// COMMAND_AND_WAIT
     for(int i = 0; i < tellos.size();) {
         _connectionMutex.lock_shared();
         NetworkResponse networkResponse = networkInterface->read(_commandConnection._fileDescriptor);

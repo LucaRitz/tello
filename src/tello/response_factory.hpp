@@ -26,6 +26,7 @@ namespace tello {
         static unique_ptr<Response> build(const CommandType& commandType, string& response);
         static unique_ptr<Response> timeout();
         static unique_ptr<Response> error();
+        static unique_ptr<Response> unknown();
 
     private:
         static const unordered_map<const CommandType, ResponseBuildType, EnumClassHash> MAPPING;

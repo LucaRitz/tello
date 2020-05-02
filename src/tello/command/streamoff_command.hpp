@@ -8,11 +8,9 @@ using std::unique_ptr;
 namespace tello::command {
     class StreamOffCommand : public Command {
     public:
-        explicit StreamOffCommand(vector<string>& arguments);
+        StreamOffCommand();
 
         [[nodiscard]]
         string build() const override;
-
-        static unique_ptr<Command> create(vector<string>& arguments);
     };
 }

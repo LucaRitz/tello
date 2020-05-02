@@ -9,12 +9,10 @@ using std::vector;
 
 namespace tello::validator {
 
-    template<class type, type (* converter)(const string&, size_t*, int)>
-    string between(const string& argument, type lowerBound, type upperBound, const string& argName) {
+    template<class type>
+    string between(const type& argument, type lowerBound, type upperBound, const string& argName) {
         try {
-            int arg = converter(argument, nullptr, 10);
-
-            if (arg < lowerBound || arg > upperBound) {
+            if (argument < lowerBound || argument > upperBound) {
                 return string("Value of '") + argName + string("' has to be between 20 and 500\n\r");
             }
 
