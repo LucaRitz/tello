@@ -8,6 +8,7 @@
 #include "command/up_command.hpp"
 #include "command/streamon_command.hpp"
 #include "command/streamoff_command.hpp"
+#include "command/clockwise_turn_command.hpp"
 #include "command/wifi_command.hpp"
 
 using tello::Response;
@@ -55,6 +56,11 @@ unordered_map<ip_address, unique_ptr<Response>> tello::Swarm::streamon() const {
 
 unordered_map<ip_address, unique_ptr<Response>> tello::Swarm::streamoff() const {
     StreamOffCommand command;
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, _tellos, _strategy);
+}
+
+unordered_map<ip_address, unique_ptr<Response>> tello::Swarm::clockwise_turn(int x) const {
+    ClockwiseTurnCommand command{x};
     return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, _tellos, _strategy);
 }
 

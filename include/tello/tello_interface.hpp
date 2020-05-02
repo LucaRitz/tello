@@ -15,6 +15,7 @@ namespace tello {
         virtual Response up(int x) const = 0;
         virtual Response streamon() const = 0;
         virtual Response streamoff() const = 0;
+        virtual Response clockwise_turn(int x) const = 0;
 
         virtual QueryResponse wifi() const = 0;
 

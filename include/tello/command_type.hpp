@@ -24,6 +24,7 @@ namespace tello {
         UP,
         STREAM_ON,
         STREAM_OFF,
+        CLOCKWISE_TURN,
 
         QUERY_WIFI
     };

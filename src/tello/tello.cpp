@@ -8,6 +8,7 @@
 #include "command/up_command.hpp"
 #include "command/streamon_command.hpp"
 #include "command/streamoff_command.hpp"
+#include "command/clockwise_turn_command.hpp"
 #include "command/wifi_command.hpp"
 
 #define COMMAND_PORT 8889
@@ -75,6 +76,11 @@ unique_ptr<Response> tello::Tello::streamon() const {
 
 unique_ptr<Response> tello::Tello::streamoff() const {
     StreamOffCommand command;
+    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+}
+
+unique_ptr<Response> tello::Tello::clockwise_turn(int x) const {
+    ClockwiseTurnCommand command{x};
     return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
 }
 

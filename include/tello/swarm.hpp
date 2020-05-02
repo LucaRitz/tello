@@ -30,14 +30,15 @@ namespace tello {
         ///// COMMANDS //////////////////////////////////////////////
         /////////////////////////////////////////////////////////////
 
-        [[nodiscard]] unordered_map<ip_address, unique_ptr<Response>> command() const;
-        [[nodiscard]] unordered_map<ip_address, unique_ptr<Response>> takeoff() const;
-        [[nodiscard]] unordered_map<ip_address, unique_ptr<Response>> land() const;
-        [[nodiscard]] unordered_map<ip_address, unique_ptr<Response>> up(int x) const;
-        [[nodiscard]] unordered_map<ip_address, unique_ptr<Response>> streamon() const;
-        [[nodiscard]] unordered_map<ip_address, unique_ptr<Response>> streamoff() const;
+        [[nodiscard]] unordered_map<ip_address, unique_ptr<Response>> command() const override;
+        [[nodiscard]] unordered_map<ip_address, unique_ptr<Response>> takeoff() const override;
+        [[nodiscard]] unordered_map<ip_address, unique_ptr<Response>> land() const override;
+        [[nodiscard]] unordered_map<ip_address, unique_ptr<Response>> up(int x) const override;
+        [[nodiscard]] unordered_map<ip_address, unique_ptr<Response>> streamon() const override;
+        [[nodiscard]] unordered_map<ip_address, unique_ptr<Response>> streamoff() const override;
+        [[nodiscard]] unordered_map<ip_address, unique_ptr<Response>> clockwise_turn(int x) const override;
 
-        [[nodiscard]] unordered_map<ip_address, unique_ptr<QueryResponse>> wifi() const;
+        [[nodiscard]] unordered_map<ip_address, unique_ptr<QueryResponse>> wifi() const override;
 
         /////////////////////////////////////////////////////////////
         ///// END COMMANDS //////////////////////////////////////////

@@ -45,6 +45,7 @@ namespace tello {
         [[nodiscard]] unique_ptr<Response> up(int x) const override;
         [[nodiscard]] unique_ptr<Response> streamon() const override;
         [[nodiscard]] unique_ptr<Response> streamoff() const override;
+        [[nodiscard]] unique_ptr<Response> clockwise_turn(int x) const override;
 
         [[nodiscard]] unique_ptr<QueryResponse> wifi() const override;
 

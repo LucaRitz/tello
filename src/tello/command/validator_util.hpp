@@ -2,7 +2,6 @@
 
 #include <string>
 #include <vector>
-#include <numeric>
 
 using std::string;
 using std::vector;
@@ -26,11 +25,5 @@ namespace tello::validator {
         }
     }
 
-    string concat(vector<string> errors) {
-        return std::accumulate(std::begin(errors), std::end(errors), string(),
-                                   [](string &ss, string &s)
-                                   {
-                                       return ss.empty() ? s : ss + "\n\r" + s;
-                                   });
-    }
+    string concat(vector<string> errors);
 }

@@ -26,6 +26,9 @@ TEST(Tello, SimpleCaseBerger) {
     std::chrono::seconds duration(5);
     std::this_thread::sleep_for(duration);
 
+    std::unique_ptr<Response> responnseCWTurn = tello.clockwise_turn(180);
+    ASSERT_NE(Status::FAIL, responnseCWTurn->status());
+
     std::unique_ptr<Response> responseLand = tello.land();
     ASSERT_NE(Status::FAIL, responseLand->status());
 }
