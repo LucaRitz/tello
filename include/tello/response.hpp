@@ -4,13 +4,14 @@
 #include <string>
 #include <memory>
 #include <mutex>
-#include <functional>
+#include <future>
 
 using std::unordered_map;
 using std::string;
 using std::shared_ptr;
 using std::mutex;
 using std::function;
+using std::promise;
 
 namespace tello {
     class Response;
@@ -37,17 +38,16 @@ namespace tello {
         static shared_ptr<Response> timeout();
         static shared_ptr<Response> empty();
 
-
         virtual void update(const string& value);
         void update(const Status& status);
-        void subscribe(const t_subscriber& subscriber);
+        promise<const Response&>& subscribe();
 
     protected:
         void callSubscriber();
         Status _status;
 
     private:
-        t_subscriber _subscriber;
+        promise<const Response&> _promise;
         mutex _mutex;
     };
 }

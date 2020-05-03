@@ -47,7 +47,7 @@ void tello::UdpCommandListener::listen(const tello::ConnectionData& connectionDa
                     string("Answer from wrong tello received {0:x}"), senderIp);
         } else {
             string answer = networkResponse._response;
-            ResponseMapping& response = sender->second.at(0);
+            ResponseMapping response = sender->second.at(0);
             sender->second.erase(sender->second.begin());
             if (sender->second.empty()) {
                 mapping.erase(sender->first);

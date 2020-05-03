@@ -2,7 +2,7 @@
 
 using tello::Status;
 
-tello::Response::Response(const Status& status) : _status(status), _subscriber(nullptr), _mutex() {}
+tello::Response::Response(const Status& status) : _status(status), _promise(), _mutex() {}
 
 Status tello::Response::status() const {
     return _status;
@@ -28,24 +28,23 @@ void tello::Response::update(const string& value) {
 }
 
 void tello::Response::update(const Status &status) {
+    _mutex.lock();
     _status = status;
+    _mutex.unlock();
     callSubscriber();
 }
 
-void tello::Response::subscribe(const t_subscriber& subscriber) {
+promise<const tello::Response&>& tello::Response::subscribe() {
     _mutex.lock();
     if (_status != Status::UNKNOWN) {
-        subscriber(*this);
-        return;
+        callSubscriber();
     }
-    _subscriber = subscriber;
     _mutex.unlock();
+    return _promise;
 }
 
 void tello::Response::callSubscriber() {
     _mutex.lock();
-    if (_subscriber != nullptr) {
-        _subscriber(*this);
-    }
+    _promise.set_value(*this);
     _mutex.unlock();
 }
