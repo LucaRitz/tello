@@ -9,14 +9,15 @@ namespace tello {
 
     class QueryResponse : public Response {
     public:
-        explicit QueryResponse(const string& response);
         explicit QueryResponse(const Status& status);
 
         [[nodiscard]] int value() const;
 
-        static unique_ptr<QueryResponse> error();
-        static unique_ptr<QueryResponse> timeout();
-        static unique_ptr<QueryResponse> of(const string& arg);
+        static shared_ptr<QueryResponse> error();
+        static shared_ptr<QueryResponse> timeout();
+        static shared_ptr<QueryResponse> empty();
+
+        void update(const string& value) override;
     private:
         int _value;
 
