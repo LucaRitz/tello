@@ -17,7 +17,7 @@ using tello::Status;
 using std::string;
 
 
-static int subscribCall = 0;
+static int subscribeCall = 0;
 
 void subscriber(const Response& response);
 
@@ -50,10 +50,10 @@ TEST(Swarm, SimpleCaseBerger_Swarm) {
     std::chrono::seconds awaitResponse(16);
     std::this_thread::sleep_for(awaitResponse);
 
-    ASSERT_TRUE(subscribCall > 0);
+    ASSERT_TRUE(subscribeCall > 0);
 }
 
 void subscriber(const Response& response) {
     ASSERT_NE(Status::FAIL, response.status());
-    subscribCall++;
+    subscribeCall++;
 }

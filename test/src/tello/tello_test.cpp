@@ -30,8 +30,10 @@ TEST(Tello, SimpleCaseBerger) {
         });
     });
 
-    std::chrono::seconds duration(20);
-    std::this_thread::sleep_for(duration);
+    while(!successful) {
+        std::chrono::seconds duration(5);
+        std::this_thread::sleep_for(duration);
+    }
 
     ASSERT_TRUE(successful);
 }
