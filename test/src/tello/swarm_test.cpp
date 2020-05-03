@@ -16,27 +16,44 @@ using tello::Response;
 using tello::Status;
 using std::string;
 
+
+static int subscribCall = 0;
+
+void subscriber(const Response& response);
+
 TEST(Swarm, SimpleCaseBerger_Swarm) {
     Swarm swarm;
     Tello tello1(TELLO1_IP_ADDRESS);
     Tello tello2(TELLO2_IP_ADDRESS);
     swarm << tello1 << tello2;
 
-    unordered_map<ip_address, std::unique_ptr<Response>> responseCommand = swarm.command();
-    for(auto tello : swarm.tellos()) {
-        ASSERT_NE(Status::FAIL, responseCommand.find(tello.first)->second->status());
+    unordered_map<ip_address, std::shared_ptr<Response>> responseCommand = swarm.command();
+    for(auto& response : responseCommand) {
+        response.second->subscribe(subscriber);
     }
 
-    unordered_map<ip_address, std::unique_ptr<Response>> responseTakeoff = swarm.takeoff();
-    for(auto tello : swarm.tellos()) {
-        ASSERT_NE(Status::FAIL, responseTakeoff.find(tello.first)->second->status());
+    unordered_map<ip_address, std::shared_ptr<Response>> responseTakeoff = swarm.takeoff();
+    for(auto& response : responseTakeoff) {
+        response.second->subscribe(subscriber);
     }
+
 
     std::chrono::seconds duration(5);
     std::this_thread::sleep_for(duration);
 
-    unordered_map<ip_address, std::unique_ptr<Response>> responseLand = swarm.land();
-    for(auto tello : swarm.tellos()) {
-        ASSERT_NE(Status::FAIL, responseLand.find(tello.first)->second->status());
+    unordered_map<ip_address, std::shared_ptr<Response>> responseLand = swarm.land();
+    for(auto& response : responseLand) {
+        response.second->subscribe(subscriber);
     }
+
+
+    std::chrono::seconds awaitResponse(16);
+    std::this_thread::sleep_for(awaitResponse);
+
+    ASSERT_TRUE(subscribCall > 0);
+}
+
+void subscriber(const Response& response) {
+    ASSERT_NE(Status::FAIL, response.status());
+    subscribCall++;
 }

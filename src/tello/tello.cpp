@@ -49,45 +49,44 @@ void tello::Tello::setVideoHandler(video_handler videoHandler) {
 ///// COMMANDS //////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
-unique_ptr<Response> tello::Tello::command() const {
+shared_ptr<Response> tello::Tello::command() const {
     const CommandCommand command;
-    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
 }
 
-unique_ptr<Response> tello::Tello::takeoff() const {
+shared_ptr<Response> tello::Tello::takeoff() const {
     TakeoffCommand command;
-    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
 }
 
-unique_ptr<Response> tello::Tello::land() const {
+shared_ptr<Response> tello::Tello::land() const {
     LandCommand command;
-    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
 }
 
-unique_ptr<Response> tello::Tello::up(int x) const {
+shared_ptr<Response> tello::Tello::up(int x) const {
     UpCommand command{x};
-    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
 }
 
-unique_ptr<Response> tello::Tello::streamon() const {
+shared_ptr<Response> tello::Tello::streamon() const {
     StreamOnCommand command;
-    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
 }
 
-unique_ptr<Response> tello::Tello::streamoff() const {
+shared_ptr<Response> tello::Tello::streamoff() const {
     StreamOffCommand command;
-    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
 }
 
-unique_ptr<Response> tello::Tello::clockwise_turn(int x) const {
+shared_ptr<Response> tello::Tello::clockwise_turn(int x) const {
     ClockwiseTurnCommand command{x};
-    return Network::exec<Response, Response::error, Response::timeout, Response::of>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
 }
 
-unique_ptr<QueryResponse> tello::Tello::wifi() const {
+shared_ptr<QueryResponse> tello::Tello::wifi() const {
     WifiCommand command;
-    return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::timeout, QueryResponse::of>(command, *this,
-                                                                                                         _strategy);
+    return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::empty>(command, *this,_strategy);
 }
 
 /////////////////////////////////////////////////////////////

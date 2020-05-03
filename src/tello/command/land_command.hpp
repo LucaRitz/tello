@@ -11,10 +11,6 @@ namespace tello::command {
         LandCommand();
 
         [[nodiscard]]
-        t_forecast forecast() const override;
-        [[nodiscard]]
-        t_forecast forecast(const StatusResponse& status) const override;
-        [[nodiscard]]
         string build() const override;
     };
 }

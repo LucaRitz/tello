@@ -11,8 +11,6 @@ namespace tello::command {
         TakeoffCommand();
 
         [[nodiscard]]
-        t_forecast forecast() const override;
-        [[nodiscard]]
         string build() const override;
     };
 }

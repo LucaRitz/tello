@@ -13,9 +13,8 @@ ConnectionData tello::Network::_statusConnection = {-1, {}};
 ConnectionData tello::Network::_videoConnection = {-1, {}};
 std::shared_mutex tello::Network::_connectionMutex;
 shared_ptr<NetworkInterface> tello::Network::networkInterface = tello::NetworkInterfaceFactory::build();
-StatusResponse tello::Network::_statusResponse{""};
-std::shared_mutex tello::Network::_statusMutex;
 VideoAnalyzer tello::Network::_videoAnalyzer;
+UdpCommandListener tello::Network::_commandListener{_commandConnection, networkInterface, _connectionMutex};
 UdpListener<StatusResponse, tello::Network::statusResponseFactory, tello::Network::invokeStatusListener> tello::Network::_statusListener{
         _statusConnection, networkInterface, tello::Tello::_telloMapping, tello::Tello::_telloMappingMutex,
         tello::Network::_connectionMutex, LoggerType::STATUS};
@@ -66,6 +65,7 @@ bool tello::Network::connect() {
 void tello::Network::disconnect() {
     _statusListener.stop();
     _videoListener.stop();
+    _commandListener.stop();
 
     _connectionMutex.lock();
     if (_commandConnection._fileDescriptor != -1) {
@@ -105,9 +105,6 @@ StatusResponse tello::Network::statusResponseFactory(const NetworkResponse& netw
 }
 
 void tello::Network::invokeStatusListener(const StatusResponse& response, const tello::Tello& tello) {
-    _statusMutex.lock();
-    _statusResponse = response;
-    _statusMutex.unlock();
     if (tello._statusHandler != nullptr) {
         tello._statusHandler(response);
     }

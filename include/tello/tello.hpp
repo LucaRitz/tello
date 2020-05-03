@@ -9,7 +9,7 @@
 #include "connection/command_strategy.hpp"
 #include "tello_interface.hpp"
 
-using std::unique_ptr;
+using std::shared_ptr;
 using std::unordered_map;
 using tello::StatusResponse;
 using tello::NetworkData;
@@ -26,7 +26,7 @@ namespace tello {
     using status_handler = void (*)(const StatusResponse&);
     using video_handler = void (*)(const VideoResponse& frame);
 
-    class Tello : public TelloInterface<unique_ptr<Response>, unique_ptr<QueryResponse>> {
+    class Tello : public TelloInterface<shared_ptr<Response>, shared_ptr<QueryResponse>> {
     public:
         explicit Tello(ip_address telloIp);
         ~Tello();
@@ -39,15 +39,15 @@ namespace tello {
         ///// COMMANDS //////////////////////////////////////////////
         /////////////////////////////////////////////////////////////
 
-        [[nodiscard]] unique_ptr<Response> command() const override;
-        [[nodiscard]] unique_ptr<Response> takeoff() const override;
-        [[nodiscard]] unique_ptr<Response> land() const override;
-        [[nodiscard]] unique_ptr<Response> up(int x) const override;
-        [[nodiscard]] unique_ptr<Response> streamon() const override;
-        [[nodiscard]] unique_ptr<Response> streamoff() const override;
-        [[nodiscard]] unique_ptr<Response> clockwise_turn(int x) const override;
+        [[nodiscard]] shared_ptr<Response> command() const override;
+        [[nodiscard]] shared_ptr<Response> takeoff() const override;
+        [[nodiscard]] shared_ptr<Response> land() const override;
+        [[nodiscard]] shared_ptr<Response> up(int x) const override;
+        [[nodiscard]] shared_ptr<Response> streamon() const override;
+        [[nodiscard]] shared_ptr<Response> streamoff() const override;
+        [[nodiscard]] shared_ptr<Response> clockwise_turn(int x) const override;
 
-        [[nodiscard]] unique_ptr<QueryResponse> wifi() const override;
+        [[nodiscard]] shared_ptr<QueryResponse> wifi() const override;
 
         /////////////////////////////////////////////////////////////
         ///// END COMMANDS //////////////////////////////////////////

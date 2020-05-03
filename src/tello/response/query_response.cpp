@@ -4,11 +4,6 @@
 using tello::Logger;
 using tello::LoggerType;
 
-tello::QueryResponse::QueryResponse(const string& response) : Response(Status::UNKNOWN),
-                                                              _value(tello::QueryResponse::convert(response)) {
-    _status = _value >= 0 ? Status::OK : Status::FAIL;
-}
-
 tello::QueryResponse::QueryResponse(const Status& status) : Response(status),
                                                               _value(-1) {}
 
@@ -17,16 +12,22 @@ int tello::QueryResponse::value() const {
 }
 
 
-unique_ptr<tello::QueryResponse> tello::QueryResponse::error() {
-    return std::make_unique<QueryResponse>(Status::FAIL);
+shared_ptr<tello::QueryResponse> tello::QueryResponse::error() {
+    return std::make_shared<QueryResponse>(Status::FAIL);
 }
 
-unique_ptr<tello::QueryResponse> tello::QueryResponse::timeout() {
-    return std::make_unique<QueryResponse>(Status::TIMEOUT);
+shared_ptr<tello::QueryResponse> tello::QueryResponse::timeout() {
+    return std::make_shared<QueryResponse>(Status::TIMEOUT);
 }
 
-unique_ptr<tello::QueryResponse> tello::QueryResponse::of(const string& arg) {
-    return std::make_unique<QueryResponse>(arg);
+shared_ptr<tello::QueryResponse> tello::QueryResponse::empty() {
+    return std::make_shared<QueryResponse>(Status::UNKNOWN);
+}
+
+void tello::QueryResponse::update(const string &value) {
+    _value = convert(value);
+    _status = _value >= 0 ? Status::OK : Status::FAIL;
+    callSubscriber();
 }
 
 int tello::QueryResponse::QueryResponse::convert(const string& stringValue) {
