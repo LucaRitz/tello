@@ -1,9 +1,6 @@
 #pragma once
 
 #include <tello/command.hpp>
-#include <tello/response/query_response.hpp>
-
-using tello::QueryResponse;
 
 namespace tello::command {
 

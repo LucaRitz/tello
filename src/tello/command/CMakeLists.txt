@@ -24,7 +24,17 @@ target_sources(${PROJECT_NAME} PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/clockwise_turn_command.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/counterclockwise_turn_command.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/counterclockwise_turn_command.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/wifi_command.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/wifi_command.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/flip_command.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/flip_command.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/stop_command.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/stop_command.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/emergency_command.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/emergency_command.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/set_speed_command.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/set_speed_command.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/read_wifi_command.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/read_wifi_command.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/read_speed_command.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/read_speed_command.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/validator_util.cpp
         )

@@ -9,14 +9,17 @@ namespace tello {
 
     class QueryResponse : public Response {
     public:
+        QueryResponse() : _value(-1) {}
         explicit QueryResponse(const Status& status);
 
         [[nodiscard]] int value() const;
 
-        static shared_ptr<QueryResponse> error();
-        static shared_ptr<QueryResponse> empty();
+        static QueryResponse error();
+        static QueryResponse empty();
 
         void update(const string& value) override;
+        void update(const Status& status);
+
     private:
         int _value;
 

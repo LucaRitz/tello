@@ -20,17 +20,20 @@ TEST(Tello, SimpleCaseBergerVideo) {
     Tello tello(TELLO_IP_ADDRESS);
     tello.setVideoHandler(handler);
 
-    std::shared_ptr<Response> responseCommand = tello.command();
-    ASSERT_NE(Status::FAIL, responseCommand->status());
+    future<Response> responseCommand = tello.command();
+    responseCommand.wait();
+    ASSERT_NE(Status::FAIL, responseCommand.get().status());
 
-    std::shared_ptr<Response> responseStreamOn = tello.streamon();
-    ASSERT_NE(Status::FAIL, responseStreamOn->status());
+    future<Response> responseStreamOn = tello.streamon();
+    responseStreamOn.wait();
+    ASSERT_NE(Status::FAIL, responseStreamOn.get().status());
 
     std::chrono::seconds duration(10);
     std::this_thread::sleep_for(duration);
 
-    std::shared_ptr<Response> responseStreamOff = tello.streamoff();
-    ASSERT_NE(Status::FAIL, responseStreamOff->status());
+    future<Response> responseStreamOff = tello.streamoff();
+    responseStreamOff.wait();
+    ASSERT_NE(Status::FAIL, responseStreamOff.get().status());
 
     ASSERT_TRUE(handlerCallCount > 0);
 }
