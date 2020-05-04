@@ -38,8 +38,14 @@ namespace tello {
         ResponseMapping(promise<Response>& prom, time_t insertDate);
         ResponseMapping(promise<QueryResponse>& prom, time_t insertDate);
 
-        void set_value(const string& value);
-        void set_value(const Status& status);
+        template <typename Param>
+        void set_value(const Param& value) {
+            if (_responseMappingType == ResponseMappingType::RESPONSE) {
+                _prom.set_value(Response{value});
+            } else if (_responseMappingType == ResponseMappingType::QUERY_RESPONSE) {
+                _queryProm.set_value(QueryResponse{value});
+            }
+        }
 
         time_t _insertDate;
 
