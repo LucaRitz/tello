@@ -6,5 +6,5 @@ tello::command::StopCommand::StopCommand() :
 	Command(CommandType::STOP) {}
 
 string tello::command::StopCommand::build() const {
-	return std::string("stop ");
+	return std::string("stop");
 }

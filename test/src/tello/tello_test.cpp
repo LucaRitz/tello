@@ -7,6 +7,7 @@
 using tello::Command;
 using tello::Tello;
 using tello::Response;
+using tello::QueryResponse;
 using tello::Status;
 using std::string;
 using std::promise;
@@ -78,3 +79,48 @@ TEST(Tello, BasicFlightCommands) {
     land_future.wait();
     ASSERT_NE(Status::FAIL, land_future.get().status());
 }
+
+/*
+TEST(Tello, SpeedCommands) {
+    Tello tello(TELLO_IP_ADDRESS);
+
+    promise<const Response&>& command_promise = tello.command()->subscribe();
+    future<const Response&> command_future = command_promise.get_future();
+    command_future.wait();
+    ASSERT_NE(Status::FAIL, command_future.get().status());
+
+    //Read default speed
+    int defaultVelocity = 50;
+	
+    promise<const QueryResponse&>& get_speed_promise = tello.read_speed()->subscribe();
+    future<const QueryResponse&> get_speed_future = get_speed_promise.get_future();
+    get_speed_future.wait();
+    ASSERT_NE(Status::FAIL, get_speed_future.get().status());
+
+	//Set speed to max 100
+    int maxVelocity = 100;
+    promise<const Response&>& set_speed_promise = tello.set_speed(maxVelocity)->subscribe();
+    future<const Response&> set_speed_future = set_speed_promise.get_future();
+    set_speed_future.wait();
+    ASSERT_NE(Status::FAIL, set_speed_future.get().status());
+
+	//Read that speed is max
+    get_speed_promise = tello.read_speed()->subscribe();
+    get_speed_future = get_speed_promise.get_future();
+    get_speed_future.wait();
+    ASSERT_NE(Status::FAIL, get_speed_future.get().status());
+
+    //Reset speed to default speed
+    set_speed_promise = tello.set_speed(defaultVelocity)->subscribe();
+    set_speed_future = set_speed_promise.get_future();
+    set_speed_future.wait();
+    ASSERT_NE(Status::FAIL, set_speed_future.get().status());
+
+	//Check if speed was rested to default speed
+    get_speed_promise = tello.read_speed()->subscribe();
+    get_speed_future = get_speed_promise.get_future();
+    get_speed_future.wait();
+    ASSERT_NE(Status::FAIL, get_speed_future.get().status());
+	
+}
+*/

@@ -6,5 +6,5 @@ tello::command::EmergencyCommand::EmergencyCommand() :
 	Command(CommandType::EMERGENCY) {}
 
 string tello::command::EmergencyCommand::build() const {
-    return std::string("emergency ");
+    return std::string("emergency");
 }
