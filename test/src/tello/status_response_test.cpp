@@ -12,7 +12,7 @@ TEST(StatusResponse, ParseString_mpry_Test) {
 	StatusResponse response = StatusResponse(STRING_TO_PARSE);
 
 	// Assert
-	ASSERT_EQ("-1,-1,-1", response.get_mpry());
+	ASSERT_EQ("TODO", response.get_mpry());
 }
 
 TEST(StatusResponse, ParseString_x_Test) {
@@ -103,7 +103,7 @@ TEST(StatusResponse, ParseString_roll_Test) {
 	StatusResponse response = StatusResponse(STRING_TO_PARSE);
 
 	// Assert
-	ASSERT_EQ(-1, response.get_roll());
+	ASSERT_EQ(0, response.get_roll());
 }
 
 TEST(StatusResponse, ParseString_bat_Test) {
@@ -119,7 +119,7 @@ TEST(StatusResponse, ParseString_yaw_Test) {
 	StatusResponse response = StatusResponse(STRING_TO_PARSE);
 
 	// Assert
-	ASSERT_EQ(-1, response.get_yaw());
+	ASSERT_EQ(0, response.get_yaw());
 }
 
 
@@ -161,7 +161,8 @@ TEST(StatusResponse, ParseString_baro_Test) {
 	StatusResponse response = StatusResponse(STRING_TO_PARSE);
 
 	// Assert
-	ASSERT_EQ(681.32, response.get_baro());
+	float value = 681.32;
+	ASSERT_EQ(std::to_string(value), string("") + std::to_string(response.get_baro()));
 }
 
 TEST(StatusResponse, ParseString_time_Test) {
@@ -169,5 +170,5 @@ TEST(StatusResponse, ParseString_time_Test) {
 	StatusResponse response = StatusResponse(STRING_TO_PARSE);
 
 	// Assert
-	ASSERT_EQ(-1, response.get_time());
+	ASSERT_EQ(0, response.get_time());
 }
