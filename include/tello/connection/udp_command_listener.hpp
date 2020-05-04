@@ -35,20 +35,17 @@ namespace tello {
 
     struct ResponseMapping {
 
-        ResponseMapping(Response response, promise<Response>& prom, time_t insertDate);
-        ResponseMapping(QueryResponse response, promise<QueryResponse>& prom, time_t insertDate);
+        ResponseMapping(promise<Response>& prom, time_t insertDate);
+        ResponseMapping(promise<QueryResponse>& prom, time_t insertDate);
 
         void set_value(const string& value);
         void set_value(const Status& status);
-        void complete();
 
         time_t _insertDate;
 
     private:
         promise<Response> _prom;
         promise<QueryResponse> _queryProm;
-        Response _response;
-        QueryResponse _queryResponse;
         ResponseMappingType _responseMappingType;
     };
 
@@ -60,20 +57,20 @@ namespace tello {
         void stop();
 
         template <typename Response>
-        unordered_map<ip_address, future<Response>> append(const unordered_map<ip_address, Response>& responses) {
+        unordered_map<ip_address, future<Response>> append(vector<ip_address>& responses) {
             _responseMutex.lock();
             unordered_map<ip_address, future<Response>> futures{};
             auto now = UdpCommandListener::currentTime();
-            for(auto& entry : responses) {
-                auto responseEntry = _mapping.find(entry.first);
+            for(auto entry : responses) {
+                auto responseEntry = _mapping.find(entry);
                 promise<Response> prom{};
-                futures[entry.first] = std::move(prom.get_future());
+                futures[entry] = std::move(prom.get_future());
                 if (responseEntry != _mapping.end()) {
-                    responseEntry->second.push_back(std::make_shared<ResponseMapping>(entry.second, prom, now));
+                    responseEntry->second.push_back(std::make_shared<ResponseMapping>(prom, now));
                 } else {
                     vector<shared_ptr<ResponseMapping>> responseMapping{
-                            std::make_shared<ResponseMapping>(entry.second, prom, now)};
-                    _mapping[entry.first] = std::move(responseMapping);
+                            std::make_shared<ResponseMapping>(prom, now)};
+                    _mapping[entry] = std::move(responseMapping);
                 }
             }
             _responseMutex.unlock();

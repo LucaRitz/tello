@@ -12,37 +12,29 @@ tello::UdpCommandListener::UdpCommandListener(const tello::ConnectionData& conne
                          std::ref(connectionMutex), _exitSignal.get_future(), std::ref(_mapping),
                          std::ref(_responseMutex))) {}
 
-tello::ResponseMapping::ResponseMapping(Response response, promise<Response>& prom, time_t insertDate) :
-        _response(std::move(response)), _queryResponse(), _prom(std::move(prom)), _queryProm(),
-        _insertDate(insertDate), _responseMappingType(ResponseMappingType::RESPONSE) {}
+tello::ResponseMapping::ResponseMapping(promise<Response>& prom, time_t insertDate) : _prom(std::move(prom)),
+                                                                                      _queryProm(),
+                                                                                      _insertDate(insertDate),
+                                                                                      _responseMappingType(
+                                                                                              ResponseMappingType::RESPONSE) {}
 
-tello::ResponseMapping::ResponseMapping(QueryResponse response, promise<QueryResponse>& prom, time_t insertDate) :
-        _response(), _queryResponse(std::move(response)), _prom(), _queryProm(std::move(prom)),
-        _insertDate(insertDate), _responseMappingType(ResponseMappingType::QUERY_RESPONSE) {}
+tello::ResponseMapping::ResponseMapping(promise<QueryResponse>& prom, time_t insertDate)
+        : _prom(), _queryProm(std::move(prom)),
+          _insertDate(insertDate), _responseMappingType(ResponseMappingType::QUERY_RESPONSE) {}
 
 void tello::ResponseMapping::set_value(const string& value) {
     if (_responseMappingType == ResponseMappingType::RESPONSE) {
-        _response.update(value);
+        _prom.set_value(Response{value});
     } else if (_responseMappingType == ResponseMappingType::QUERY_RESPONSE) {
-        _queryResponse.update(value);
+        _queryProm.set_value(QueryResponse{value});
     }
-    complete();
 }
 
 void tello::ResponseMapping::set_value(const Status& status) {
     if(_responseMappingType == ResponseMappingType::RESPONSE) {
-        _response.update(status);
+        _prom.set_value(Response{status});
     } else if (_responseMappingType == ResponseMappingType::QUERY_RESPONSE) {
-        _queryResponse.update(status);
-    }
-    complete();
-}
-
-void tello::ResponseMapping::complete() {
-    if(_responseMappingType == ResponseMappingType::RESPONSE) {
-        _prom.set_value(_response);
-    } else if (_responseMappingType == ResponseMappingType::QUERY_RESPONSE) {
-        _queryProm.set_value(_queryResponse);
+        _queryProm.set_value(QueryResponse{status});
     }
 }
 

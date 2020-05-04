@@ -9,6 +9,7 @@
 #include "../command.hpp"
 #include "../logger/logger.hpp"
 #include "udp_command_listener.hpp"
+#include <vector>
 
 using tello::ConnectionData;
 using std::optional;
@@ -21,6 +22,7 @@ using tello::VideoAnalyzer;
 using tello::Command;
 using tello::Logger;
 using tello::UdpCommandListener;
+using std::vector;
 
 #define SEND 3
 
@@ -35,11 +37,11 @@ namespace tello {
         static bool connect();
         static void disconnect();
 
-        template<typename CommandResponse, CommandResponse (* error)(), CommandResponse(* empty)()>
+        template<typename CommandResponse>
         static future<CommandResponse>
         exec(const Command& command, const Tello& tello);
 
-        template<typename CommandResponse, CommandResponse (* error)(), CommandResponse(* empty)()>
+        template<typename CommandResponse>
         static unordered_map<ip_address, future<CommandResponse>>
         exec(const Command& command, unordered_map<ip_address, const Tello*> tellos);
 
@@ -66,19 +68,19 @@ namespace tello {
         static void disconnect(ConnectionData& connectionData, const LoggerType& loggerType);
     };
 
-    template<typename CommandResponse, CommandResponse (* error)(), CommandResponse (* empty)()>
+    template<typename CommandResponse>
     future<CommandResponse>
     Network::exec(const Command& command, const Tello& tello) {
         unordered_map<ip_address, const Tello*> tellos{};
         ip_address telloAddress = tello._clientaddr._ip;
         tellos[telloAddress] = &tello;
 
-        unordered_map<ip_address, future<CommandResponse>> answers = exec<CommandResponse, error, empty>(command, tellos);
+        unordered_map<ip_address, future<CommandResponse>> answers = exec<CommandResponse>(command, tellos);
         auto answer = answers.find(telloAddress);
         return std::move(answer->second);
     }
 
-    template<typename CommandResponse, CommandResponse (* error)(), CommandResponse(* empty)()>
+    template<typename CommandResponse>
     unordered_map<ip_address, future<CommandResponse>>
     Network::exec(const Command& command, unordered_map<ip_address, const Tello*> tellos) {
         unordered_map<ip_address, future<CommandResponse>> responses{};
@@ -89,7 +91,7 @@ namespace tello {
             Logger::get(LoggerType::COMMAND)->error(string("Message is: {}"), errorMessage);
 
             for (auto tello : tellos) {
-                CommandResponse& response = error();
+                CommandResponse& response = CommandResponse{Status::FAIL};
                 promise<CommandResponse> errorProm{};
                 errorProm.set_value(response);
                 responses[tello.first] = std::move(errorProm.get_future());
@@ -116,7 +118,7 @@ namespace tello {
                         string("Command of type [{}] is not sent cause of socket error!"),
                         NAMES.find(command.type())->second);
 
-                CommandResponse response = error();
+                CommandResponse response = CommandResponse{Status::FAIL};
                 promise<CommandResponse> errorProm{};
                 errorProm.set_value(response);
                 responses[tello->first] = std::move(errorProm.get_future());
@@ -129,12 +131,12 @@ namespace tello {
             }
         }
 
-        unordered_map<ip_address, CommandResponse> openResponses{};
+        vector<ip_address> openResponses{};
         for(auto aTello : tellos) {
-            openResponses[aTello.first] = empty();
+            openResponses.push_back(aTello.first);
         }
 
-        unordered_map<ip_address, future<CommandResponse>> futures = _commandListener.append(openResponses);
+        unordered_map<ip_address, future<CommandResponse>> futures = _commandListener.append<CommandResponse>(openResponses);
         for(auto& future : futures) {
             responses[future.first] = std::move(future.second);
         }

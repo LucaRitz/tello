@@ -61,100 +61,100 @@ void tello::Tello::setVideoHandler(video_handler videoHandler) {
 
 future<Response> tello::Tello::command() const {
     const CommandCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 future<Response> tello::Tello::takeoff() const {
     const TakeoffCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 future<Response> tello::Tello::land() const {
     const LandCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 future<Response> tello::Tello::streamon() const {
     const StreamOnCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 future<Response> tello::Tello::streamoff() const {
     const StreamOffCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 future<Response> tello::Tello::up(int x) const {
     const UpCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 future<Response> tello::Tello::down(int x) const {
     const DownCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 future<Response> tello::Tello::left(int x) const {
     const LeftCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 future<Response> tello::Tello::right(int x) const {
     const RightCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 future<Response> tello::Tello::forward(int x) const {
     const ForwardCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 future<Response> tello::Tello::back(int x) const {
     const BackCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 future<Response> tello::Tello::clockwise_turn(int x) const {
     const ClockwiseTurnCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 future<Response> tello::Tello::counterclockwise_turn(int x) const {
     const CounterclockwiseTurnCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 future<Response> tello::Tello::flip(char flip_direction) const
 {
     const FlipCommand command{ flip_direction };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 future<Response> tello::Tello::stop() const {
     const StopCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 future<Response> tello::Tello::emergency() const {
     const EmergencyCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 
 future<Response> tello::Tello::set_speed(int velocity) const {
     const SetSpeedCommand command { velocity };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+    return Network::exec<Response>(command, *this);
 }
 
 
 future<QueryResponse> tello::Tello::read_speed() const {
     const ReadSpeedCommand command;
-    return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::empty>(command, *this);
+    return Network::exec<QueryResponse>(command, *this);
 }
 
 future<QueryResponse> tello::Tello::read_wifi() const {
     const ReadWifiCommand command;
-    return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::empty>(command, *this);
+    return Network::exec<QueryResponse>(command, *this);
 }
 
 /////////////////////////////////////////////////////////////

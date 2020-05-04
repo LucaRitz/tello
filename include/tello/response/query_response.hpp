@@ -9,16 +9,11 @@ namespace tello {
 
     class QueryResponse : public Response {
     public:
-        QueryResponse() : _value(-1) {}
+        QueryResponse() : Response(Status::UNKNOWN), _value(-1) {}
+        explicit QueryResponse(const string& value);
         explicit QueryResponse(const Status& status);
 
         [[nodiscard]] int value() const;
-
-        static QueryResponse error();
-        static QueryResponse empty();
-
-        void update(const string& value) override;
-        void update(const Status& status);
 
     private:
         int _value;
