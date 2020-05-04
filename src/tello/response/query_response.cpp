@@ -11,19 +11,21 @@ int tello::QueryResponse::value() const {
     return _value;
 }
 
-
-shared_ptr<tello::QueryResponse> tello::QueryResponse::error() {
-    return std::make_shared<QueryResponse>(Status::FAIL);
+tello::QueryResponse tello::QueryResponse::error() {
+    return QueryResponse{Status::FAIL};
 }
 
-shared_ptr<tello::QueryResponse> tello::QueryResponse::empty() {
-    return std::make_shared<QueryResponse>(Status::UNKNOWN);
+tello::QueryResponse tello::QueryResponse::empty() {
+    return QueryResponse{Status::UNKNOWN};
 }
 
 void tello::QueryResponse::update(const string &value) {
     _value = convert(value);
     _status = _value >= 0 ? Status::OK : Status::FAIL;
-    callSubscriber();
+}
+
+void tello::QueryResponse::update(const Status& status) {
+    Response::update(status);
 }
 
 int tello::QueryResponse::QueryResponse::convert(const string& stringValue) {

@@ -22,18 +22,26 @@ TEST(Swarm, SimpleCaseBerger_Swarm) {
     Tello tello2(TELLO2_IP_ADDRESS);
     swarm << tello1 << tello2;
 
-    unordered_map<ip_address, std::shared_ptr<Response>> responseCommand = swarm.command();
+    unordered_map<ip_address, future<Response>> responseCommand = swarm.command();
+    for(auto& entry : responseCommand) {
+        entry.second.wait();
+        ASSERT_NE(Status::FAIL, entry.second.get().status());
+    }
 
-
-    unordered_map<ip_address, std::shared_ptr<Response>> responseTakeoff = swarm.takeoff();
-
-
+    unordered_map<ip_address, future<Response>> responseTakeoff = swarm.takeoff();
+    for(auto& entry : responseTakeoff) {
+        entry.second.wait();
+        ASSERT_NE(Status::FAIL, entry.second.get().status());
+    }
 
     std::chrono::seconds duration(5);
     std::this_thread::sleep_for(duration);
 
-    unordered_map<ip_address, std::shared_ptr<Response>> responseLand = swarm.land();
-
+    unordered_map<ip_address, future<Response>> responseLand = swarm.land();
+    for(auto& entry : responseLand) {
+        entry.second.wait();
+        ASSERT_NE(Status::FAIL, entry.second.get().status());
+    }
 
     std::chrono::seconds awaitResponse(16);
     std::this_thread::sleep_for(awaitResponse);

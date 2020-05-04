@@ -35,12 +35,12 @@ namespace tello {
         static bool connect();
         static void disconnect();
 
-        template<typename CommandResponse, shared_ptr<CommandResponse> (* error)(), shared_ptr<CommandResponse>(* empty)()>
-        static shared_ptr<CommandResponse>
+        template<typename CommandResponse, CommandResponse (* error)(), CommandResponse(* empty)()>
+        static future<CommandResponse>
         exec(const Command& command, const Tello& tello);
 
-        template<typename CommandResponse, shared_ptr<CommandResponse> (* error)(), shared_ptr<CommandResponse>(* empty)()>
-        static unordered_map<ip_address, shared_ptr<CommandResponse>>
+        template<typename CommandResponse, CommandResponse (* error)(), CommandResponse(* empty)()>
+        static unordered_map<ip_address, future<CommandResponse>>
         exec(const Command& command, unordered_map<ip_address, const Tello*> tellos);
 
     private:
@@ -66,22 +66,22 @@ namespace tello {
         static void disconnect(ConnectionData& connectionData, const LoggerType& loggerType);
     };
 
-    template<typename CommandResponse, shared_ptr<CommandResponse> (* error)(), shared_ptr<CommandResponse>(* empty)()>
-    shared_ptr<CommandResponse>
+    template<typename CommandResponse, CommandResponse (* error)(), CommandResponse (* empty)()>
+    future<CommandResponse>
     Network::exec(const Command& command, const Tello& tello) {
         unordered_map<ip_address, const Tello*> tellos{};
         ip_address telloAddress = tello._clientaddr._ip;
         tellos[telloAddress] = &tello;
 
-        unordered_map<ip_address, shared_ptr<CommandResponse>> answers = exec<CommandResponse, error, empty>(command, tellos);
+        unordered_map<ip_address, future<CommandResponse>> answers = exec<CommandResponse, error, empty>(command, tellos);
         auto answer = answers.find(telloAddress);
         return std::move(answer->second);
     }
 
-    template<typename CommandResponse, shared_ptr<CommandResponse> (* error)(), shared_ptr<CommandResponse>(* empty)()>
-    unordered_map<ip_address, shared_ptr<CommandResponse>>
+    template<typename CommandResponse, CommandResponse (* error)(), CommandResponse(* empty)()>
+    unordered_map<ip_address, future<CommandResponse>>
     Network::exec(const Command& command, unordered_map<ip_address, const Tello*> tellos) {
-        unordered_map<ip_address, shared_ptr<CommandResponse>> responses{};
+        unordered_map<ip_address, future<CommandResponse>> responses{};
         string errorMessage = command.validate();
         if (!errorMessage.empty()) {
             Logger::get(LoggerType::COMMAND)->error(
@@ -89,7 +89,10 @@ namespace tello {
             Logger::get(LoggerType::COMMAND)->error(string("Message is: {}"), errorMessage);
 
             for (auto tello : tellos) {
-                responses[tello.first] = error();
+                CommandResponse& response = error();
+                promise<CommandResponse> errorProm{};
+                errorProm.set_value(response);
+                responses[tello.first] = std::move(errorProm.get_future());
             }
 
             return responses;
@@ -112,7 +115,12 @@ namespace tello {
                 Logger::get(LoggerType::COMMAND)->info(
                         string("Command of type [{}] is not sent cause of socket error!"),
                         NAMES.find(command.type())->second);
-                responses[tello->first] = error();
+
+                CommandResponse response = error();
+                promise<CommandResponse> errorProm{};
+                errorProm.set_value(response);
+                responses[tello->first] = std::move(errorProm.get_future());
+
                 tellos.erase(tello->first);
             } else {
                 Logger::get(LoggerType::COMMAND)->info(
@@ -121,13 +129,15 @@ namespace tello {
             }
         }
 
-        unordered_map<ip_address, shared_ptr<CommandResponse>> openResponses{};
+        unordered_map<ip_address, CommandResponse> openResponses{};
         for(auto aTello : tellos) {
-            responses[aTello.first] = empty();
-            openResponses[aTello.first] = responses[aTello.first];
+            openResponses[aTello.first] = empty();
         }
 
-        _commandListener.append(openResponses);
+        unordered_map<ip_address, future<CommandResponse>> futures = _commandListener.append(openResponses);
+        for(auto& future : futures) {
+            responses[future.first] = std::move(future.second);
+        }
 
         return responses;
     }

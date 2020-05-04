@@ -7,12 +7,14 @@
 #include <shared_mutex>
 #include "response/video_response.hpp"
 #include "tello_interface.hpp"
+#include <future>
 
 using std::shared_ptr;
 using std::unordered_map;
 using tello::StatusResponse;
 using tello::NetworkData;
 using tello::VideoResponse;
+using std::future;
 
 namespace tello {
 
@@ -24,7 +26,7 @@ namespace tello {
     using status_handler = void (*)(const StatusResponse&);
     using video_handler = void (*)(const VideoResponse& frame);
 
-    class Tello : public TelloInterface<shared_ptr<Response>, shared_ptr<QueryResponse>> {
+    class Tello : public TelloInterface<future<Response>, future<QueryResponse>> {
     public:
         explicit Tello(ip_address telloIp);
         ~Tello();
@@ -37,32 +39,32 @@ namespace tello {
         ///// COMMANDS //////////////////////////////////////////////
         /////////////////////////////////////////////////////////////
 
-        [[nodiscard]] shared_ptr<Response> command() const override;
-        [[nodiscard]] shared_ptr<Response> takeoff() const override;
-        [[nodiscard]] shared_ptr<Response> land() const override;
-    	
-        [[nodiscard]] shared_ptr<Response> streamon() const override;
-        [[nodiscard]] shared_ptr<Response> streamoff() const override;
-    	
-        [[nodiscard]] shared_ptr<Response> up(int x) const override;
-        [[nodiscard]] shared_ptr<Response> down(int x) const override;
-        [[nodiscard]] shared_ptr<Response> left(int x) const override;
-        [[nodiscard]] shared_ptr<Response> right(int x) const override;
-        [[nodiscard]] shared_ptr<Response> forward(int x) const override;
-        [[nodiscard]] shared_ptr<Response> back(int x) const override;
-    	
-        [[nodiscard]] shared_ptr<Response> clockwise_turn(int x) const override;
-        [[nodiscard]] shared_ptr<Response> counterclockwise_turn(int x) const override;
+        [[nodiscard]] future<Response> command() const override;
+        [[nodiscard]] future<Response> takeoff() const override;
+        [[nodiscard]] future<Response> land() const override;
 
-    	[[nodiscard]] shared_ptr<Response> flip(char flip_direction) const override;
-    	
-        [[nodiscard]] shared_ptr<Response> stop() const override;
-        [[nodiscard]] shared_ptr<Response> emergency() const override;
+        [[nodiscard]] future<Response> streamon() const override;
+        [[nodiscard]] future<Response> streamoff() const override;
 
-        [[nodiscard]] shared_ptr<Response> set_speed(int velocity) const override;
+        [[nodiscard]] future<Response> up(int x) const override;
+        [[nodiscard]] future<Response> down(int x) const override;
+        [[nodiscard]] future<Response> left(int x) const override;
+        [[nodiscard]] future<Response> right(int x) const override;
+        [[nodiscard]] future<Response> forward(int x) const override;
+        [[nodiscard]] future<Response> back(int x) const override;
 
-        [[nodiscard]] shared_ptr<QueryResponse> read_speed() const override;
-        [[nodiscard]] shared_ptr<QueryResponse> read_wifi() const override;
+        [[nodiscard]] future<Response> clockwise_turn(int x) const override;
+        [[nodiscard]] future<Response> counterclockwise_turn(int x) const override;
+
+    	[[nodiscard]] future<Response> flip(char flip_direction) const override;
+
+        [[nodiscard]] future<Response> stop() const override;
+        [[nodiscard]] future<Response> emergency() const override;
+
+        [[nodiscard]] future<Response> set_speed(int velocity) const override;
+
+        [[nodiscard]] future<QueryResponse> read_speed() const override;
+        [[nodiscard]] future<QueryResponse> read_wifi() const override;
 
         /////////////////////////////////////////////////////////////
         ///// END COMMANDS //////////////////////////////////////////
