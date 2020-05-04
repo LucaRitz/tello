@@ -16,10 +16,11 @@
 #include "command/clockwise_turn_command.hpp"
 #include "command/counterclockwise_turn_command.hpp"
 #include "command/flip_command.hpp"
-#include "command/emergency_command.hpp"
 #include "command/stop_command.hpp"
+#include "command/emergency_command.hpp"
 #include "command/set_speed_command.hpp"
-#include "command/wifi_command.hpp"
+#include "command/read_speed_command.hpp"
+#include "command/read_wifi_command.hpp"
 
 #define COMMAND_PORT 8889
 
@@ -150,8 +151,13 @@ shared_ptr<Response> tello::Tello::set_speed(int velocity) const {
 }
 
 
-shared_ptr<QueryResponse> tello::Tello::wifi() const {
-    const WifiCommand command;
+shared_ptr<QueryResponse> tello::Tello::read_speed() const {
+    const ReadSpeedCommand command;
+    return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::empty>(command, *this);
+}
+
+shared_ptr<QueryResponse> tello::Tello::read_wifi() const {
+    const ReadWifiCommand command;
     return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::empty>(command, *this);
 }
 

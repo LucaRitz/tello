@@ -61,7 +61,8 @@ namespace tello {
 
         [[nodiscard]] shared_ptr<Response> set_speed(int velocity) const override;
 
-        [[nodiscard]] shared_ptr<QueryResponse> wifi() const override;
+        [[nodiscard]] shared_ptr<QueryResponse> read_speed() const override;
+        [[nodiscard]] shared_ptr<QueryResponse> read_wifi() const override;
 
         /////////////////////////////////////////////////////////////
         ///// END COMMANDS //////////////////////////////////////////

@@ -29,7 +29,8 @@ namespace tello {
 
         virtual Response set_speed(int velocity) const = 0;
     	
-        virtual QueryResponse wifi() const = 0;
+        virtual QueryResponse read_speed() const = 0;
+        virtual QueryResponse read_wifi() const = 0;
 
     protected:
         TelloInterface() = default;

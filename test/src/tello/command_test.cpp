@@ -12,6 +12,8 @@
 #include "tello/command/emergency_command.hpp"
 #include <random>
 
+
+#include "tello/command/read_speed_command.hpp"
 #include "tello/command/set_speed_command.hpp"
 
 
@@ -321,7 +323,6 @@ TEST(CommandFactory, FlipCommand_flipDirectionInvalid_buildExpectedCommand) {
     }
 }
 
-
 TEST(CommandFactory, FlipCommand_flipDirectionValid_buildExpectedCommand) {
     char validDirections[] = {'r', 'l', 'f', 'b'};
 
@@ -336,11 +337,32 @@ TEST(CommandFactory, FlipCommand_flipDirectionValid_buildExpectedCommand) {
 	}    
 }
 
+
+TEST(CommandFactory, StopCommand_buildExpectedCommand) {
+    // Act
+    StopCommand result = StopCommand();
+
+    // Assert
+    ASSERT_TRUE(result.validate().empty());
+    ASSERT_EQ(std::string("stop"), result.build());
+}
+
+
+TEST(CommandFactory, EmergencyCommand_buildExpectedCommand) {
+    // Act
+    EmergencyCommand result = EmergencyCommand();
+
+    // Assert
+    ASSERT_TRUE(result.validate().empty());
+    ASSERT_EQ(std::string("emergency"), result.build());
+}
+
+
 TEST(CommandFactory, SetSpeedCommandValidVelocity_buildExpectedCommand) {
     // Arrange
     int velocity = 10;
 
-	// Act
+    // Act
     SetSpeedCommand result = SetSpeedCommand(velocity);
 
     // Assert
@@ -370,21 +392,11 @@ TEST(CommandFactory, SetSpeedCommandVelocityTooHigh_buildExpectedCommand) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-
-TEST(CommandFactory, StopCommand_buildExpectedCommand) {
+TEST(CommandFactory, ReadSpeedCommand_buildExpectedCommand) {
     // Act
-    StopCommand result = StopCommand();
+    ReadSpeedCommand result = ReadSpeedCommand();
 
     // Assert
     ASSERT_TRUE(result.validate().empty());
-    ASSERT_EQ(std::string("stop"), result.build());
-}
-
-TEST(CommandFactory, EmergencyCommand_buildExpectedCommand) {
-    // Act
-    EmergencyCommand result = EmergencyCommand();
-
-    // Assert
-    ASSERT_TRUE(result.validate().empty());
-    ASSERT_EQ(std::string("emergency"), result.build());
+    ASSERT_EQ(std::string("speed?"), result.build());
 }

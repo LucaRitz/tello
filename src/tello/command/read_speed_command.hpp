@@ -7,9 +7,9 @@ using tello::QueryResponse;
 
 namespace tello::command {
 
-    class WifiCommand : public Command {
+    class ReadSpeedCommand : public Command {
     public:
-        WifiCommand();
+        ReadSpeedCommand();
 
         [[nodiscard]]
         string build() const override;

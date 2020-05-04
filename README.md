@@ -58,7 +58,7 @@ UDP Port: 11111
 ## Read Commands
 |  Command |             Description            | Possible Response | Implemented |
 |:--------:|:----------------------------------:|:-----------------:|:-----------:|
-|  speed?  |     Obtain current speed (cm/s)    |     x = 10-100    |     :x:     |
+|  speed?  |     Obtain current speed (cm/s)    |     x = 10-100    | :heavy_check_mark: |
 | battery? | Obtain current battery percentage. |     x = 0-100     |     :x:     |
 |   time?  |     Obtain current flight time.    |        time       |     :x:	  |
 |   wifi?  |          Obtain Wi-Fi SNR.         |        snr        | :heavy_check_mark: |

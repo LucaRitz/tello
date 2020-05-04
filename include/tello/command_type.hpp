@@ -43,7 +43,8 @@ namespace tello {
 
         SET_SPEED,
 
-        QUERY_WIFI
+        READ_SPEED,
+        READ_WIFI
     };
 
     unordered_map<const CommandType, string, EnumClassHash> createNamesMap();

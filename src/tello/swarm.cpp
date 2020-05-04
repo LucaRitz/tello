@@ -19,7 +19,8 @@
 #include "command/stop_command.hpp"
 #include "command/emergency_command.hpp"
 #include "command/set_speed_command.hpp"
-#include "command/wifi_command.hpp"
+#include "command/read_speed_command.hpp"
+#include "command/read_wifi_command.hpp"
 
 using tello::Response;
 using tello::QueryResponse;
@@ -122,15 +123,21 @@ unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::emergency() const 
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 
+
 unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::set_speed(int velocity) const {
     const SetSpeedCommand command {velocity};
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 
-unordered_map<ip_address, shared_ptr<QueryResponse>> tello::Swarm::wifi() const {
-    const WifiCommand command;
-    return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::empty>(command,
-                                                                                    _tellos);
+
+unordered_map<ip_address, shared_ptr<QueryResponse>> tello::Swarm::read_speed() const {
+    const ReadSpeedCommand command;
+    return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::empty>(command, _tellos);
+}
+
+unordered_map<ip_address, shared_ptr<QueryResponse>> tello::Swarm::read_wifi() const {
+    const ReadWifiCommand command;
+    return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::empty>(command, _tellos);
 }
 
 /////////////////////////////////////////////////////////////
