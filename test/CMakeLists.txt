@@ -3,7 +3,6 @@ project(tello_test)
 # Setup testing
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-add_definitions(-DBASE_LOG_PATH_CMAKE=${CMAKE_CURRENT_BINARY_DIR}/libs)
 
 find_package(tello_lib REQUIRED)
 
@@ -15,7 +14,8 @@ add_subdirectory(lib/googletest-release-1.10.0)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include_directories(${gmock_SOURCE_DIR}/include ${gmock_SOURCE_DIR})
 
-include_directories(${tello_SOURCE_DIR}/include)
+include_directories(${TELLO_INCLUDE})
+include_directories(${tello_SOURCE_DIR}/src)
 
 add_executable(${PROJECT_NAME})
 add_subdirectory(src)

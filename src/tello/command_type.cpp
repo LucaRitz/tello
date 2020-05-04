@@ -8,6 +8,17 @@ unordered_map<const CommandType, string, EnumClassHash> tello::createNamesMap() 
     mapping[CommandType::COMMAND] = string("COMMAND");
     mapping[CommandType::TAKE_OFF] = string("TAKE_OFF");
     mapping[CommandType::LAND] = string("LAND");
+    mapping[CommandType::STREAM_ON] = string("STREAM_ON");
+    mapping[CommandType::STREAM_OFF] = string("STREAM_OFF");
+    mapping[CommandType::UP] = string("UP");
+    mapping[CommandType::DOWN] = string("DOWN");
+    mapping[CommandType::LEFT] = string("LEFT");
+    mapping[CommandType::RIGHT] = string("RIGHT");
+    mapping[CommandType::FORWARD] = string("FORWARD");
+    mapping[CommandType::BACK] = string("BACK");
+    mapping[CommandType::CLOCKWISE_TURN] = string("CLOCKWISE_TURN");
+    mapping[CommandType::COUNTERCLOCKWISE_TURN] = string("COUNTERCLOCKWISE_TURN");
+    mapping[CommandType::QUERY_WIFI] = string("QUERY_WIFI");
     // TODO: Add Command-Mappings
     return mapping;
 }

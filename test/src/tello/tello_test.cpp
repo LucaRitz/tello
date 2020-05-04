@@ -1,37 +1,80 @@
 #include <gtest/gtest.h>
-#include <tello/command_factory.hpp>
 #include <tello/tello.hpp>
-#include <tello/command.hpp>
-#include <tello/response.hpp>
-#include <chrono>
-#include <thread>
+#include <future>
 
-#define TELLO_IP_ADDRESS (ULONG)0xC0A80A01 // 192.168.10.1
+#define TELLO_IP_ADDRESS (ip_address)0xC0A80A01 // 192.168.10.1
 
-using tello::CommandFactory;
 using tello::Command;
-using tello::CommandType;
 using tello::Tello;
 using tello::Response;
 using tello::Status;
 using std::string;
-using ComPtr = std::optional<std::unique_ptr<Command>>;
+using std::promise;
+using std::future;
 
-TEST(Tello, SimpleCaseBerger) {
+#include <iostream>
+
+TEST(Tello, BasicFlightCommands) {
     Tello tello(TELLO_IP_ADDRESS);
 
-    ComPtr command = CommandFactory::build(CommandType::COMMAND);
-    std::unique_ptr<Response> responseCommand = tello.exec(*(command->get()));
-    ASSERT_EQ(Status::OK, responseCommand->status());
+    shared_ptr<Response> rp = tello.up(-30);
+    promise<const Response&>& up_wrong_promise = rp->subscribe();
+    future<const Response&> up_wrong_future = up_wrong_promise.get_future();
+    up_wrong_future.wait();
+    ASSERT_EQ(Status::FAIL, up_wrong_future.get().status());
 
-    ComPtr takeoff = CommandFactory::build(CommandType::TAKE_OFF);
-    std::unique_ptr<Response> responseTakeoff = tello.exec(*(takeoff->get()));
-    ASSERT_EQ(Status::OK, responseTakeoff->status());
+    promise<const Response&>& command_promise = tello.command()->subscribe();
+    future<const Response&> command_future = command_promise.get_future();
+    command_future.wait();
+    ASSERT_NE(Status::FAIL, command_future.get().status());
 
-    std::chrono::seconds duration(5);
-    std::this_thread::sleep_for(duration);
+    promise<const Response&>& takeoff_promise = tello.takeoff()->subscribe();
+    future<const Response&> takeoff_future = takeoff_promise.get_future();
+    takeoff_future.wait();
+    ASSERT_NE(Status::FAIL, takeoff_future.get().status());
 
-    ComPtr land = CommandFactory::build(CommandType::LAND);
-    std::unique_ptr<Response> responseLand = tello.exec(*(land->get()));
-    ASSERT_EQ(Status::OK, responseLand->status());
+    promise<const Response&>& up_promise = tello.up(30)->subscribe();
+    future<const Response&> up_future = up_promise.get_future();
+    up_future.wait();
+    ASSERT_NE(Status::FAIL, up_future.get().status());
+
+    promise<const Response&>& down_promise = tello.down(30)->subscribe();
+    future<const Response&> down_future = down_promise.get_future();
+    down_future.wait();
+    ASSERT_NE(Status::FAIL, down_future.get().status());
+
+    promise<const Response&>& left_promise = tello.left(30)->subscribe();
+    future<const Response&> left_future = left_promise.get_future();
+    left_future.wait();
+    ASSERT_NE(Status::FAIL, left_future.get().status());
+
+    promise<const Response&>& right_promise = tello.right(30)->subscribe();
+    future<const Response&> right_future = right_promise.get_future();
+    right_future.wait();
+    ASSERT_NE(Status::FAIL, right_future.get().status());
+
+    promise<const Response&>& forward_promise = tello.forward(30)->subscribe();
+    future<const Response&> forward_future = forward_promise.get_future();
+    forward_future.wait();
+    ASSERT_NE(Status::FAIL, forward_future.get().status());
+
+    promise<const Response&>& back_promise = tello.back(30)->subscribe();
+    future<const Response&> back_future = back_promise.get_future();
+    back_future.wait();
+    ASSERT_NE(Status::FAIL, back_future.get().status());
+
+    promise<const Response&>& clockwise_turn_promise = tello.clockwise_turn(180)->subscribe();
+    future<const Response&> clockwise_turn_future = clockwise_turn_promise.get_future();
+    clockwise_turn_future.wait();
+    ASSERT_NE(Status::FAIL, clockwise_turn_future.get().status());
+
+    promise<const Response&>& counter_clockwise_turn_promise = tello.counterclockwise_turn(180)->subscribe();
+    future<const Response&> counter_clockwise_turn_future = counter_clockwise_turn_promise.get_future();
+    counter_clockwise_turn_future.wait();
+    ASSERT_NE(Status::FAIL, counter_clockwise_turn_future.get().status());
+
+    promise<const Response&>& land_promise = tello.land()->subscribe();
+    future<const Response&> land_future = land_promise.get_future();
+    land_future.wait();
+    ASSERT_NE(Status::FAIL, land_future.get().status());
 }

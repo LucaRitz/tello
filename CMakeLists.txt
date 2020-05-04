@@ -21,4 +21,4 @@ include_directories(${TELLO_INCLUDE})
 add_subdirectory(src)
 add_subdirectory(test)
 
-target_link_libraries(tello PRIVATE spdlog::spdlog ws2_32)
+target_link_libraries(tello spdlog_lib ws2_32)

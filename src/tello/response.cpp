@@ -2,25 +2,42 @@
 
 using tello::Status;
 
-tello::Response::Response(const Status& status) : _status(status) {}
+tello::Response::Response(const Status& status) : _status(status), _promise(), _mutex() {
+    if (Status::UNKNOWN != _status) {
+        callSubscriber();
+    }
+}
 
-tello::Response::Response(const string& response) : Response(
-        response == string("ok") ? Status::OK : Status::FAIL
-        ) {}
-
-Status tello::Response::status() {
+Status tello::Response::status() const {
     return _status;
 }
 
-string tello::Response::param(const string& key) const {
-    auto it = _values.find(key);
-    if (it != _values.end()) {
-        return _values.find(key)->second;
-    }
-
-    return string("");
+shared_ptr<tello::Response> tello::Response::error() {
+    return std::make_shared<Response>(Status::FAIL);
 }
 
-void tello::Response::append(const string& key, const string& value) {
-    _values[key] = value;
+shared_ptr<tello::Response> tello::Response::empty() {
+    return std::make_shared<Response>(Status::UNKNOWN);
+}
+
+void tello::Response::update(const string& value) {
+    _status = value.find(string("ok")) != std::string::npos ? Status::OK : (value.find(string("error")) !=
+                                                                     std::string::npos ? Status::FAIL
+                                                                                       : Status::UNKNOWN);
+    callSubscriber();
+}
+
+void tello::Response::update(const Status &status) {
+    _mutex.lock();
+    _status = status;
+    _mutex.unlock();
+    callSubscriber();
+}
+
+promise<const tello::Response&>& tello::Response::subscribe() {
+    return _promise;
+}
+
+void tello::Response::callSubscriber() {
+    _promise.set_value(*this);
 }

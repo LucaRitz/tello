@@ -8,11 +8,9 @@ using std::unique_ptr;
 namespace tello::command {
     class TakeoffCommand : public Command {
     public:
-        explicit TakeoffCommand(const CommandType& commandType, vector<string>& arguments);
+        TakeoffCommand();
 
         [[nodiscard]]
         string build() const override;
-
-        static unique_ptr<Command> create(const CommandType& commandType, vector<string>& arguments);
     };
 }

@@ -2,31 +2,51 @@
 
 #include <unordered_map>
 #include <string>
+#include <memory>
+#include <mutex>
+#include <future>
 
 using std::unordered_map;
 using std::string;
+using std::shared_ptr;
+using std::mutex;
+using std::function;
+using std::promise;
+
+namespace tello {
+    class Response;
+}
+
+using t_subscriber =  std::function<void (const tello::Response&)>;
 
 namespace tello {
 
     enum class Status {
         OK,
-        FAIL
+        FAIL,
+        TIMEOUT,
+        UNKNOWN
     };
 
     class Response {
     public:
         explicit Response(const Status& status);
-        explicit Response(const string& response);
 
-        Status status();
-        [[nodiscard]]
-        string param(const string& key) const;
+        [[nodiscard]] Status status() const;
+
+        static shared_ptr<Response> error();
+        static shared_ptr<Response> empty();
+
+        virtual void update(const string& value);
+        void update(const Status& status);
+        promise<const Response&>& subscribe();
 
     protected:
-        void append(const string& key, const string& value);
+        void callSubscriber();
+        Status _status;
 
     private:
-        const Status _status;
-        unordered_map<string, string> _values;
+        promise<const Response&> _promise;
+        mutex _mutex;
     };
 }
