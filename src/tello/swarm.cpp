@@ -18,6 +18,7 @@
 #include "command/flip_command.hpp"
 #include "command/stop_command.hpp"
 #include "command/emergency_command.hpp"
+#include "command/set_speed_command.hpp"
 #include "command/wifi_command.hpp"
 
 using tello::Response;
@@ -118,6 +119,11 @@ unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::stop() const {
 
 unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::emergency() const {
     const EmergencyCommand command;
+    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+}
+
+unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::set_speed(int velocity) const {
+    const SetSpeedCommand command {velocity};
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 

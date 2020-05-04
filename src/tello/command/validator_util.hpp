@@ -12,7 +12,8 @@ namespace tello::validator {
     string between(const type& argument, type lowerBound, type upperBound, const string& argName) {
         try {
             if (argument < lowerBound || argument > upperBound) {
-                return string("Value of '") + argName + string("' has to be between 20 and 500\n\r");
+                return string("Value of '") + argName + string("' has to be between '") + std::to_string(lowerBound) +
+					   string("' and '") + std::to_string(upperBound) + string("'\n\r");
             }
 
             return string("");

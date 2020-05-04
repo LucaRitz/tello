@@ -27,6 +27,8 @@ namespace tello {
         virtual Response stop() const = 0;
         virtual Response emergency() const = 0;
 
+        virtual Response set_speed(int velocity) const = 0;
+    	
         virtual QueryResponse wifi() const = 0;
 
     protected:

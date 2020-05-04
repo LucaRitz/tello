@@ -32,14 +32,16 @@ namespace tello {
         RIGHT,
         FORWARD,
         BACK,
-       
+
         CLOCKWISE_TURN,
         COUNTERCLOCKWISE_TURN,
 
-    	FLIP,
-    	
+        FLIP,
+
         EMERGENCY,
         STOP,
+
+        SET_SPEED,
 
         QUERY_WIFI
     };

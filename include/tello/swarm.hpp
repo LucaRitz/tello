@@ -49,6 +49,8 @@ namespace tello {
 
     	[[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> stop() const override;
         [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> emergency() const override;
+    	
+        [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> set_speed(int velocity) const override;
 
         [[nodiscard]] unordered_map<ip_address, shared_ptr<QueryResponse>> wifi() const override;
 

@@ -18,6 +18,7 @@
 #include "command/flip_command.hpp"
 #include "command/emergency_command.hpp"
 #include "command/stop_command.hpp"
+#include "command/set_speed_command.hpp"
 #include "command/wifi_command.hpp"
 
 #define COMMAND_PORT 8889
@@ -139,6 +140,12 @@ shared_ptr<Response> tello::Tello::stop() const {
 
 shared_ptr<Response> tello::Tello::emergency() const {
     const EmergencyCommand command;
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+}
+
+
+shared_ptr<Response> tello::Tello::set_speed(int velocity) const {
+    const SetSpeedCommand command { velocity };
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 

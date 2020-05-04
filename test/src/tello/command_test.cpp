@@ -12,6 +12,8 @@
 #include "tello/command/emergency_command.hpp"
 #include <random>
 
+#include "tello/command/set_speed_command.hpp"
+
 
 using tello::Command;
 using tello::CommandType;
@@ -332,6 +334,40 @@ TEST(CommandFactory, FlipCommand_flipDirectionValid_buildExpectedCommand) {
         ASSERT_TRUE(result.validate().empty());
         ASSERT_EQ(std::string("flip ") + std::to_string(direction), result.build());
 	}    
+}
+
+TEST(CommandFactory, SetSpeedCommandValidVelocity_buildExpectedCommand) {
+    // Arrange
+    int velocity = 10;
+
+	// Act
+    SetSpeedCommand result = SetSpeedCommand(velocity);
+
+    // Assert
+    ASSERT_TRUE(result.validate().empty());
+    ASSERT_EQ(std::string("speed ") + std::to_string(velocity), result.build());
+}
+
+TEST(CommandFactory, SetSpeedCommandVelocityTooLow_buildExpectedCommand) {
+    // Arrange
+    int velocity = 9;
+
+    // Act
+    SetSpeedCommand result = SetSpeedCommand(velocity);
+
+    // Assert
+    ASSERT_FALSE(result.validate().empty());
+}
+
+TEST(CommandFactory, SetSpeedCommandVelocityTooHigh_buildExpectedCommand) {
+    // Arrange
+    int velocity = 101;
+
+    // Act
+    SetSpeedCommand result = SetSpeedCommand(velocity);
+
+    // Assert
+    ASSERT_FALSE(result.validate().empty());
 }
 
 
