@@ -15,6 +15,9 @@
 #include "command/back_command.hpp"
 #include "command/clockwise_turn_command.hpp"
 #include "command/counterclockwise_turn_command.hpp"
+#include "command/flip_command.hpp"
+#include "command/stop_command.hpp"
+#include "command/emergency_command.hpp"
 #include "command/wifi_command.hpp"
 
 using tello::Response;
@@ -34,72 +37,92 @@ void tello::Swarm::add(const Tello &tello) {
 /////////////////////////////////////////////////////////////
 
 unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::command() const {
-    CommandCommand command;
+    const CommandCommand command;
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 
 unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::takeoff() const {
-    TakeoffCommand command;
+    const TakeoffCommand command;
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 
 unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::land() const {
-    LandCommand command;
+    const LandCommand command;
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 
+
 unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::streamon() const {
-    StreamOnCommand command;
+    const StreamOnCommand command;
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 
 unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::streamoff() const {
-    StreamOffCommand command;
+    const StreamOffCommand command;
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 
+
 unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::up(int x) const {
-    UpCommand command{ x };
+    const UpCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 
 unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::down(int x) const {
-    DownCommand command{ x };
+    const DownCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 
 unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::left(int x) const {
-    LeftCommand command{ x };
+    const LeftCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 
 unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::right(int x) const {
-    RightCommand command{ x };
+    const RightCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 
 unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::forward(int x) const {
-    ForwardCommand command{ x };
+    const ForwardCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 
 unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::back(int x) const {
-    BackCommand command{ x };
+    const BackCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 
+
 unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::clockwise_turn(int x) const {
-    ClockwiseTurnCommand command{ x };
+    const ClockwiseTurnCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 
 unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::counterclockwise_turn(int x) const {
-    CounterclockwiseTurnCommand command{ x };
+    const CounterclockwiseTurnCommand command{ x };
+    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+}
+
+
+unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::flip(char flip_direction) const {
+    const FlipCommand command{ flip_direction };
+    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+}
+
+
+unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::stop() const {
+    const StopCommand command;
+    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+}
+
+unordered_map<ip_address, shared_ptr<Response>> tello::Swarm::emergency() const {
+    const EmergencyCommand command;
     return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
 }
 
 unordered_map<ip_address, shared_ptr<QueryResponse>> tello::Swarm::wifi() const {
-    WifiCommand command;
+    const WifiCommand command;
     return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::empty>(command,
                                                                                     _tellos);
 }

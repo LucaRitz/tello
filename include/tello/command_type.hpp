@@ -36,6 +36,8 @@ namespace tello {
         CLOCKWISE_TURN,
         COUNTERCLOCKWISE_TURN,
 
+    	FLIP,
+    	
         EMERGENCY,
         STOP,
 

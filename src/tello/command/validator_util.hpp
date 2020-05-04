@@ -25,5 +25,7 @@ namespace tello::validator {
         }
     }
 
+    string isHorizontalDirection(const char& direction, const string& argName);
+
     string concat(vector<string> errors);
 }

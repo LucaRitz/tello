@@ -31,16 +31,24 @@ namespace tello {
         [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> command() const override;
         [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> takeoff() const override;
         [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> land() const override;
+    	
         [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> streamon() const override;
         [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> streamoff() const override;
+    	
         [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> up(int x) const override;
         [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> down(int x) const override;
         [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> left(int x) const override;
         [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> right(int x) const override;
         [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> forward(int x) const override;
         [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> back(int x) const override;
+    	
         [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> clockwise_turn(int x) const override;
         [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> counterclockwise_turn(int x) const override;
+    	
+        [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> flip(char flip_direction) const override;
+
+    	[[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> stop() const override;
+        [[nodiscard]] unordered_map<ip_address, shared_ptr<Response>> emergency() const override;
 
         [[nodiscard]] unordered_map<ip_address, shared_ptr<QueryResponse>> wifi() const override;
 

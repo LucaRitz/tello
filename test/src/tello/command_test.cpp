@@ -7,9 +7,11 @@
 #include <tello/command/back_command.hpp>
 #include <tello/command/clockwise_turn_command.hpp>
 #include <tello/command/counterclockwise_turn_command.hpp>
+#include "tello/command/flip_command.hpp"
 #include "tello/command/stop_command.hpp"
 #include "tello/command/emergency_command.hpp"
 #include <random>
+
 
 using tello::Command;
 using tello::CommandType;
@@ -297,6 +299,41 @@ TEST(CommandFactory, CounterclockwiseTurnCommand_xValueBetweenMinAndMaxGiven_bui
     ASSERT_TRUE(result.validate().empty());
     ASSERT_EQ(std::string("ccw ") + x_arg, result.build());
 }
+
+
+TEST(CommandFactory, FlipCommand_flipDirectionInvalid_buildExpectedCommand) {
+    for (auto i = 0; i <= 255; i++)
+    {
+        const char direction = i - 128;
+    	if (direction == 'l' || direction == 'r' || direction == 'f' || direction == 'b')
+    	{
+    		//this is a valid direction --> skip validation
+    		continue;
+    	}
+    	
+        // Act
+        FlipCommand result = FlipCommand(direction);
+
+        // Assert
+        ASSERT_FALSE(result.validate().empty());
+    }
+}
+
+
+TEST(CommandFactory, FlipCommand_flipDirectionValid_buildExpectedCommand) {
+    char validDirections[] = {'r', 'l', 'f', 'b'};
+
+	for (char direction : validDirections)
+	{
+        // Act
+        FlipCommand result = FlipCommand(direction);
+
+        // Assert
+        ASSERT_TRUE(result.validate().empty());
+        ASSERT_EQ(std::string("flip ") + std::to_string(direction), result.build());
+	}    
+}
+
 
 TEST(CommandFactory, StopCommand_buildExpectedCommand) {
     // Act

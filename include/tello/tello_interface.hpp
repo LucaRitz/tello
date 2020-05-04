@@ -22,6 +22,8 @@ namespace tello {
         virtual Response clockwise_turn(int x) const = 0;
         virtual Response counterclockwise_turn(int x) const = 0;
 
+        virtual Response flip(char flip_direction) const = 0;
+
         virtual Response stop() const = 0;
         virtual Response emergency() const = 0;
 

@@ -40,6 +40,7 @@ namespace tello {
         [[nodiscard]] shared_ptr<Response> command() const override;
         [[nodiscard]] shared_ptr<Response> takeoff() const override;
         [[nodiscard]] shared_ptr<Response> land() const override;
+    	
         [[nodiscard]] shared_ptr<Response> streamon() const override;
         [[nodiscard]] shared_ptr<Response> streamoff() const override;
     	
@@ -53,6 +54,8 @@ namespace tello {
         [[nodiscard]] shared_ptr<Response> clockwise_turn(int x) const override;
         [[nodiscard]] shared_ptr<Response> counterclockwise_turn(int x) const override;
 
+    	[[nodiscard]] shared_ptr<Response> flip(char flip_direction) const override;
+    	
         [[nodiscard]] shared_ptr<Response> stop() const override;
         [[nodiscard]] shared_ptr<Response> emergency() const override;
 

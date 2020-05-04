@@ -15,6 +15,7 @@
 #include "command/back_command.hpp"
 #include "command/clockwise_turn_command.hpp"
 #include "command/counterclockwise_turn_command.hpp"
+#include "command/flip_command.hpp"
 #include "command/emergency_command.hpp"
 #include "command/stop_command.hpp"
 #include "command/wifi_command.hpp"
@@ -62,82 +63,88 @@ shared_ptr<Response> tello::Tello::command() const {
 }
 
 shared_ptr<Response> tello::Tello::takeoff() const {
-    TakeoffCommand command;
+    const TakeoffCommand command;
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::land() const {
-    LandCommand command;
+    const LandCommand command;
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 
 shared_ptr<Response> tello::Tello::streamon() const {
-    StreamOnCommand command;
+    const StreamOnCommand command;
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::streamoff() const {
-    StreamOffCommand command;
+    const StreamOffCommand command;
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 
 shared_ptr<Response> tello::Tello::up(int x) const {
-    UpCommand command{ x };
+    const UpCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::down(int x) const {
-    DownCommand command{ x };
+    const DownCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::left(int x) const {
-    LeftCommand command{ x };
+    const LeftCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::right(int x) const {
-    RightCommand command{ x };
+    const RightCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::forward(int x) const {
-    ForwardCommand command{ x };
+    const ForwardCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::back(int x) const {
-    BackCommand command{ x };
+    const BackCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 
 shared_ptr<Response> tello::Tello::clockwise_turn(int x) const {
-    ClockwiseTurnCommand command{ x };
+    const ClockwiseTurnCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::counterclockwise_turn(int x) const {
-    CounterclockwiseTurnCommand command{ x };
+    const CounterclockwiseTurnCommand command{ x };
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+}
+
+shared_ptr<Response> tello::Tello::flip(char flip_direction) const
+{
+    const FlipCommand command{ flip_direction };
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 
 shared_ptr<Response> tello::Tello::stop() const {
-    StopCommand command;
+    const StopCommand command;
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::emergency() const {
-    EmergencyCommand command;
+    const EmergencyCommand command;
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 
 shared_ptr<QueryResponse> tello::Tello::wifi() const {
-    WifiCommand command;
+    const WifiCommand command;
     return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::empty>(command, *this);
 }
 
