@@ -6,7 +6,6 @@
 #include "response/status_response.hpp"
 #include <shared_mutex>
 #include "response/video_response.hpp"
-#include "connection/command_strategy.hpp"
 #include "tello_interface.hpp"
 
 using std::shared_ptr;
@@ -14,7 +13,6 @@ using std::unordered_map;
 using tello::StatusResponse;
 using tello::NetworkData;
 using tello::VideoResponse;
-using tello::CommandStrategy;
 
 namespace tello {
 

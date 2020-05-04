@@ -2,7 +2,11 @@
 
 using tello::Status;
 
-tello::Response::Response(const Status& status) : _status(status), _promise(), _mutex() {}
+tello::Response::Response(const Status& status) : _status(status), _promise(), _mutex() {
+    if (Status::UNKNOWN != _status) {
+        callSubscriber();
+    }
+}
 
 Status tello::Response::status() const {
     return _status;
@@ -10,10 +14,6 @@ Status tello::Response::status() const {
 
 shared_ptr<tello::Response> tello::Response::error() {
     return std::make_shared<Response>(Status::FAIL);
-}
-
-shared_ptr<tello::Response> tello::Response::timeout() {
-    return std::make_shared<Response>(Status::TIMEOUT);
 }
 
 shared_ptr<tello::Response> tello::Response::empty() {
@@ -35,16 +35,9 @@ void tello::Response::update(const Status &status) {
 }
 
 promise<const tello::Response&>& tello::Response::subscribe() {
-    _mutex.lock();
-    if (_status != Status::UNKNOWN) {
-        callSubscriber();
-    }
-    _mutex.unlock();
     return _promise;
 }
 
 void tello::Response::callSubscriber() {
-    _mutex.lock();
     _promise.set_value(*this);
-    _mutex.unlock();
 }

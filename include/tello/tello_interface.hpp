@@ -1,9 +1,5 @@
 #pragma once
 
-#include "connection/command_strategy.hpp"
-
-using tello::CommandStrategy;
-
 namespace tello {
 
     template<typename Response, typename QueryResponse>
@@ -25,13 +21,7 @@ namespace tello {
 
         virtual QueryResponse wifi() const = 0;
 
-        void setCommandStrategy(CommandStrategy strategy) {
-            _strategy = strategy;
-        }
-
     protected:
-        explicit TelloInterface(CommandStrategy strategy) : _strategy(strategy) {}
-
-        CommandStrategy _strategy;
+        TelloInterface() = default;
     };
 }

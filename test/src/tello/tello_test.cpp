@@ -12,8 +12,16 @@ using std::string;
 using std::promise;
 using std::future;
 
+#include <iostream>
+
 TEST(Tello, BasicFlightCommands) {
     Tello tello(TELLO_IP_ADDRESS);
+
+    shared_ptr<Response> rp = tello.up(-30);
+    promise<const Response&>& up_wrong_promise = rp->subscribe();
+    future<const Response&> up_wrong_future = up_wrong_promise.get_future();
+    up_wrong_future.wait();
+    ASSERT_EQ(Status::FAIL, up_wrong_future.get().status());
 
     promise<const Response&>& command_promise = tello.command()->subscribe();
     future<const Response&> command_future = command_promise.get_future();

@@ -6,7 +6,6 @@
 #include <memory>
 #include "../native/network_interface.hpp"
 #include "../video_analyzer.hpp"
-#include "command_strategy.hpp"
 #include "../command.hpp"
 #include "../logger/logger.hpp"
 #include "udp_command_listener.hpp"
@@ -19,7 +18,6 @@ using std::shared_ptr;
 using std::unique_ptr;
 using tello::NetworkInterface;
 using tello::VideoAnalyzer;
-using tello::CommandStrategy;
 using tello::Command;
 using tello::Logger;
 using tello::UdpCommandListener;
@@ -39,12 +37,11 @@ namespace tello {
 
         template<typename CommandResponse, shared_ptr<CommandResponse> (* error)(), shared_ptr<CommandResponse>(* empty)()>
         static shared_ptr<CommandResponse>
-        exec(const Command& command, const Tello& tello, const CommandStrategy& strategy);
+        exec(const Command& command, const Tello& tello);
 
         template<typename CommandResponse, shared_ptr<CommandResponse> (* error)(), shared_ptr<CommandResponse>(* empty)()>
         static unordered_map<ip_address, shared_ptr<CommandResponse>>
-        exec(const Command& command, unordered_map<ip_address, const Tello*> tellos,
-             const CommandStrategy& strategy);
+        exec(const Command& command, unordered_map<ip_address, const Tello*> tellos);
 
     private:
         static ConnectionData _commandConnection;
@@ -71,20 +68,19 @@ namespace tello {
 
     template<typename CommandResponse, shared_ptr<CommandResponse> (* error)(), shared_ptr<CommandResponse>(* empty)()>
     shared_ptr<CommandResponse>
-    Network::exec(const Command& command, const Tello& tello, const CommandStrategy& strategy) {
+    Network::exec(const Command& command, const Tello& tello) {
         unordered_map<ip_address, const Tello*> tellos{};
         ip_address telloAddress = tello._clientaddr._ip;
         tellos[telloAddress] = &tello;
 
-        unordered_map<ip_address, shared_ptr<CommandResponse>> answers = exec<CommandResponse, error, empty>(command, tellos, strategy);
+        unordered_map<ip_address, shared_ptr<CommandResponse>> answers = exec<CommandResponse, error, empty>(command, tellos);
         auto answer = answers.find(telloAddress);
         return std::move(answer->second);
     }
 
     template<typename CommandResponse, shared_ptr<CommandResponse> (* error)(), shared_ptr<CommandResponse>(* empty)()>
     unordered_map<ip_address, shared_ptr<CommandResponse>>
-    Network::exec(const Command& command, unordered_map<ip_address, const Tello*> tellos,
-                  const CommandStrategy& strategy) {
+    Network::exec(const Command& command, unordered_map<ip_address, const Tello*> tellos) {
         unordered_map<ip_address, shared_ptr<CommandResponse>> responses{};
         string errorMessage = command.validate();
         if (!errorMessage.empty()) {
@@ -125,11 +121,13 @@ namespace tello {
             }
         }
 
+        unordered_map<ip_address, shared_ptr<CommandResponse>> openResponses{};
         for(auto aTello : tellos) {
             responses[aTello.first] = empty();
+            openResponses[aTello.first] = responses[aTello.first];
         }
 
-        _commandListener.append(responses);
+        _commandListener.append(openResponses);
 
         return responses;
     }

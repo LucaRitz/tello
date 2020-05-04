@@ -4,11 +4,9 @@
 #include <memory>
 #include "tello_interface.hpp"
 #include "native/network_interface.hpp"
-#include "connection/command_strategy.hpp"
 
 using std::unordered_map;
 using std::shared_ptr;
-using tello::CommandStrategy;
 
 namespace tello {
 
@@ -21,7 +19,7 @@ namespace tello {
     class Swarm
             : public TelloInterface<unordered_map<ip_address, shared_ptr<Response>>, unordered_map<ip_address, shared_ptr<QueryResponse>>> {
     public:
-        Swarm();
+        Swarm() = default;
 
         void add(const Tello& tello);
         [[nodiscard]] const unordered_map<ip_address, const Tello*>& tellos() const;

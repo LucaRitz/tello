@@ -29,8 +29,7 @@ using namespace tello::command;
 unordered_map<ip_address, const tello::Tello*> tello::Tello::_telloMapping;
 std::shared_mutex tello::Tello::_telloMappingMutex;
 
-tello::Tello::Tello(ip_address telloIp) : TelloInterface(CommandStrategy::COMMAND_AND_WAIT),
-                                          _clientaddr(mapToNetworkData(telloIp)),
+tello::Tello::Tello(ip_address telloIp) : _clientaddr(mapToNetworkData(telloIp)),
                                           _statusHandler(nullptr) {
     _telloMappingMutex.lock();
     _telloMapping[telloIp] = this;
@@ -57,72 +56,72 @@ void tello::Tello::setVideoHandler(video_handler videoHandler) {
 
 shared_ptr<Response> tello::Tello::command() const {
     const CommandCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::takeoff() const {
     TakeoffCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::land() const {
     LandCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::streamon() const {
     StreamOnCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::streamoff() const {
     StreamOffCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::up(int x) const {
     UpCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::down(int x) const {
     DownCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::left(int x) const {
     LeftCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::right(int x) const {
     RightCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::forward(int x) const {
     ForwardCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::back(int x) const {
     BackCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::clockwise_turn(int x) const {
     ClockwiseTurnCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<Response> tello::Tello::counterclockwise_turn(int x) const {
     CounterclockwiseTurnCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, *this, _strategy);
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
 shared_ptr<QueryResponse> tello::Tello::wifi() const {
     WifiCommand command;
-    return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::empty>(command, *this,_strategy);
+    return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::empty>(command, *this);
 }
 
 /////////////////////////////////////////////////////////////

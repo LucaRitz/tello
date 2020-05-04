@@ -16,10 +16,6 @@ shared_ptr<tello::QueryResponse> tello::QueryResponse::error() {
     return std::make_shared<QueryResponse>(Status::FAIL);
 }
 
-shared_ptr<tello::QueryResponse> tello::QueryResponse::timeout() {
-    return std::make_shared<QueryResponse>(Status::TIMEOUT);
-}
-
 shared_ptr<tello::QueryResponse> tello::QueryResponse::empty() {
     return std::make_shared<QueryResponse>(Status::UNKNOWN);
 }

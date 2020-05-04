@@ -14,7 +14,6 @@ namespace tello {
         [[nodiscard]] int value() const;
 
         static shared_ptr<QueryResponse> error();
-        static shared_ptr<QueryResponse> timeout();
         static shared_ptr<QueryResponse> empty();
 
         void update(const string& value) override;

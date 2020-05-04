@@ -35,7 +35,6 @@ namespace tello {
         [[nodiscard]] Status status() const;
 
         static shared_ptr<Response> error();
-        static shared_ptr<Response> timeout();
         static shared_ptr<Response> empty();
 
         virtual void update(const string& value);
