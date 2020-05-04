@@ -6,26 +6,13 @@ using tello::LoggerType;
 
 tello::QueryResponse::QueryResponse(const Status& status) : Response(status),
                                                               _value(-1) {}
-
-int tello::QueryResponse::value() const {
-    return _value;
-}
-
-tello::QueryResponse tello::QueryResponse::error() {
-    return QueryResponse{Status::FAIL};
-}
-
-tello::QueryResponse tello::QueryResponse::empty() {
-    return QueryResponse{Status::UNKNOWN};
-}
-
-void tello::QueryResponse::update(const string &value) {
-    _value = convert(value);
+tello::QueryResponse::QueryResponse(const string& value) : Response(Status::UNKNOWN),
+                                                            _value(convert(value)) {
     _status = _value >= 0 ? Status::OK : Status::FAIL;
 }
 
-void tello::QueryResponse::update(const Status& status) {
-    Response::update(status);
+int tello::QueryResponse::value() const {
+    return _value;
 }
 
 int tello::QueryResponse::QueryResponse::convert(const string& stringValue) {

@@ -40,102 +40,102 @@ void tello::Swarm::add(const Tello &tello) {
 
 unordered_map<ip_address, future<Response>> tello::Swarm::command() const {
     const CommandCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 unordered_map<ip_address, future<Response>> tello::Swarm::takeoff() const {
     const TakeoffCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 unordered_map<ip_address, future<Response>> tello::Swarm::land() const {
     const LandCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 
 unordered_map<ip_address, future<Response>> tello::Swarm::streamon() const {
     const StreamOnCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 unordered_map<ip_address, future<Response>> tello::Swarm::streamoff() const {
     const StreamOffCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 
 unordered_map<ip_address, future<Response>> tello::Swarm::up(int x) const {
     const UpCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 unordered_map<ip_address, future<Response>> tello::Swarm::down(int x) const {
     const DownCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 unordered_map<ip_address, future<Response>> tello::Swarm::left(int x) const {
     const LeftCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 unordered_map<ip_address, future<Response>> tello::Swarm::right(int x) const {
     const RightCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 unordered_map<ip_address, future<Response>> tello::Swarm::forward(int x) const {
     const ForwardCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 unordered_map<ip_address, future<Response>> tello::Swarm::back(int x) const {
     const BackCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 unordered_map<ip_address, future<Response>> tello::Swarm::clockwise_turn(int x) const {
     const ClockwiseTurnCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 unordered_map<ip_address, future<Response>> tello::Swarm::counterclockwise_turn(int x) const {
     const CounterclockwiseTurnCommand command{ x };
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 
 unordered_map<ip_address, future<Response>> tello::Swarm::flip(char flip_direction) const {
     const FlipCommand command{ flip_direction };
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 
 unordered_map<ip_address, future<Response>> tello::Swarm::stop() const {
     const StopCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 unordered_map<ip_address, future<Response>> tello::Swarm::emergency() const {
     const EmergencyCommand command;
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 
 unordered_map<ip_address, future<Response>> tello::Swarm::set_speed(int velocity) const {
     const SetSpeedCommand command {velocity};
-    return Network::exec<Response, Response::error, Response::empty>(command, _tellos);
+    return Network::exec<Response>(command, _tellos);
 }
 
 unordered_map<ip_address, future<QueryResponse>> tello::Swarm::read_speed() const {
     const ReadSpeedCommand command;
-    return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::empty>(command, _tellos);
+    return Network::exec<QueryResponse>(command, _tellos);
 }
 
 unordered_map<ip_address, future<QueryResponse>> tello::Swarm::read_wifi() const {
     const ReadWifiCommand command;
-    return Network::exec<QueryResponse, QueryResponse::error, QueryResponse::empty>(command, _tellos);
+    return Network::exec<QueryResponse>(command, _tellos);
 }
 
 /////////////////////////////////////////////////////////////

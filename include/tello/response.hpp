@@ -25,16 +25,11 @@ namespace tello {
 
     class Response {
     public:
-        Response() : _status(Status::UNKNOWN) {}
+        Response() : _status(Status::UNKNOWN){}
+        explicit Response(const string& value);
         explicit Response(const Status& status);
 
         [[nodiscard]] Status status() const;
-
-        static Response error();
-        static Response empty();
-
-        virtual void update(const string& value);
-        virtual void update(const Status& status);
 
     protected:
         Status _status;
