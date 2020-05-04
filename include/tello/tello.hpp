@@ -42,14 +42,19 @@ namespace tello {
         [[nodiscard]] shared_ptr<Response> land() const override;
         [[nodiscard]] shared_ptr<Response> streamon() const override;
         [[nodiscard]] shared_ptr<Response> streamoff() const override;
+    	
         [[nodiscard]] shared_ptr<Response> up(int x) const override;
         [[nodiscard]] shared_ptr<Response> down(int x) const override;
         [[nodiscard]] shared_ptr<Response> left(int x) const override;
         [[nodiscard]] shared_ptr<Response> right(int x) const override;
         [[nodiscard]] shared_ptr<Response> forward(int x) const override;
         [[nodiscard]] shared_ptr<Response> back(int x) const override;
+    	
         [[nodiscard]] shared_ptr<Response> clockwise_turn(int x) const override;
         [[nodiscard]] shared_ptr<Response> counterclockwise_turn(int x) const override;
+
+        [[nodiscard]] shared_ptr<Response> stop() const override;
+        [[nodiscard]] shared_ptr<Response> emergency() const override;
 
         [[nodiscard]] shared_ptr<QueryResponse> wifi() const override;
 

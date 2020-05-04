@@ -7,6 +7,8 @@
 #include <tello/command/back_command.hpp>
 #include <tello/command/clockwise_turn_command.hpp>
 #include <tello/command/counterclockwise_turn_command.hpp>
+#include "tello/command/stop_command.hpp"
+#include "tello/command/emergency_command.hpp"
 #include <random>
 
 using tello::Command;
@@ -294,4 +296,22 @@ TEST(CommandFactory, CounterclockwiseTurnCommand_xValueBetweenMinAndMaxGiven_bui
     // Assert
     ASSERT_TRUE(result.validate().empty());
     ASSERT_EQ(std::string("ccw ") + x_arg, result.build());
+}
+
+TEST(CommandFactory, StopCommand_buildExpectedCommand) {
+    // Act
+    StopCommand result = StopCommand();
+
+    // Assert
+    ASSERT_TRUE(result.validate().empty());
+    ASSERT_EQ(std::string("stop"), result.build());
+}
+
+TEST(CommandFactory, EmergencyCommand_buildExpectedCommand) {
+    // Act
+    EmergencyCommand result = EmergencyCommand();
+
+    // Assert
+    ASSERT_TRUE(result.validate().empty());
+    ASSERT_EQ(std::string("emergency"), result.build());
 }

@@ -15,6 +15,8 @@
 #include "command/back_command.hpp"
 #include "command/clockwise_turn_command.hpp"
 #include "command/counterclockwise_turn_command.hpp"
+#include "command/emergency_command.hpp"
+#include "command/stop_command.hpp"
 #include "command/wifi_command.hpp"
 
 #define COMMAND_PORT 8889
@@ -69,6 +71,7 @@ shared_ptr<Response> tello::Tello::land() const {
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
+
 shared_ptr<Response> tello::Tello::streamon() const {
     StreamOnCommand command;
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
@@ -78,6 +81,7 @@ shared_ptr<Response> tello::Tello::streamoff() const {
     StreamOffCommand command;
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
+
 
 shared_ptr<Response> tello::Tello::up(int x) const {
     UpCommand command{ x };
@@ -109,6 +113,7 @@ shared_ptr<Response> tello::Tello::back(int x) const {
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
 
+
 shared_ptr<Response> tello::Tello::clockwise_turn(int x) const {
     ClockwiseTurnCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
@@ -118,6 +123,18 @@ shared_ptr<Response> tello::Tello::counterclockwise_turn(int x) const {
     CounterclockwiseTurnCommand command{ x };
     return Network::exec<Response, Response::error, Response::empty>(command, *this);
 }
+
+
+shared_ptr<Response> tello::Tello::stop() const {
+    StopCommand command;
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+}
+
+shared_ptr<Response> tello::Tello::emergency() const {
+    EmergencyCommand command;
+    return Network::exec<Response, Response::error, Response::empty>(command, *this);
+}
+
 
 shared_ptr<QueryResponse> tello::Tello::wifi() const {
     WifiCommand command;
