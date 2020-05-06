@@ -1,4 +1,62 @@
-# tello SDK 2.0
+# C++ Tello Lib
+The intent of this library is its simplicity to use.
+The following code section shows a basic setup for one Tello-drone.
+```cpp
+// Initialize logging
+LoggerSettings settings {"./log/command_log.log", "./log/video_log.log", "./log/status_log.log"};
+Logger::initialize(settings);
+
+// Setup connection
+const bool isConnected = Network::connect();
+assert(isConnected);
+
+// Create a tello drone object for interaction
+Tello tello(TELLO_IP_ADDRESS);
+
+// Enter command mode.
+future<Response> command_future = tello.command();
+// You don't have to wait for a response.
+// A response is timed-out after 15 seconds.
+command_future.wait();
+
+// More commands
+// ...
+
+// At least, the connections have to be closed.
+Network::disconnect();
+```
+
+Another possibility is the setup of a swarm.
+```cpp
+// setup ...
+
+// Create tello drones object for interaction
+Tello tello_1(TELLO_IP_ADDRESS_1);
+Tello tello_2(TELLO_IP_ADDRESS_2);
+// ...
+Tello tello_n(TELLO_IP_ADDRESS_n);
+
+// Create a swarm object and add tellos
+Swarm swarm;
+swarm << tello_1 << tello_2 << ... << tello_n;
+
+// Enter command mode
+unordered_map<ip_address, future<Response>> response_futures = swarm.command();
+for(auto& entry : response_futures) {
+    entry.second.wait();
+}
+// May repeate command for a single tello if one failed.
+
+
+// More commands and tear down
+// ...
+```
+
+## Third-party libs
+For logging, the library spdlog is used.
+https://github.com/gabime/spdlog
+
+# Tello SDK 2.0
 
 ## Send Command & Receive Response
 Tello IP: 192.168.10.1
