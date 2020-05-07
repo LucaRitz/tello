@@ -53,6 +53,7 @@ namespace tello {
         [[nodiscard]] unordered_map<ip_address, future<Response>> emergency() const override;
 
         [[nodiscard]] unordered_map<ip_address, future<Response>> set_speed(int velocity) const override;
+        [[nodiscard]] unordered_map<ip_address, future<Response>> rc_control(int x, int y, int z, int r) const override;
 
         [[nodiscard]] unordered_map<ip_address, future<QueryResponse>> read_speed() const override;
         [[nodiscard]] unordered_map<ip_address, future<QueryResponse>> read_wifi() const override;

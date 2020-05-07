@@ -62,6 +62,7 @@ namespace tello {
         [[nodiscard]] future<Response> emergency() const override;
 
         [[nodiscard]] future<Response> set_speed(int velocity) const override;
+        [[nodiscard]] future<Response> rc_control(int x, int y, int z, int r) const override;
 
         [[nodiscard]] future<QueryResponse> read_speed() const override;
         [[nodiscard]] future<QueryResponse> read_wifi() const override;
