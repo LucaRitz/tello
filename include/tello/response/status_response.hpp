@@ -38,8 +38,8 @@ namespace tello {
 
     private:
         unordered_map<string, string> values;
-        float readFloat(string& key, float defaultValue);
-        int readInt(string& key, int defaultValue);
+        float readFloat(string&& key, float defaultValue);
+        int readInt(string&& key, int defaultValue);
 
     };
 }
