@@ -108,6 +108,14 @@ TEST(Tello, SpeedCommands) {
 TEST(Tello, RCControlCommandFlyCircle) {
     Tello tello(TELLO_IP_ADDRESS);
 
+    future<Response> command_future = tello.command();
+    command_future.wait();
+    ASSERT_EQ(Status::OK, command_future.get().status());
+
+    future<Response> takeoff_future = tello.takeoff();
+    takeoff_future.wait();
+    ASSERT_EQ(Status::OK, takeoff_future.get().status());
+
     future<Response> rc_control_future1 = tello.rc_control(10, -10, 0, 0);
     rc_control_future1.wait();
     ASSERT_EQ(Status::OK, rc_control_future1.get().status());
@@ -139,4 +147,12 @@ TEST(Tello, RCControlCommandFlyCircle) {
     future<Response> rc_control_future8 = tello.rc_control(10, 0, 0, 0);
     rc_control_future8.wait();
     ASSERT_EQ(Status::OK, rc_control_future8.get().status());
+
+    future<Response> rc_control_future9 = tello.rc_control(0, 0, 0, 0);
+    rc_control_future9.wait();
+    ASSERT_EQ(Status::OK, rc_control_future9.get().status());
+
+    future<Response> land_future = tello.land();
+    land_future.wait();
+    ASSERT_EQ(Status::OK, land_future.get().status());
 }
