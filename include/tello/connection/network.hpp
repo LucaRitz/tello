@@ -131,14 +131,22 @@ namespace tello {
             }
         }
 
-        vector<ip_address> openResponses{};
-        for(auto aTello : tellos) {
-            openResponses.push_back(aTello.first);
-        }
-
-        unordered_map<ip_address, future<CommandResponse>> futures = _commandListener.append<CommandResponse>(openResponses);
-        for(auto& future : futures) {
-            responses[future.first] = std::move(future.second);
+        if (command.hasResponse()) {
+            vector<ip_address> openResponses{};
+            for(auto aTello : tellos) {
+                openResponses.push_back(aTello.first);
+            }
+            unordered_map<ip_address, future<CommandResponse>> futures = _commandListener.append<CommandResponse>(openResponses);
+            for(auto& future : futures) {
+                responses[future.first] = std::move(future.second);
+            }
+        } else {
+            for(auto aTello : tellos) {
+                CommandResponse response = CommandResponse{Status::UNKNOWN};
+                promise<CommandResponse> unknownProm{};
+                unknownProm.set_value(response);
+                responses[aTello.first] = std::move(unknownProm.get_future());
+            }
         }
 
         return responses;

@@ -23,3 +23,7 @@ string tello::command::RCControlCommand::validate() const {
 string tello::command::RCControlCommand::build() const {
     return std::string("rc ") + std::to_string(_x) + std::string(" ") + std::to_string(_y) + std::string(" ") + std::to_string(_z) + std::string(" ") + std::to_string(_r);
 }
+
+bool tello::command::RCControlCommand::hasResponse() const {
+    return false;
+}

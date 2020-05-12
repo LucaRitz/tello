@@ -10,9 +10,11 @@ namespace tello::command {
         explicit RCControlCommand(int x, int y, int z, int r);
 
         [[nodiscard]]
-        virtual string validate() const override;
+        string validate() const override;
         [[nodiscard]]
         string build() const override;
+        [[nodiscard]]
+        bool hasResponse() const override;
 
     private:
         const int _x;

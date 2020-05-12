@@ -118,39 +118,39 @@ TEST(Tello, RCControlCommandFlyCircle) {
 
     future<Response> rc_control_future1 = tello.rc_control(10, -10, 0, 0);
     rc_control_future1.wait();
-    ASSERT_EQ(Status::OK, rc_control_future1.get().status());
+    ASSERT_EQ(Status::UNKNOWN, rc_control_future1.get().status());
 
     future<Response> rc_control_future2 = tello.rc_control(0, -10, 0, 0);
     rc_control_future2.wait();
-    ASSERT_EQ(Status::OK, rc_control_future2.get().status());
+    ASSERT_EQ(Status::UNKNOWN, rc_control_future2.get().status());
 
     future<Response> rc_control_future3 = tello.rc_control(-10, -10, 0, 0);
     rc_control_future3.wait();
-    ASSERT_EQ(Status::OK, rc_control_future3.get().status());
+    ASSERT_EQ(Status::UNKNOWN, rc_control_future3.get().status());
 
     future<Response> rc_control_future4 = tello.rc_control(-10, 0, 0, 0);
     rc_control_future4.wait();
-    ASSERT_EQ(Status::OK, rc_control_future4.get().status());
+    ASSERT_EQ(Status::UNKNOWN, rc_control_future4.get().status());
 
     future<Response> rc_control_future5 = tello.rc_control(-10, 10, 0, 0);
     rc_control_future5.wait();
-    ASSERT_EQ(Status::OK, rc_control_future5.get().status());
+    ASSERT_EQ(Status::UNKNOWN, rc_control_future5.get().status());
 
     future<Response> rc_control_future6 = tello.rc_control(0, 10, 0, 0);
     rc_control_future6.wait();
-    ASSERT_EQ(Status::OK, rc_control_future6.get().status());
+    ASSERT_EQ(Status::UNKNOWN, rc_control_future6.get().status());
 
     future<Response> rc_control_future7 = tello.rc_control(10, 10, 0, 0);
     rc_control_future7.wait();
-    ASSERT_EQ(Status::OK, rc_control_future7.get().status());
+    ASSERT_EQ(Status::UNKNOWN, rc_control_future7.get().status());
 
     future<Response> rc_control_future8 = tello.rc_control(10, 0, 0, 0);
     rc_control_future8.wait();
-    ASSERT_EQ(Status::OK, rc_control_future8.get().status());
+    ASSERT_EQ(Status::UNKNOWN, rc_control_future8.get().status());
 
     future<Response> rc_control_future9 = tello.rc_control(0, 0, 0, 0);
     rc_control_future9.wait();
-    ASSERT_EQ(Status::OK, rc_control_future9.get().status());
+    ASSERT_EQ(Status::UNKNOWN, rc_control_future9.get().status());
 
     future<Response> land_future = tello.land();
     land_future.wait();

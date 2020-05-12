@@ -21,6 +21,8 @@ namespace tello {
         [[nodiscard]]
         virtual string build() const = 0;
         [[nodiscard]]
+        virtual bool hasResponse() const;
+        [[nodiscard]]
         inline const CommandType& type() const { return _type; }
 
     protected:

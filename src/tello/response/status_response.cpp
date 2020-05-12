@@ -32,7 +32,7 @@ tello::StatusResponse::StatusResponse(const string& response) :
 }
 
 
-float tello::StatusResponse::readFloat(string& key, float defaultValue)
+float tello::StatusResponse::readFloat(string&& key, float defaultValue)
 {
     if (values.empty())
     {
@@ -44,7 +44,7 @@ float tello::StatusResponse::readFloat(string& key, float defaultValue)
     return value;
 }
 
-int tello::StatusResponse::readInt(string& key, int defaultValue)
+int tello::StatusResponse::readInt(string&& key, int defaultValue)
 {
     if (values.empty())
     {
