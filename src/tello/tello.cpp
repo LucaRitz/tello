@@ -19,6 +19,7 @@
 #include "command/stop_command.hpp"
 #include "command/emergency_command.hpp"
 #include "command/set_speed_command.hpp"
+#include "command/rc_control_command.hpp"
 #include "command/read_speed_command.hpp"
 #include "command/read_wifi_command.hpp"
 
@@ -140,12 +141,15 @@ future<Response> tello::Tello::emergency() const {
     return Network::exec<Response>(command, *this);
 }
 
-
 future<Response> tello::Tello::set_speed(int velocity) const {
     const SetSpeedCommand command { velocity };
     return Network::exec<Response>(command, *this);
 }
 
+future<Response> tello::Tello::rc_control(int x, int y, int z, int r) const {
+    const RCControlCommand command { x, y, z, r };
+    return Network::exec<Response>(command, *this);
+}
 
 future<QueryResponse> tello::Tello::read_speed() const {
     const ReadSpeedCommand command;

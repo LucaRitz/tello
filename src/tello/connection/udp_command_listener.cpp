@@ -22,22 +22,6 @@ tello::ResponseMapping::ResponseMapping(promise<QueryResponse>& prom, time_t ins
         : _prom(), _queryProm(std::move(prom)),
           _insertDate(insertDate), _responseMappingType(ResponseMappingType::QUERY_RESPONSE) {}
 
-void tello::ResponseMapping::set_value(const string& value) {
-    if (_responseMappingType == ResponseMappingType::RESPONSE) {
-        _prom.set_value(Response{value});
-    } else if (_responseMappingType == ResponseMappingType::QUERY_RESPONSE) {
-        _queryProm.set_value(QueryResponse{value});
-    }
-}
-
-void tello::ResponseMapping::set_value(const Status& status) {
-    if(_responseMappingType == ResponseMappingType::RESPONSE) {
-        _prom.set_value(Response{status});
-    } else if (_responseMappingType == ResponseMappingType::QUERY_RESPONSE) {
-        _queryProm.set_value(QueryResponse{status});
-    }
-}
-
 void tello::UdpCommandListener::stop()  {
     _exitSignal.set_value();
     _worker.join();

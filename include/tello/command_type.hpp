@@ -42,6 +42,7 @@ namespace tello {
         STOP,
 
         SET_SPEED,
+        RC_CONTROL,
 
         READ_SPEED,
         READ_WIFI

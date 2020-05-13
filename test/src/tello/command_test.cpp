@@ -10,11 +10,10 @@
 #include "tello/command/flip_command.hpp"
 #include "tello/command/stop_command.hpp"
 #include "tello/command/emergency_command.hpp"
-#include <random>
-
-
 #include "tello/command/read_speed_command.hpp"
 #include "tello/command/set_speed_command.hpp"
+#include "tello/command/rc_control_command.hpp"
+#include <random>
 
 
 using tello::Command;
@@ -399,4 +398,192 @@ TEST(CommandFactory, ReadSpeedCommand_buildExpectedCommand) {
     // Assert
     ASSERT_TRUE(result.validate().empty());
     ASSERT_EQ(std::string("speed?"), result.build());
+}
+
+TEST(CommandFactory, RCControlCommandXTooLow_buildExpectedCommand) {
+    std::uniform_int_distribution<int> dist(-200, -101);
+    int x = dist(mt);
+    int y = 0;
+    int z = 0;
+    int r = 0;
+
+    // Act
+    RCControlCommand result = RCControlCommand(x, y, z, r);
+
+    // Assert
+    ASSERT_FALSE(result.validate().empty());
+}
+
+TEST(CommandFactory, RCControlCommandXTooHigh_buildExpectedCommand) {
+    std::uniform_int_distribution<int> dist(101, 200);
+    int x = dist(mt);
+    int y = 0;
+    int z = 0;
+    int r = 0;
+
+    // Act
+    RCControlCommand result = RCControlCommand(x, y, z, r);
+
+    // Assert
+    ASSERT_FALSE(result.validate().empty());
+}
+
+TEST(CommandFactory, RCControlCommandXValid_buildExpectedCommand) {
+    std::uniform_int_distribution<int> dist(-100, 100);
+    int x = dist(mt);
+    int y = 0;
+    int z = 0;
+    int r = 0;
+    string x_arg = std::to_string(x);
+    string y_arg = std::to_string(y);
+    string z_arg = std::to_string(z);
+    string r_arg = std::to_string(r);
+
+    // Act
+    RCControlCommand result = RCControlCommand(x, y, z, r);
+
+    // Assert
+    ASSERT_TRUE(result.validate().empty());
+    ASSERT_EQ(std::string("rc ") + std::to_string(x) + std::string(" ") + std::to_string(y) + std::string(" ") + std::to_string(z) + std::string(" ") + std::to_string(r), result.build());
+}
+
+TEST(CommandFactory, RCControlCommandYTooLow_buildExpectedCommand) {
+    std::uniform_int_distribution<int> dist(-200, -101);
+    int x = 0;
+    int y = dist(mt);
+    int z = 0;
+    int r = 0;
+
+    // Act
+    RCControlCommand result = RCControlCommand(x, y, z, r);
+
+    // Assert
+    ASSERT_FALSE(result.validate().empty());
+}
+
+TEST(CommandFactory, RCControlCommandYTooHigh_buildExpectedCommand) {
+    std::uniform_int_distribution<int> dist(101, 200);
+    int x = 0;
+    int y = dist(mt);
+    int z = 0;
+    int r = 0;
+
+    // Act
+    RCControlCommand result = RCControlCommand(x, y, z, r);
+
+    // Assert
+    ASSERT_FALSE(result.validate().empty());
+}
+
+TEST(CommandFactory, RCControlCommandYValid_buildExpectedCommand) {
+    std::uniform_int_distribution<int> dist(-100, 100);
+    int x = 0;
+    int y = dist(mt);
+    int z = 0;
+    int r = 0;
+    string x_arg = std::to_string(x);
+    string y_arg = std::to_string(y);
+    string z_arg = std::to_string(z);
+    string r_arg = std::to_string(r);
+
+    // Act
+    RCControlCommand result = RCControlCommand(x, y, z, r);
+
+    // Assert
+    ASSERT_TRUE(result.validate().empty());
+    ASSERT_EQ(std::string("rc ") + std::to_string(x) + std::string(" ") + std::to_string(y) + std::string(" ") + std::to_string(z) + std::string(" ") + std::to_string(r), result.build());
+}
+
+TEST(CommandFactory, RCControlCommandZTooLow_buildExpectedCommand) {
+    std::uniform_int_distribution<int> dist(-200, -101);
+    int x = 0;
+    int y = 0;
+    int z = dist(mt);
+    int r = 0;
+
+    // Act
+    RCControlCommand result = RCControlCommand(x, y, z, r);
+
+    // Assert
+    ASSERT_FALSE(result.validate().empty());
+}
+
+TEST(CommandFactory, RCControlCommandZTooHigh_buildExpectedCommand) {
+    std::uniform_int_distribution<int> dist(101, 200);
+    int x = 0;
+    int y = 0;
+    int z = dist(mt);
+    int r = 0;
+
+    // Act
+    RCControlCommand result = RCControlCommand(x, y, z, r);
+
+    // Assert
+    ASSERT_FALSE(result.validate().empty());
+}
+
+TEST(CommandFactory, RCControlCommandZValid_buildExpectedCommand) {
+    std::uniform_int_distribution<int> dist(-100, 100);
+    int x = 0;
+    int y = 0;
+    int z = dist(mt);
+    int r = 0;
+    string x_arg = std::to_string(x);
+    string y_arg = std::to_string(y);
+    string z_arg = std::to_string(z);
+    string r_arg = std::to_string(r);
+
+    // Act
+    RCControlCommand result = RCControlCommand(x, y, z, r);
+
+    // Assert
+    ASSERT_TRUE(result.validate().empty());
+    ASSERT_EQ(std::string("rc ") + std::to_string(x) + std::string(" ") + std::to_string(y) + std::string(" ") + std::to_string(z) + std::string(" ") + std::to_string(r), result.build());
+}
+
+TEST(CommandFactory, RCControlCommandRTooLow_buildExpectedCommand) {
+    std::uniform_int_distribution<int> dist(-200, -101);
+    int x = 0;
+    int y = 0;
+    int z = 0;
+    int r = dist(mt);
+
+    // Act
+    RCControlCommand result = RCControlCommand(x, y, z, r);
+
+    // Assert
+    ASSERT_FALSE(result.validate().empty());
+}
+
+TEST(CommandFactory, RCControlCommandRTooHigh_buildExpectedCommand) {
+    std::uniform_int_distribution<int> dist(101, 200);
+    int x = 0;
+    int y = 0;
+    int z = 0;
+    int r = dist(mt);
+
+    // Act
+    RCControlCommand result = RCControlCommand(x, y, z, r);
+
+    // Assert
+    ASSERT_FALSE(result.validate().empty());
+}
+
+TEST(CommandFactory, RCControlCommandRValid_buildExpectedCommand) {
+    std::uniform_int_distribution<int> dist(-100, 100);
+    int x = 0;
+    int y = 0;
+    int z = 0;
+    int r = dist(mt);
+    string x_arg = std::to_string(x);
+    string y_arg = std::to_string(y);
+    string z_arg = std::to_string(z);
+    string r_arg = std::to_string(r);
+
+    // Act
+    RCControlCommand result = RCControlCommand(x, y, z, r);
+
+    // Assert
+    ASSERT_TRUE(result.validate().empty());
+    ASSERT_EQ(std::string("rc ") + std::to_string(x) + std::string(" ") + std::to_string(y) + std::string(" ") + std::to_string(z) + std::string(" ") + std::to_string(r), result.build());
 }

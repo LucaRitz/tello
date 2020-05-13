@@ -32,6 +32,8 @@ target_sources(${PROJECT_NAME} PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/emergency_command.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/set_speed_command.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/set_speed_command.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/rc_control_command.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/rc_control_command.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/read_wifi_command.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/read_wifi_command.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/read_speed_command.hpp

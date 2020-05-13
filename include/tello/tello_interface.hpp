@@ -28,6 +28,7 @@ namespace tello {
         virtual Response emergency() const = 0;
 
         virtual Response set_speed(int velocity) const = 0;
+        virtual Response rc_control(int x, int y, int z, int r) const = 0;
     	
         virtual QueryResponse read_speed() const = 0;
         virtual QueryResponse read_wifi() const = 0;

@@ -28,6 +28,7 @@ unordered_map<const CommandType, string, EnumClassHash> tello::createNamesMap() 
     mapping[CommandType::EMERGENCY] = string("EMERGENCY");
 
     mapping[CommandType::SET_SPEED] = string("SET_SPEED");
+    mapping[CommandType::RC_CONTROL] = string("RC_CONTROL");
 
 	mapping[CommandType::READ_SPEED] = string("READ_SPEED");
 	mapping[CommandType::READ_WIFI] = string("READ_WIFI");
