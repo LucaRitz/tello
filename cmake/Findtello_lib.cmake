@@ -1,7 +1,14 @@
 set(tello_lib_location ${tello_BINARY_DIR}/lib/tello.lib)
-if(EXISTS "${tello_BINARY_DIR}/Release/tello.lib")
-    set(tello_lib_location ${tello_BINARY_DIR}/Release/tello.lib)
-endif()
+#if(EXISTS "${tello_BINARY_DIR}/lib/Release/tello.lib")
+#    set(tello_lib_location ${tello_BINARY_DIR}/lib/Release/tello.lib)
+#endif()
+
+message(" *** BERGER TEST *** ")
+#get_cmake_property(_variableNames VARIABLES)
+#list (SORT _variableNames)
+#foreach (_variableName ${_variableNames})
+#    message(STATUS "BERGER --- ${_variableName}=${${_variableName}}")
+#endforeach()
 
 message("-- Use tello-lib-location: ${tello_lib_location}")
 
