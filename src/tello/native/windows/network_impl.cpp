@@ -1,7 +1,7 @@
 #include "network_impl.hpp"
 #include <tello/logger/logger.hpp>
 
-#define BUFFER_LENGTH 1024
+#define BUFFER_LENGTH 2048
 
 using tello::NetworkData;
 using tello::NetworkResponse;
