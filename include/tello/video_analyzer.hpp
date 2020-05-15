@@ -22,5 +22,7 @@ namespace tello {
 
     private:
         string _frame;
+
+        string string_to_hex(const std::string& input);
     };
 }
