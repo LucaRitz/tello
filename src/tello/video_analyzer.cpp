@@ -1,4 +1,5 @@
 #include "tello/video_analyzer.hpp"
+#include "tello/logger/logger.hpp"
 #include <string>
 
 #define VIDEO_PACKET_LENGTH 1460
@@ -12,6 +13,8 @@ bool tello::VideoAnalyzer::append(const string& framePart) {
     bool isFinish = _frame.size() % VIDEO_PACKET_LENGTH != 0;
     std::cout << "Packet size: " << _frame.size();
     std::cout << "Hex code: " << string_to_hex(framePart) << std::endl;
+    Logger::get(LoggerType::VIDEO)->info("VIDEO-Frame: {}", framePart);
+
     if (isFinish) {
         std::cout << string_to_hex(_frame) << std::endl;
     }
