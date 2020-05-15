@@ -115,12 +115,10 @@ NetworkResponse tello::Network::videoResponseFactory(const NetworkResponse& netw
     return networkResponse;
 }
 
-#include <iostream>
 void tello::Network::invokeVideoListener(const NetworkResponse& response, const Tello& tello) {
     bool frameFull = _videoAnalyzer.append(response._response, response._length);
 
     if (frameFull) {
-        std::cout << "flu" << std::endl;
         unsigned char* frame = _videoAnalyzer.frame();
         unsigned int length = _videoAnalyzer.length();
         _videoAnalyzer.clean();

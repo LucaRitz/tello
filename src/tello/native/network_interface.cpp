@@ -7,7 +7,7 @@ tello::NetworkData::NetworkData(const tello::SIN_FAM sinFam, const unsigned shor
 
 tello::ConnectionData::ConnectionData(int fileDescriptor, NetworkData networkData) :
         _fileDescriptor(fileDescriptor),
-        _networkData(networkData) {};
+        _networkData(networkData) {}
 
 tello::NetworkResponse::NetworkResponse(const tello::NetworkData& sender, char* response, int size) :
         _sender(sender),

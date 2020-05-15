@@ -28,7 +28,6 @@ bool tello::VideoAnalyzer::append(const unsigned char* const& framePart, int len
 
     bool isFinish = _currentSize % VIDEO_PACKET_LENGTH != 0;
     if (isFinish) {
-        std::cout << "finished frame" << std::endl;
         std::cout << "\n\n" << string_to_hex(_frame, _currentSize) << std::endl;
     }
     return isFinish;
