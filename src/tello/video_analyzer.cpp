@@ -8,37 +8,56 @@ using std::string;
 
 #include <iostream>
 
-bool tello::VideoAnalyzer::append(const string& framePart) {
-    _frame += framePart;
-    bool isFinish = _frame.size() % VIDEO_PACKET_LENGTH != 0;
-    std::cout << "Packet size: " << _frame.size();
-    std::cout << "Hex code: " << string_to_hex(framePart) << std::endl;
-    Logger::get(LoggerType::VIDEO)->info("VIDEO-Frame: {}", framePart);
+tello::VideoAnalyzer::VideoAnalyzer() : _frame(nullptr), _currentSize(0) {
 
+}
+
+tello::VideoAnalyzer::~VideoAnalyzer() {
+    clean();
+}
+
+bool tello::VideoAnalyzer::append(const unsigned char* const& framePart, int length) {
+    auto* temp = new unsigned char[_currentSize + length];
+    if (_frame != nullptr) {
+        memcpy(temp, _frame, _currentSize);
+        delete[] _frame;
+    }
+    memcpy(temp + _currentSize, framePart, length);
+    _frame = temp;
+    _currentSize += length;
+
+    bool isFinish = _currentSize % VIDEO_PACKET_LENGTH != 0;
     if (isFinish) {
-        std::cout << string_to_hex(_frame) << std::endl;
+        std::cout << "finished frame" << std::endl;
+        std::cout << "\n\n" << string_to_hex(_frame, _currentSize) << std::endl;
     }
     return isFinish;
 }
 
-string tello::VideoAnalyzer::frame() const {
+unsigned char* tello::VideoAnalyzer::frame() const {
     return _frame;
 }
 
-void tello::VideoAnalyzer::clean() {
-    _frame.clear();
+unsigned int tello::VideoAnalyzer::length() const {
+    return _currentSize;
 }
 
-std::string tello::VideoAnalyzer::string_to_hex(const std::string& input)
+void tello::VideoAnalyzer::clean() {
+    delete[] _frame;
+    _frame = nullptr;
+    _currentSize = 0;
+}
+
+std::string tello::VideoAnalyzer::string_to_hex(unsigned char*& input, unsigned int size)
 {
     static const char hex_digits[] = "0123456789ABCDEF";
 
     std::string output;
-    output.reserve(input.length() * 2);
-    for (unsigned char c : input)
+    output.reserve(size * 2);
+    for (int i = 0; i < size; i++)
     {
-        output.push_back(hex_digits[c >> 4]);
-        output.push_back(hex_digits[c & 15]);
+        output.push_back(hex_digits[input[i] >> 4]);
+        output.push_back(hex_digits[input[i] & 15]);
     }
     return output;
 }

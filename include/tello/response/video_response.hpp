@@ -9,11 +9,18 @@ namespace tello {
 
     class VideoResponse : public Response {
     public:
-        explicit VideoResponse(string videoFrame);
+        VideoResponse(unsigned char* videoFrame, unsigned int length);
+        VideoResponse(const VideoResponse& other);
+        VideoResponse& operator=(const VideoResponse& other);
+        VideoResponse(VideoResponse&& other) noexcept;
+        VideoResponse& operator=(VideoResponse&& other) noexcept;
+        ~VideoResponse();
 
-        [[nodiscard]] const string& videoFrame() const;
+        [[nodiscard]] const unsigned char* videoFrame() const;
+        [[nodiscard]] unsigned int length() const;
 
     private:
-        string _videoFrame;
+        unsigned char* _videoFrame;
+        unsigned int _length;
     };
 }

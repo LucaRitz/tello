@@ -10,19 +10,22 @@ namespace tello {
 
     class VideoAnalyzer {
     public:
-        VideoAnalyzer() = default;
+        VideoAnalyzer();
         VideoAnalyzer(const VideoAnalyzer&) = delete;
         VideoAnalyzer& operator=(const VideoAnalyzer&) = delete;
         VideoAnalyzer(VideoAnalyzer&&) = delete;
         VideoAnalyzer& operator=(VideoAnalyzer&&) = delete;
+        ~VideoAnalyzer();
 
-        bool append(const string& framePart);
-        [[nodiscard]] string frame() const;
+        bool append(const unsigned char* const& framePart, int length);
+        [[nodiscard]] unsigned char* frame() const;
+        [[nodiscard]] unsigned int length() const;
         void clean();
 
     private:
-        string _frame;
+        unsigned char* _frame;
+        unsigned int _currentSize;
 
-        string string_to_hex(const std::string& input);
+        string string_to_hex(unsigned char*& input, unsigned int size);
     };
 }

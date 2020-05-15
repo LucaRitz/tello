@@ -39,8 +39,8 @@ TEST(Tello, SimpleCaseBergerVideo) {
 }
 
 void handler(const VideoResponse& response) {
-    if (!response.videoFrame().empty()) {
-        Logger::get(LoggerType::VIDEO)->info("VIDEO: {}", response.videoFrame());
-        handlerCallCount++;
-    }
+    Logger::get(LoggerType::VIDEO)->info("VIDEO: {}",
+                                         std::string(reinterpret_cast<const char*>(response.videoFrame()),
+                                                     response.length()));
+    handlerCallCount++;
 }

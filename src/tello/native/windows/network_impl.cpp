@@ -106,7 +106,7 @@ NetworkResponse tello::windows::NetworkImpl::read(const int& fileDescriptor) con
     buffer[n] = '\0';
 
     return NetworkResponse(NetworkData{SIN_FAM::I_AF_INET, ntohs(sender.sin_port), ntohl(sender.sin_addr.s_addr)},
-                           string(buffer));
+                           buffer, n);
 }
 
 sockaddr_in tello::windows::NetworkImpl::map(const NetworkData& source) const {

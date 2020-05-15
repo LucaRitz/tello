@@ -23,12 +23,6 @@ tello::StatusResponse::StatusResponse(const string& response) :
             values[key] = value;
         }
     }
-
-	//Debug output
-    for (const auto& elem : values)
-    {
-        std::cout << elem.first << " " << elem.second << "\n";
-    }
 }
 
 

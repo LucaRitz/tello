@@ -34,10 +34,18 @@ namespace tello {
     };
 
     struct NetworkResponse {
-        NetworkResponse(const NetworkData& sender, string response);
+        NetworkResponse(const NetworkData& sender, char* response, int size);
+        NetworkResponse(const NetworkResponse& other);
+        NetworkResponse& operator=(const NetworkResponse& other);
+        NetworkResponse(NetworkResponse&& other) noexcept;
+        NetworkResponse& operator=(NetworkResponse&& other) noexcept;
+        ~NetworkResponse();
 
-        const NetworkData _sender;
-        const string _response;
+        string response() const;
+
+        NetworkData _sender;
+        unsigned char* _response;
+        int _length;
     };
 
     class NetworkInterface {

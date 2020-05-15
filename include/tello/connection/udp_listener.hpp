@@ -70,9 +70,9 @@ namespace tello {
                 if (telloIt != telloMapping.end()) {
                     Response res = factory(networkResponse);
                     invoke(res, *(telloIt->second));
-                } else {
+                } else if (networkResponse._length > 0) {
                     Logger::get(loggerType)->warn(string("Received data {0} from unknown Tello {1:x}"),
-                                                  networkResponse._response, networkResponse._sender._ip);
+                                                  networkResponse.response(), networkResponse._sender._ip);
                 }
                 telloMappingMutex.unlock_shared();
             }

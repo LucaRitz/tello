@@ -7,6 +7,7 @@
 #define VIDEO_PORT 11111
 
 using tello::Response;
+using tello::NetworkResponse;
 
 ConnectionData tello::Network::_commandConnection{-1, {}};
 ConnectionData tello::Network::_statusConnection = {-1, {}};
@@ -19,7 +20,7 @@ UdpListener<StatusResponse, tello::Network::statusResponseFactory, tello::Networ
         _statusConnection, networkInterface, tello::Tello::_telloMapping, tello::Tello::_telloMappingMutex,
         tello::Network::_connectionMutex, LoggerType::STATUS};
 
-UdpListener<string, tello::Network::videoResponseFactory, tello::Network::invokeVideoListener> tello::Network::_videoListener {
+UdpListener<NetworkResponse, tello::Network::videoResponseFactory, tello::Network::invokeVideoListener> tello::Network::_videoListener {
     _videoConnection, networkInterface, tello::Tello::_telloMapping, tello::Tello::_telloMappingMutex,
         tello::Network::_connectionMutex, LoggerType::VIDEO};
 
@@ -101,7 +102,7 @@ void tello::Network::disconnect(ConnectionData& connectionData, const LoggerType
 }
 
 StatusResponse tello::Network::statusResponseFactory(const NetworkResponse& networkResponse) {
-    return StatusResponse{networkResponse._response};
+    return StatusResponse{networkResponse.response()};
 }
 
 void tello::Network::invokeStatusListener(const StatusResponse& response, const tello::Tello& tello) {
@@ -110,20 +111,23 @@ void tello::Network::invokeStatusListener(const StatusResponse& response, const 
     }
 }
 
-string tello::Network::videoResponseFactory(const NetworkResponse& networkResponse) {
-    return networkResponse._response;
+NetworkResponse tello::Network::videoResponseFactory(const NetworkResponse& networkResponse) {
+    return networkResponse;
 }
 
-void tello::Network::invokeVideoListener(const string& response, const Tello& tello) {
-    bool frameFull = _videoAnalyzer.append(response);
+#include <iostream>
+void tello::Network::invokeVideoListener(const NetworkResponse& response, const Tello& tello) {
+    bool frameFull = _videoAnalyzer.append(response._response, response._length);
 
     if (frameFull) {
-        string frame = _videoAnalyzer.frame();
+        std::cout << "flu" << std::endl;
+        unsigned char* frame = _videoAnalyzer.frame();
+        unsigned int length = _videoAnalyzer.length();
         _videoAnalyzer.clean();
 
         if (tello._videoHandler != nullptr) {
-            VideoResponse videResponse = VideoResponse{frame};
-            tello._videoHandler(videResponse);
+            VideoResponse videoResponse = VideoResponse{frame, length};
+            tello._videoHandler(videoResponse);
         }
     }
 }
