@@ -10,6 +10,8 @@ using std::string;
 bool tello::VideoAnalyzer::append(const string& framePart) {
     _frame += framePart;
     bool isFinish = _frame.size() % VIDEO_PACKET_LENGTH != 0;
+    std::cout << "Packet size: " << _frame.size();
+    std::cout << "Hex code: " << string_to_hex(framePart) << std::endl;
     if (isFinish) {
         std::cout << string_to_hex(_frame) << std::endl;
     }
