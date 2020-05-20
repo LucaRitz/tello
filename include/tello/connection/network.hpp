@@ -9,6 +9,7 @@
 #include "../command.hpp"
 #include "../logger/logger.hpp"
 #include "udp_command_listener.hpp"
+#include "../thread/thread_pool.hpp"
 #include <vector>
 
 using tello::ConnectionData;
@@ -23,6 +24,7 @@ using tello::Command;
 using tello::Logger;
 using tello::UdpCommandListener;
 using std::vector;
+using tello::threading::Threadpool;
 
 #define SEND 3
 
@@ -53,6 +55,7 @@ namespace tello {
         static shared_ptr<NetworkInterface> networkInterface;
         static VideoAnalyzer _videoAnalyzer;
         static UdpCommandListener _commandListener;
+        static Threadpool _threadpool;
 
         static StatusResponse statusResponseFactory(const NetworkResponse& networkResponse);
         static void invokeStatusListener(const StatusResponse& response, const Tello& tello);

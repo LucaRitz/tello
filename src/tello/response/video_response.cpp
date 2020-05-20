@@ -6,6 +6,7 @@ tello::VideoResponse::VideoResponse(unsigned char* videoFrame, unsigned int leng
         _length(length){}
 
 tello::VideoResponse::VideoResponse(const VideoResponse& other) :
+        Response(other),
         _length(other.length()) {
     delete[] _videoFrame;
     _videoFrame = reinterpret_cast<unsigned char*>(std::memcpy(new unsigned char[other.length()], other._videoFrame,
@@ -13,6 +14,10 @@ tello::VideoResponse::VideoResponse(const VideoResponse& other) :
 }
 
 tello::VideoResponse& tello::VideoResponse::operator=(const VideoResponse& other) {
+    if (this == &other) {
+        return *this;
+    }
+
     delete[] _videoFrame;
     _videoFrame = reinterpret_cast<unsigned char*>(std::memcpy(new unsigned char[other.length()], other._videoFrame,
                                                                other.length()));

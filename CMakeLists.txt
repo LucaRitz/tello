@@ -23,6 +23,7 @@ endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 set_target_properties(tello PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION 1)
 
 include_directories(${TELLO_INCLUDE})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/ctpl)
 
 add_subdirectory(src)
 add_subdirectory(test)

@@ -41,10 +41,10 @@ namespace tello {
         NetworkResponse& operator=(NetworkResponse&& other) noexcept;
         ~NetworkResponse();
 
-        string response() const;
+        [[nodiscard]] string response() const;
 
         NetworkData _sender;
-        unsigned char* _response;
+        char* _response;
         int _length;
     };
 

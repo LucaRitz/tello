@@ -11,21 +11,24 @@ tello::ConnectionData::ConnectionData(int fileDescriptor, NetworkData networkDat
 
 tello::NetworkResponse::NetworkResponse(const tello::NetworkData& sender, char* response, int size) :
         _sender(sender),
-        _response(reinterpret_cast<unsigned char*>(std::memcpy(new unsigned char[size], response, size))),
+        _response(response),
         _length(size){}
 
 tello::NetworkResponse::NetworkResponse(const NetworkResponse& other) :
         _sender(other._sender),
         _length(other._length) {
-    delete[] _response;
-    _response = reinterpret_cast<unsigned char*>(std::memcpy(new unsigned char[other._length], other._response,
+    _response = reinterpret_cast<char*>(std::memcpy(new char[other._length], other._response,
                                                            other._length));
 }
 
 tello::NetworkResponse& tello::NetworkResponse::operator=(const NetworkResponse& other) {
+    if (this == &other) {
+        return *this;
+    }
+
     this->_sender = other._sender;
     delete[] this->_response;
-    this->_response = reinterpret_cast<unsigned char*>(std::memcpy(new unsigned char[other._length], other._response,
+    this->_response = reinterpret_cast<char*>(std::memcpy(new char[other._length], other._response,
                                                                    other._length));
     this->_length = other._length;
 
@@ -59,5 +62,8 @@ tello::NetworkResponse::~NetworkResponse() {
 }
 
 string tello::NetworkResponse::response() const {
-    return string(reinterpret_cast<const char*>(_response), _length);
+    if (_response != nullptr) {
+        return string(_response);
+    }
+    return "";
 }

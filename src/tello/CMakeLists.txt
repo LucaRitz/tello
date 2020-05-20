@@ -3,6 +3,7 @@ add_subdirectory(command)
 add_subdirectory(connection)
 add_subdirectory(response)
 add_subdirectory(native)
+add_subdirectory(thread)
 
 target_sources(${PROJECT_NAME} PUBLIC
         ${TELLO_INCLUDE}/tello/command.hpp

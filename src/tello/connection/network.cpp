@@ -15,6 +15,7 @@ ConnectionData tello::Network::_videoConnection = {-1, {}};
 std::shared_mutex tello::Network::_connectionMutex;
 shared_ptr<NetworkInterface> tello::Network::networkInterface = tello::NetworkInterfaceFactory::build();
 VideoAnalyzer tello::Network::_videoAnalyzer;
+Threadpool tello::Network::_threadpool;
 UdpCommandListener tello::Network::_commandListener{_commandConnection, networkInterface, _connectionMutex};
 UdpListener<StatusResponse, tello::Network::statusResponseFactory, tello::Network::invokeStatusListener> tello::Network::_statusListener{
         _statusConnection, networkInterface, tello::Tello::_telloMapping, tello::Tello::_telloMappingMutex,
@@ -67,6 +68,7 @@ void tello::Network::disconnect() {
     _statusListener.stop();
     _videoListener.stop();
     _commandListener.stop();
+    _threadpool.stop();
 
     _connectionMutex.lock();
     if (_commandConnection._fileDescriptor != -1) {
@@ -117,15 +119,17 @@ NetworkResponse tello::Network::videoResponseFactory(const NetworkResponse& netw
 
 void tello::Network::invokeVideoListener(const NetworkResponse& response, const Tello& tello) {
     bool frameFull = _videoAnalyzer.append(response._response, response._length);
-
     if (frameFull) {
         unsigned char* frame = _videoAnalyzer.frame();
         unsigned int length = _videoAnalyzer.length();
         _videoAnalyzer.clean();
 
-        if (tello._videoHandler != nullptr) {
-            VideoResponse videoResponse = VideoResponse{frame, length};
-            tello._videoHandler(videoResponse);
-        }
+        _threadpool.push([&tello, &frame, &length](int id) {
+            if (tello._videoHandler != nullptr) {
+                VideoResponse videoResponse = VideoResponse{frame, length};
+                tello._videoHandler(videoResponse);
+            }
+            delete frame;
+        });
     }
 }

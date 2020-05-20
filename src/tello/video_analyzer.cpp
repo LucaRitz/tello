@@ -8,7 +8,7 @@ using std::string;
 
 #include <iostream>
 
-tello::VideoAnalyzer::VideoAnalyzer() : _frame(nullptr), _currentSize(0) {
+tello::VideoAnalyzer::VideoAnalyzer() : _frames(), _frameSizes() {
 
 }
 
@@ -16,47 +16,46 @@ tello::VideoAnalyzer::~VideoAnalyzer() {
     clean();
 }
 
-bool tello::VideoAnalyzer::append(const unsigned char* const& framePart, int length) {
-    auto* temp = new unsigned char[_currentSize + length];
-    if (_frame != nullptr) {
-        memcpy(temp, _frame, _currentSize);
-        delete[] _frame;
-    }
-    memcpy(temp + _currentSize, framePart, length);
-    _frame = temp;
-    _currentSize += length;
+bool tello::VideoAnalyzer::isStart(const char* const& framePart, int length) {
+    return length >= 4 && framePart[0] == '\0' && framePart[1] == '\0' && framePart[2] == '\0' && framePart[3] == '\1';
+}
 
-    bool isFinish = _currentSize % VIDEO_PACKET_LENGTH != 0;
-    if (isFinish) {
-        std::cout << "\n\n" << string_to_hex(_frame, _currentSize) << std::endl;
+bool tello::VideoAnalyzer::append(const char* const& framePart, int length) {
+    if(_frames.empty() && !isStart(framePart, length)) {
+        return false;
     }
-    return isFinish;
+
+    auto* frame = new unsigned char[length];
+    memcpy(frame, framePart, length);
+    _frames.push_back(frame);
+    _frameSizes.push_back(length);
+
+    return length % VIDEO_PACKET_LENGTH != 0;
 }
 
 unsigned char* tello::VideoAnalyzer::frame() const {
-    return _frame;
+    auto* frame = new unsigned char[length()];
+    int pos = 0;
+    for(int i = 0; i < _frames.size(); i++) {
+        memcpy(frame + pos, _frames.at(i), _frameSizes.at(i));
+        pos += _frameSizes.at(i);
+    }
+    return frame;
 }
 
 unsigned int tello::VideoAnalyzer::length() const {
-    return _currentSize;
+    int size = 0;
+    for(int frameSize : _frameSizes) {
+        size += frameSize;
+    }
+
+    return size;
 }
 
 void tello::VideoAnalyzer::clean() {
-    delete[] _frame;
-    _frame = nullptr;
-    _currentSize = 0;
-}
-
-std::string tello::VideoAnalyzer::string_to_hex(unsigned char*& input, unsigned int size)
-{
-    static const char hex_digits[] = "0123456789ABCDEF";
-
-    std::string output;
-    output.reserve(size * 2);
-    for (int i = 0; i < size; i++)
-    {
-        output.push_back(hex_digits[input[i] >> 4]);
-        output.push_back(hex_digits[input[i] & 15]);
+    for(auto* frame : _frames) {
+        delete[] frame;
     }
-    return output;
+    _frames.clear();
+    _frameSizes.clear();
 }

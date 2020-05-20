@@ -17,15 +17,15 @@ namespace tello {
         VideoAnalyzer& operator=(VideoAnalyzer&&) = delete;
         ~VideoAnalyzer();
 
-        bool append(const unsigned char* const& framePart, int length);
+        bool append(const char* const& framePart, int length);
         [[nodiscard]] unsigned char* frame() const;
         [[nodiscard]] unsigned int length() const;
         void clean();
 
     private:
-        unsigned char* _frame;
-        unsigned int _currentSize;
+        vector<unsigned char*> _frames;
+        vector<int> _frameSizes;
 
-        string string_to_hex(unsigned char*& input, unsigned int size);
+        static bool isStart(const char* const& framePart, int length);
     };
 }

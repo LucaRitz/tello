@@ -94,13 +94,13 @@ tello::windows::NetworkImpl::send(const int& fileDescriptor, const NetworkData& 
 }
 
 NetworkResponse tello::windows::NetworkImpl::read(const int& fileDescriptor) const {
-    char buffer[BUFFER_LENGTH];
+    char* buffer = new char[BUFFER_LENGTH];
     int n = 0;
     sockaddr_in sender{};
     memset(&sender, 0, sizeof(sender));
     int senderAddrSize = sizeof(sender);
 
-    n = recvfrom(fileDescriptor, (char*) buffer, BUFFER_LENGTH, 0, (struct sockaddr*) &sender, &senderAddrSize);
+    n = recvfrom(fileDescriptor, buffer, BUFFER_LENGTH, 0, (struct sockaddr*) &sender, &senderAddrSize);
 
     n = n >= 0 ? n : 0;
     buffer[n] = '\0';
