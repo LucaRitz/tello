@@ -8,6 +8,8 @@ using std::string;
 
 namespace tello {
 
+    class NetworkResponse;
+
     class VideoAnalyzer {
     public:
         VideoAnalyzer();
@@ -17,13 +19,13 @@ namespace tello {
         VideoAnalyzer& operator=(VideoAnalyzer&&) = delete;
         ~VideoAnalyzer();
 
-        bool append(const char* const& framePart, int length);
+        bool append(NetworkResponse& response);
         [[nodiscard]] unsigned char* frame() const;
         [[nodiscard]] unsigned int length() const;
         void clean();
 
     private:
-        vector<unsigned char*> _frames;
+        vector<NetworkResponse> _frames;
         vector<int> _frameSizes;
 
         static bool isStart(const char* const& framePart, int length);

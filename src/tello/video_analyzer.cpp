@@ -1,12 +1,11 @@
 #include "tello/video_analyzer.hpp"
 #include "tello/logger/logger.hpp"
+#include <tello/native/network_interface.hpp>
 #include <string>
 
 #define VIDEO_PACKET_LENGTH 1460
 
 using std::string;
-
-#include <iostream>
 
 tello::VideoAnalyzer::VideoAnalyzer() : _frames(), _frameSizes() {
 
@@ -20,15 +19,13 @@ bool tello::VideoAnalyzer::isStart(const char* const& framePart, int length) {
     return length >= 4 && framePart[0] == '\0' && framePart[1] == '\0' && framePart[2] == '\0' && framePart[3] == '\1';
 }
 
-bool tello::VideoAnalyzer::append(const char* const& framePart, int length) {
-    if(_frames.empty() && !isStart(framePart, length)) {
+bool tello::VideoAnalyzer::append(NetworkResponse& response) {
+    if(_frames.empty() && !isStart(response._response, response._length)) {
         return false;
     }
 
-    auto* frame = new unsigned char[length];
-    memcpy(frame, framePart, length);
-    _frames.push_back(frame);
-    _frameSizes.push_back(length);
+    int length = response._length;
+    _frames.push_back(std::move(response));
 
     return length % VIDEO_PACKET_LENGTH != 0;
 }
@@ -36,26 +33,24 @@ bool tello::VideoAnalyzer::append(const char* const& framePart, int length) {
 unsigned char* tello::VideoAnalyzer::frame() const {
     auto* frame = new unsigned char[length()];
     int pos = 0;
+
     for(int i = 0; i < _frames.size(); i++) {
-        memcpy(frame + pos, _frames.at(i), _frameSizes.at(i));
-        pos += _frameSizes.at(i);
+        const NetworkResponse& response = _frames.at(i);
+        memcpy(frame + pos, response._response, response._length);
+        pos += response._length;
     }
     return frame;
 }
 
 unsigned int tello::VideoAnalyzer::length() const {
     int size = 0;
-    for(int frameSize : _frameSizes) {
-        size += frameSize;
+    for(auto& frame : _frames) {
+        size += frame._length;
     }
 
     return size;
 }
 
 void tello::VideoAnalyzer::clean() {
-    for(auto* frame : _frames) {
-        delete[] frame;
-    }
     _frames.clear();
-    _frameSizes.clear();
 }

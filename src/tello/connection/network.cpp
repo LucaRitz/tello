@@ -17,11 +17,11 @@ shared_ptr<NetworkInterface> tello::Network::networkInterface = tello::NetworkIn
 VideoAnalyzer tello::Network::_videoAnalyzer;
 Threadpool tello::Network::_threadpool;
 UdpCommandListener tello::Network::_commandListener{_commandConnection, networkInterface, _connectionMutex};
-UdpListener<StatusResponse, tello::Network::statusResponseFactory, tello::Network::invokeStatusListener> tello::Network::_statusListener{
+UdpListener<tello::Network::invokeStatusListener> tello::Network::_statusListener{
         _statusConnection, networkInterface, tello::Tello::_telloMapping, tello::Tello::_telloMappingMutex,
         tello::Network::_connectionMutex, LoggerType::STATUS};
 
-UdpListener<NetworkResponse, tello::Network::videoResponseFactory, tello::Network::invokeVideoListener> tello::Network::_videoListener {
+UdpListener<tello::Network::invokeVideoListener> tello::Network::_videoListener {
     _videoConnection, networkInterface, tello::Tello::_telloMapping, tello::Tello::_telloMappingMutex,
         tello::Network::_connectionMutex, LoggerType::VIDEO};
 
@@ -103,22 +103,14 @@ void tello::Network::disconnect(ConnectionData& connectionData, const LoggerType
     }
 }
 
-StatusResponse tello::Network::statusResponseFactory(const NetworkResponse& networkResponse) {
-    return StatusResponse{networkResponse.response()};
-}
-
-void tello::Network::invokeStatusListener(const StatusResponse& response, const tello::Tello& tello) {
+void tello::Network::invokeStatusListener(NetworkResponse& networkResponse, const tello::Tello& tello) {
     if (tello._statusHandler != nullptr) {
-        tello._statusHandler(response);
+        tello._statusHandler(StatusResponse{networkResponse.response()});
     }
 }
 
-NetworkResponse tello::Network::videoResponseFactory(const NetworkResponse& networkResponse) {
-    return networkResponse;
-}
-
-void tello::Network::invokeVideoListener(const NetworkResponse& response, const Tello& tello) {
-    bool frameFull = _videoAnalyzer.append(response._response, response._length);
+void tello::Network::invokeVideoListener(NetworkResponse& response, const Tello& tello) {
+    bool frameFull = _videoAnalyzer.append(response);
     if (frameFull) {
         unsigned char* frame = _videoAnalyzer.frame();
         unsigned int length = _videoAnalyzer.length();

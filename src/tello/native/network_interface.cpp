@@ -57,8 +57,10 @@ tello::NetworkResponse& tello::NetworkResponse::operator=(NetworkResponse&& othe
 }
 
 tello::NetworkResponse::~NetworkResponse() {
-    delete[] _response;
-    _response = nullptr;
+    if (_response != nullptr) {
+        delete[] _response;
+        _response = nullptr;
+    }
 }
 
 string tello::NetworkResponse::response() const {

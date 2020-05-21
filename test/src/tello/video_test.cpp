@@ -28,7 +28,7 @@ TEST(Tello, SimpleCaseBergerVideo) {
     responseStreamOn.wait();
     ASSERT_NE(Status::FAIL, responseStreamOn.get().status());
 
-    std::chrono::seconds duration(5);
+    std::chrono::seconds duration(15);
     std::this_thread::sleep_for(duration);
 
     future<Response> responseStreamOff = tello.streamoff();
