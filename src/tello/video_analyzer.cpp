@@ -7,12 +7,12 @@
 
 using std::string;
 
-tello::VideoAnalyzer::VideoAnalyzer() : _frames(), _frameSizes() {
+tello::VideoAnalyzer::VideoAnalyzer() : _frames() {
 
 }
 
 tello::VideoAnalyzer::~VideoAnalyzer() {
-    clean();
+    _frames.clear();
 }
 
 bool tello::VideoAnalyzer::isStart(const char* const& framePart, int length) {
@@ -20,37 +20,46 @@ bool tello::VideoAnalyzer::isStart(const char* const& framePart, int length) {
 }
 
 bool tello::VideoAnalyzer::append(NetworkResponse& response) {
-    if(_frames.empty() && !isStart(response._response, response._length)) {
+    if(_frames.find(response._sender._ip) == _frames.end()) {
+        _frames[response._sender._ip] = std::make_shared<vector<NetworkResponse>>();
+    }
+
+    auto frames = _frames.find(response._sender._ip);
+
+    if(frames->second->empty() && !isStart(response._response, response._length)) {
         return false;
     }
 
     int length = response._length;
-    _frames.push_back(std::move(response));
+    frames->second->push_back(std::move(response));
 
-    return length % VIDEO_PACKET_LENGTH != 0;
+    return length < VIDEO_PACKET_LENGTH;
 }
 
-unsigned char* tello::VideoAnalyzer::frame() const {
-    auto* frame = new unsigned char[length()];
+unsigned char* tello::VideoAnalyzer::frame(ip_address address) const {
+    unsigned int leng = length(address);
+    auto* frame = new unsigned char[length(address)];
     int pos = 0;
 
-    for(int i = 0; i < _frames.size(); i++) {
-        const NetworkResponse& response = _frames.at(i);
+    auto frames = _frames.find(address);
+    for(const auto& response : *frames->second) {
         memcpy(frame + pos, response._response, response._length);
         pos += response._length;
     }
     return frame;
 }
 
-unsigned int tello::VideoAnalyzer::length() const {
+unsigned int tello::VideoAnalyzer::length(ip_address address) const {
     int size = 0;
-    for(auto& frame : _frames) {
+
+    auto frames = _frames.find(address);
+    for(const auto& frame : *frames->second) {
         size += frame._length;
     }
 
     return size;
 }
 
-void tello::VideoAnalyzer::clean() {
-    _frames.clear();
+void tello::VideoAnalyzer::clean(ip_address address) {
+    _frames.erase(address);
 }

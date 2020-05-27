@@ -103,25 +103,30 @@ void tello::Network::disconnect(ConnectionData& connectionData, const LoggerType
     }
 }
 
-void tello::Network::invokeStatusListener(NetworkResponse& networkResponse, const tello::Tello& tello) {
-    if (tello._statusHandler != nullptr) {
-        tello._statusHandler(StatusResponse{networkResponse.response()});
+void tello::Network::invokeStatusListener(NetworkResponse& networkResponse, const tello::Tello* tello) {
+    if (tello->_statusHandler != nullptr) {
+        tello->_statusHandler(StatusResponse{networkResponse.response()});
     }
 }
 
-void tello::Network::invokeVideoListener(NetworkResponse& response, const Tello& tello) {
+#include <iostream>
+void tello::Network::invokeVideoListener(NetworkResponse& response, const Tello* tello) {
+    ip_address ip = response._sender._ip;
+    std::cout << "Append " << response._length << std::endl;
     bool frameFull = _videoAnalyzer.append(response);
     if (frameFull) {
-        unsigned char* frame = _videoAnalyzer.frame();
-        unsigned int length = _videoAnalyzer.length();
-        _videoAnalyzer.clean();
+        unsigned char* frame = _videoAnalyzer.frame(ip);
+        unsigned int length = _videoAnalyzer.length(ip);
+        _videoAnalyzer.clean(ip);
 
-        _threadpool.push([&tello, &frame, &length](int id) {
-            if (tello._videoHandler != nullptr) {
-                VideoResponse videoResponse = VideoResponse{frame, length};
-                tello._videoHandler(videoResponse);
+        std::cout << "lib -- length: " << length << std::endl;
+
+        _threadpool.push([tello, frame, length](int id) {
+            if (tello->_videoHandler != nullptr) {
+                VideoResponse videoResponse{frame, length};
+                tello->_videoHandler(videoResponse);
             }
-            delete frame;
+            delete[] frame;
         });
     }
 }

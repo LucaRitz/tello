@@ -57,8 +57,8 @@ namespace tello {
         static UdpCommandListener _commandListener;
         static Threadpool _threadpool;
 
-        static void invokeStatusListener(NetworkResponse& response, const Tello& tello);
-        static void invokeVideoListener(NetworkResponse& response, const Tello& tello);
+        static void invokeStatusListener(NetworkResponse& response, const Tello* tello);
+        static void invokeVideoListener(NetworkResponse& response, const Tello* tello);
 
         static UdpListener<invokeStatusListener> _statusListener;
         static UdpListener<invokeVideoListener> _videoListener;

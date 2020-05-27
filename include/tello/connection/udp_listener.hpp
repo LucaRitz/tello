@@ -23,7 +23,7 @@ namespace tello {
 
     class Tello;
 
-    template<void (* invoke)(NetworkResponse&, const Tello& tello)>
+    template<void (* invoke)(NetworkResponse&, const Tello* tello)>
     class UdpListener {
     public:
         UdpListener(const ConnectionData& connectionData, shared_ptr<NetworkInterface> networkInterface,
@@ -50,7 +50,7 @@ namespace tello {
                            LoggerType loggerType) {
             bool isFirstAccessToFileDescriptor = true;
 
-            while (exitListener.wait_for(std::chrono::milliseconds(30)) == std::future_status::timeout) {
+            while (exitListener.wait_for(std::chrono::microseconds(5)) == std::future_status::timeout) {
                 connectionMutex.lock_shared();
                 if (connectionData._fileDescriptor == -1) {
                     connectionMutex.unlock_shared();
@@ -68,7 +68,7 @@ namespace tello {
 
                 auto telloIt = telloMapping.find(networkResponse._sender._ip);
                 if (telloIt != telloMapping.end()) {
-                    invoke(networkResponse, *(telloIt->second));
+                    invoke(networkResponse, telloIt->second);
                 } else if (networkResponse._length > 0) {
                     Logger::get(loggerType)->warn(string("Received data {0} from unknown Tello {1:x}"),
                                                   networkResponse.response(), networkResponse._sender._ip);

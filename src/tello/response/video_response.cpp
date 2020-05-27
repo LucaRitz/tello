@@ -46,7 +46,7 @@ tello::VideoResponse::~VideoResponse() {
     _videoFrame = nullptr;
 }
 
-const unsigned char* tello::VideoResponse::videoFrame() const {
+unsigned char* tello::VideoResponse::videoFrame() const {
     return _videoFrame;
 }
 

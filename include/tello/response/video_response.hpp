@@ -16,7 +16,7 @@ namespace tello {
         VideoResponse& operator=(VideoResponse&& other) noexcept;
         ~VideoResponse();
 
-        [[nodiscard]] const unsigned char* videoFrame() const;
+        [[nodiscard]] unsigned char* videoFrame() const;
         [[nodiscard]] unsigned int length() const;
 
     private:

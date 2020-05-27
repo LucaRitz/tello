@@ -2,7 +2,7 @@
 
 #include <ctpl_stl.h>
 
-#define THREADS 2
+#define THREADS 1
 
 namespace tello::threading {
 

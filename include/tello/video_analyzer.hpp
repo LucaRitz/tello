@@ -1,10 +1,15 @@
 #pragma once
 
 #include <vector>
+#include <unordered_map>
 #include <string>
+#include <memory>
 
 using std::vector;
+using std::unordered_map;
 using std::string;
+using std::shared_ptr;
+using ip_address = unsigned long;
 
 namespace tello {
 
@@ -20,13 +25,13 @@ namespace tello {
         ~VideoAnalyzer();
 
         bool append(NetworkResponse& response);
-        [[nodiscard]] unsigned char* frame() const;
-        [[nodiscard]] unsigned int length() const;
-        void clean();
+        [[nodiscard]] unsigned char* frame(ip_address address) const;
+        [[nodiscard]] unsigned int length(ip_address address) const;
+        void clean(ip_address address);
 
     private:
-        vector<NetworkResponse> _frames;
-        vector<int> _frameSizes;
+
+        unordered_map<ip_address, shared_ptr<vector<NetworkResponse>>> _frames;
 
         static bool isStart(const char* const& framePart, int length);
     };
