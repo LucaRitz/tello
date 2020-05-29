@@ -25,7 +25,7 @@ namespace tello::threading {
         }
 
         void stop() {
-            _pool.stop(true);
+            _pool.stop(false);
         }
 
     private:

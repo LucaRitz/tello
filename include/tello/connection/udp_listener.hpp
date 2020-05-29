@@ -50,7 +50,7 @@ namespace tello {
                            LoggerType loggerType) {
             bool isFirstAccessToFileDescriptor = true;
 
-            while (exitListener.wait_for(std::chrono::microseconds(5)) == std::future_status::timeout) {
+            while (exitListener.wait_for(std::chrono::nanoseconds(100)) == std::future_status::timeout) {
                 connectionMutex.lock_shared();
                 if (connectionData._fileDescriptor == -1) {
                     connectionMutex.unlock_shared();

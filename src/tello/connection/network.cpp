@@ -109,17 +109,13 @@ void tello::Network::invokeStatusListener(NetworkResponse& networkResponse, cons
     }
 }
 
-#include <iostream>
 void tello::Network::invokeVideoListener(NetworkResponse& response, const Tello* tello) {
     ip_address ip = response._sender._ip;
-    std::cout << "Append " << response._length << std::endl;
     bool frameFull = _videoAnalyzer.append(response);
     if (frameFull) {
         unsigned char* frame = _videoAnalyzer.frame(ip);
         unsigned int length = _videoAnalyzer.length(ip);
         _videoAnalyzer.clean(ip);
-
-        std::cout << "lib -- length: " << length << std::endl;
 
         _threadpool.push([tello, frame, length](int id) {
             if (tello->_videoHandler != nullptr) {
