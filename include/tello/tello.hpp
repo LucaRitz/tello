@@ -8,6 +8,7 @@
 #include "response/video_response.hpp"
 #include "tello_interface.hpp"
 #include <future>
+#include <functional>
 
 using std::shared_ptr;
 using std::unordered_map;
@@ -23,8 +24,8 @@ namespace tello {
     class Network;
     class QueryResponse;
 
-    using status_handler = void (*)(const StatusResponse&);
-    using video_handler = void (*)(const VideoResponse& frame);
+    using status_handler = std::function<void(const StatusResponse&)>;
+    using video_handler = std::function<void(const VideoResponse& frame)>;
 
     class Tello : public TelloInterface<future<Response>, future<QueryResponse>> {
     public:
