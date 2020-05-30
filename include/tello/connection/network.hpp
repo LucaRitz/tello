@@ -26,8 +26,6 @@ using tello::UdpCommandListener;
 using std::vector;
 using tello::threading::Threadpool;
 
-#define SEND 3
-
 namespace tello {
 
     class Network {
@@ -103,17 +101,11 @@ namespace tello {
         string commandString = command.build();
 
         for(auto tello = tellos.begin(); tello != tellos.end(); ++tello) {
-            int sendResult = SEND_ERROR_CODE;
             _connectionMutex.lock_shared();
-            for (int i = 0; i < SEND; ++i) {
-                int result = networkInterface->send(_commandConnection._fileDescriptor, tello->second->_clientaddr,
-                                                    commandString);
-                if (sendResult == SEND_ERROR_CODE) {
-                    sendResult = result != SEND_ERROR_CODE ? result : SEND_ERROR_CODE;
-                }
-            }
+            int result = networkInterface->send(_commandConnection._fileDescriptor, tello->second->_clientaddr,
+                                                commandString);
             _connectionMutex.unlock_shared();
-            if (sendResult == SEND_ERROR_CODE) {
+            if (result == SEND_ERROR_CODE) {
                 Logger::get(LoggerType::COMMAND)->info(
                         string("Command of type [{}] is not sent cause of socket error!"),
                         NAMES.find(command.type())->second);
