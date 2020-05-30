@@ -25,7 +25,7 @@ static std::mt19937 mt(rd());
 
 using namespace tello::command;
 
-TEST(CommandFactory, UpCommand_xValueLowerThanMinGiven_getErrorString) {
+TEST(Command, UpCommand_xValueLowerThanMinGiven_getErrorString) {
     std::uniform_int_distribution<int> dist(0, 19);
     int x = dist(mt);
 
@@ -36,7 +36,7 @@ TEST(CommandFactory, UpCommand_xValueLowerThanMinGiven_getErrorString) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, UpCommand_xValueGreaterThanMaxGiven_getErrorString) {
+TEST(Command, UpCommand_xValueGreaterThanMaxGiven_getErrorString) {
     std::uniform_int_distribution<int> dist(501);
     int x = dist(mt);
 
@@ -47,7 +47,7 @@ TEST(CommandFactory, UpCommand_xValueGreaterThanMaxGiven_getErrorString) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, UpCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
+TEST(Command, UpCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(20, 500);
     int x = dist(mt);
     string x_arg = std::to_string(x);
@@ -60,7 +60,7 @@ TEST(CommandFactory, UpCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand)
     ASSERT_EQ(std::string("up ") + x_arg, result.build());
 }
 
-TEST(CommandFactory, DownCommand_xValueLowerThanMinGiven_getErrorString) {
+TEST(Command, DownCommand_xValueLowerThanMinGiven_getErrorString) {
     std::uniform_int_distribution<int> dist(0, 19);
     int x = dist(mt);
 
@@ -71,7 +71,7 @@ TEST(CommandFactory, DownCommand_xValueLowerThanMinGiven_getErrorString) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, DownCommand_xValueGreaterThanMaxGiven_getErrorString) {
+TEST(Command, DownCommand_xValueGreaterThanMaxGiven_getErrorString) {
     std::uniform_int_distribution<int> dist(501);
     int x = dist(mt);
 
@@ -82,7 +82,7 @@ TEST(CommandFactory, DownCommand_xValueGreaterThanMaxGiven_getErrorString) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, DownCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
+TEST(Command, DownCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(20, 500);
     int x = dist(mt);
     string x_arg = std::to_string(x);
@@ -95,7 +95,7 @@ TEST(CommandFactory, DownCommand_xValueBetweenMinAndMaxGiven_buildExpectedComman
     ASSERT_EQ(std::string("down ") + x_arg, result.build());
 }
 
-TEST(CommandFactory, LeftCommand_xValueLowerThanMinGiven_getErrorString) {
+TEST(Command, LeftCommand_xValueLowerThanMinGiven_getErrorString) {
     std::uniform_int_distribution<int> dist(0, 19);
     int x = dist(mt);
 
@@ -106,7 +106,7 @@ TEST(CommandFactory, LeftCommand_xValueLowerThanMinGiven_getErrorString) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, LeftCommand_xValueGreaterThanMaxGiven_getErrorString) {
+TEST(Command, LeftCommand_xValueGreaterThanMaxGiven_getErrorString) {
     std::uniform_int_distribution<int> dist(501);
     int x = dist(mt);
 
@@ -117,7 +117,7 @@ TEST(CommandFactory, LeftCommand_xValueGreaterThanMaxGiven_getErrorString) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, LeftCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
+TEST(Command, LeftCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(20, 500);
     int x = dist(mt);
     string x_arg = std::to_string(x);
@@ -130,7 +130,7 @@ TEST(CommandFactory, LeftCommand_xValueBetweenMinAndMaxGiven_buildExpectedComman
     ASSERT_EQ(std::string("left ") + x_arg, result.build());
 }
 
-TEST(CommandFactory, RightCommand_xValueLowerThanMinGiven_getErrorString) {
+TEST(Command, RightCommand_xValueLowerThanMinGiven_getErrorString) {
     std::uniform_int_distribution<int> dist(0, 19);
     int x = dist(mt);
 
@@ -141,7 +141,7 @@ TEST(CommandFactory, RightCommand_xValueLowerThanMinGiven_getErrorString) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, RightCommand_xValueGreaterThanMaxGiven_getErrorString) {
+TEST(Command, RightCommand_xValueGreaterThanMaxGiven_getErrorString) {
     std::uniform_int_distribution<int> dist(501);
     int x = dist(mt);
 
@@ -152,7 +152,7 @@ TEST(CommandFactory, RightCommand_xValueGreaterThanMaxGiven_getErrorString) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, RightCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
+TEST(Command, RightCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(20, 500);
     int x = dist(mt);
     string x_arg = std::to_string(x);
@@ -165,7 +165,7 @@ TEST(CommandFactory, RightCommand_xValueBetweenMinAndMaxGiven_buildExpectedComma
     ASSERT_EQ(std::string("right ") + x_arg, result.build());
 }
 
-TEST(CommandFactory, ForwardCommand_xValueLowerThanMinGiven_getErrorString) {
+TEST(Command, ForwardCommand_xValueLowerThanMinGiven_getErrorString) {
     std::uniform_int_distribution<int> dist(0, 19);
     int x = dist(mt);
 
@@ -176,7 +176,7 @@ TEST(CommandFactory, ForwardCommand_xValueLowerThanMinGiven_getErrorString) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, ForwardCommand_xValueGreaterThanMaxGiven_getErrorString) {
+TEST(Command, ForwardCommand_xValueGreaterThanMaxGiven_getErrorString) {
     std::uniform_int_distribution<int> dist(501);
     int x = dist(mt);
 
@@ -187,7 +187,7 @@ TEST(CommandFactory, ForwardCommand_xValueGreaterThanMaxGiven_getErrorString) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, ForwardCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
+TEST(Command, ForwardCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(20, 500);
     int x = dist(mt);
     string x_arg = std::to_string(x);
@@ -200,7 +200,7 @@ TEST(CommandFactory, ForwardCommand_xValueBetweenMinAndMaxGiven_buildExpectedCom
     ASSERT_EQ(std::string("forward ") + x_arg, result.build());
 }
 
-TEST(CommandFactory, BackCommand_xValueLowerThanMinGiven_getErrorString) {
+TEST(Command, BackCommand_xValueLowerThanMinGiven_getErrorString) {
     std::uniform_int_distribution<int> dist(0, 19);
     int x = dist(mt);
 
@@ -211,7 +211,7 @@ TEST(CommandFactory, BackCommand_xValueLowerThanMinGiven_getErrorString) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, BackCommand_xValueGreaterThanMaxGiven_getErrorString) {
+TEST(Command, BackCommand_xValueGreaterThanMaxGiven_getErrorString) {
     std::uniform_int_distribution<int> dist(501);
     int x = dist(mt);
 
@@ -222,7 +222,7 @@ TEST(CommandFactory, BackCommand_xValueGreaterThanMaxGiven_getErrorString) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, BackCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
+TEST(Command, BackCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(20, 500);
     int x = dist(mt);
     string x_arg = std::to_string(x);
@@ -235,7 +235,7 @@ TEST(CommandFactory, BackCommand_xValueBetweenMinAndMaxGiven_buildExpectedComman
     ASSERT_EQ(std::string("back ") + x_arg, result.build());
 }
 
-TEST(CommandFactory, ClockwiseTurnCommand_xValueLowerThanMinGiven_getErrorString) {
+TEST(Command, ClockwiseTurnCommand_xValueLowerThanMinGiven_getErrorString) {
     int x = 0;
 
     // Act
@@ -245,7 +245,7 @@ TEST(CommandFactory, ClockwiseTurnCommand_xValueLowerThanMinGiven_getErrorString
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, ClockwiseTurnCommand_xValueGreaterThanMaxGiven_getErrorString) {
+TEST(Command, ClockwiseTurnCommand_xValueGreaterThanMaxGiven_getErrorString) {
     std::uniform_int_distribution<int> dist(361);
     int x = dist(mt);
 
@@ -256,7 +256,7 @@ TEST(CommandFactory, ClockwiseTurnCommand_xValueGreaterThanMaxGiven_getErrorStri
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, ClockwiseTurnCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
+TEST(Command, ClockwiseTurnCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(1, 360);
     int x = dist(mt);
     string x_arg = std::to_string(x);
@@ -269,7 +269,7 @@ TEST(CommandFactory, ClockwiseTurnCommand_xValueBetweenMinAndMaxGiven_buildExpec
     ASSERT_EQ(std::string("cw ") + x_arg, result.build());
 }
 
-TEST(CommandFactory, CounterclockwiseTurnCommand_xValueLowerThanMinGiven_getErrorString) {
+TEST(Command, CounterclockwiseTurnCommand_xValueLowerThanMinGiven_getErrorString) {
     int x = 0;
 
     // Act
@@ -279,7 +279,7 @@ TEST(CommandFactory, CounterclockwiseTurnCommand_xValueLowerThanMinGiven_getErro
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, CounterclockwiseTurnCommand_xValueGreaterThanMaxGiven_getErrorString) {
+TEST(Command, CounterclockwiseTurnCommand_xValueGreaterThanMaxGiven_getErrorString) {
     std::uniform_int_distribution<int> dist(361);
     int x = dist(mt);
 
@@ -290,7 +290,7 @@ TEST(CommandFactory, CounterclockwiseTurnCommand_xValueGreaterThanMaxGiven_getEr
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, CounterclockwiseTurnCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
+TEST(Command, CounterclockwiseTurnCommand_xValueBetweenMinAndMaxGiven_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(1, 360);
     int x = dist(mt);
     string x_arg = std::to_string(x);
@@ -304,7 +304,7 @@ TEST(CommandFactory, CounterclockwiseTurnCommand_xValueBetweenMinAndMaxGiven_bui
 }
 
 
-TEST(CommandFactory, FlipCommand_flipDirectionInvalid_buildExpectedCommand) {
+TEST(Command, FlipCommand_flipDirectionInvalid_buildExpectedCommand) {
     for (auto i = 0; i <= 255; i++)
     {
         const char direction = i - 128;
@@ -322,7 +322,7 @@ TEST(CommandFactory, FlipCommand_flipDirectionInvalid_buildExpectedCommand) {
     }
 }
 
-TEST(CommandFactory, FlipCommand_flipDirectionValid_buildExpectedCommand) {
+TEST(Command, FlipCommand_flipDirectionValid_buildExpectedCommand) {
     char validDirections[] = {'r', 'l', 'f', 'b'};
 
 	for (char direction : validDirections)
@@ -337,7 +337,7 @@ TEST(CommandFactory, FlipCommand_flipDirectionValid_buildExpectedCommand) {
 }
 
 
-TEST(CommandFactory, StopCommand_buildExpectedCommand) {
+TEST(Command, StopCommand_buildExpectedCommand) {
     // Act
     StopCommand result = StopCommand();
 
@@ -347,7 +347,7 @@ TEST(CommandFactory, StopCommand_buildExpectedCommand) {
 }
 
 
-TEST(CommandFactory, EmergencyCommand_buildExpectedCommand) {
+TEST(Command, EmergencyCommand_buildExpectedCommand) {
     // Act
     EmergencyCommand result = EmergencyCommand();
 
@@ -357,7 +357,7 @@ TEST(CommandFactory, EmergencyCommand_buildExpectedCommand) {
 }
 
 
-TEST(CommandFactory, SetSpeedCommandValidVelocity_buildExpectedCommand) {
+TEST(Command, SetSpeedCommandValidVelocity_buildExpectedCommand) {
     // Arrange
     int velocity = 10;
 
@@ -369,7 +369,7 @@ TEST(CommandFactory, SetSpeedCommandValidVelocity_buildExpectedCommand) {
     ASSERT_EQ(std::string("speed ") + std::to_string(velocity), result.build());
 }
 
-TEST(CommandFactory, SetSpeedCommandVelocityTooLow_buildExpectedCommand) {
+TEST(Command, SetSpeedCommandVelocityTooLow_buildExpectedCommand) {
     // Arrange
     int velocity = 9;
 
@@ -380,7 +380,7 @@ TEST(CommandFactory, SetSpeedCommandVelocityTooLow_buildExpectedCommand) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, SetSpeedCommandVelocityTooHigh_buildExpectedCommand) {
+TEST(Command, SetSpeedCommandVelocityTooHigh_buildExpectedCommand) {
     // Arrange
     int velocity = 101;
 
@@ -391,7 +391,7 @@ TEST(CommandFactory, SetSpeedCommandVelocityTooHigh_buildExpectedCommand) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, ReadSpeedCommand_buildExpectedCommand) {
+TEST(Command, ReadSpeedCommand_buildExpectedCommand) {
     // Act
     ReadSpeedCommand result = ReadSpeedCommand();
 
@@ -400,7 +400,7 @@ TEST(CommandFactory, ReadSpeedCommand_buildExpectedCommand) {
     ASSERT_EQ(std::string("speed?"), result.build());
 }
 
-TEST(CommandFactory, RCControlCommandXTooLow_buildExpectedCommand) {
+TEST(Command, RCControlCommandXTooLow_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(-200, -101);
     int x = dist(mt);
     int y = 0;
@@ -414,7 +414,7 @@ TEST(CommandFactory, RCControlCommandXTooLow_buildExpectedCommand) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, RCControlCommandXTooHigh_buildExpectedCommand) {
+TEST(Command, RCControlCommandXTooHigh_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(101, 200);
     int x = dist(mt);
     int y = 0;
@@ -428,7 +428,7 @@ TEST(CommandFactory, RCControlCommandXTooHigh_buildExpectedCommand) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, RCControlCommandXValid_buildExpectedCommand) {
+TEST(Command, RCControlCommandXValid_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(-100, 100);
     int x = dist(mt);
     int y = 0;
@@ -447,7 +447,7 @@ TEST(CommandFactory, RCControlCommandXValid_buildExpectedCommand) {
     ASSERT_EQ(std::string("rc ") + std::to_string(x) + std::string(" ") + std::to_string(y) + std::string(" ") + std::to_string(z) + std::string(" ") + std::to_string(r), result.build());
 }
 
-TEST(CommandFactory, RCControlCommandYTooLow_buildExpectedCommand) {
+TEST(Command, RCControlCommandYTooLow_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(-200, -101);
     int x = 0;
     int y = dist(mt);
@@ -461,7 +461,7 @@ TEST(CommandFactory, RCControlCommandYTooLow_buildExpectedCommand) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, RCControlCommandYTooHigh_buildExpectedCommand) {
+TEST(Command, RCControlCommandYTooHigh_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(101, 200);
     int x = 0;
     int y = dist(mt);
@@ -475,7 +475,7 @@ TEST(CommandFactory, RCControlCommandYTooHigh_buildExpectedCommand) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, RCControlCommandYValid_buildExpectedCommand) {
+TEST(Command, RCControlCommandYValid_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(-100, 100);
     int x = 0;
     int y = dist(mt);
@@ -494,7 +494,7 @@ TEST(CommandFactory, RCControlCommandYValid_buildExpectedCommand) {
     ASSERT_EQ(std::string("rc ") + std::to_string(x) + std::string(" ") + std::to_string(y) + std::string(" ") + std::to_string(z) + std::string(" ") + std::to_string(r), result.build());
 }
 
-TEST(CommandFactory, RCControlCommandZTooLow_buildExpectedCommand) {
+TEST(Command, RCControlCommandZTooLow_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(-200, -101);
     int x = 0;
     int y = 0;
@@ -508,7 +508,7 @@ TEST(CommandFactory, RCControlCommandZTooLow_buildExpectedCommand) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, RCControlCommandZTooHigh_buildExpectedCommand) {
+TEST(Command, RCControlCommandZTooHigh_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(101, 200);
     int x = 0;
     int y = 0;
@@ -522,7 +522,7 @@ TEST(CommandFactory, RCControlCommandZTooHigh_buildExpectedCommand) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, RCControlCommandZValid_buildExpectedCommand) {
+TEST(Command, RCControlCommandZValid_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(-100, 100);
     int x = 0;
     int y = 0;
@@ -541,7 +541,7 @@ TEST(CommandFactory, RCControlCommandZValid_buildExpectedCommand) {
     ASSERT_EQ(std::string("rc ") + std::to_string(x) + std::string(" ") + std::to_string(y) + std::string(" ") + std::to_string(z) + std::string(" ") + std::to_string(r), result.build());
 }
 
-TEST(CommandFactory, RCControlCommandRTooLow_buildExpectedCommand) {
+TEST(Command, RCControlCommandRTooLow_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(-200, -101);
     int x = 0;
     int y = 0;
@@ -555,7 +555,7 @@ TEST(CommandFactory, RCControlCommandRTooLow_buildExpectedCommand) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, RCControlCommandRTooHigh_buildExpectedCommand) {
+TEST(Command, RCControlCommandRTooHigh_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(101, 200);
     int x = 0;
     int y = 0;
@@ -569,7 +569,7 @@ TEST(CommandFactory, RCControlCommandRTooHigh_buildExpectedCommand) {
     ASSERT_FALSE(result.validate().empty());
 }
 
-TEST(CommandFactory, RCControlCommandRValid_buildExpectedCommand) {
+TEST(Command, RCControlCommandRValid_buildExpectedCommand) {
     std::uniform_int_distribution<int> dist(-100, 100);
     int x = 0;
     int y = 0;

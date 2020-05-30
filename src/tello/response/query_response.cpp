@@ -31,7 +31,7 @@ int tello::QueryResponse::QueryResponse::convert(const string& stringValue) {
         return -2;
     }
 
-    catch (const std::exception& e)
+    catch (...)
     {
         Logger::get(LoggerType::COMMAND)->error(string("Cannot parse query - 'exception' [{}]"), stringValue);
         return -3;
