@@ -4,12 +4,11 @@
 
 using std::stringstream;
 
-tello::StatusResponse::StatusResponse(const string& response) :
-	Response(Status::OK), values(unordered_map<string, string>()) {
+tello::StatusResponse::StatusResponse(const string &response) :
+        Response(Status::OK), values(unordered_map<string, string>()) {
 
     stringstream ss(response);
-    while (ss)
-    {
+    while (ss) {
         string keyValue{};
         std::string key{}, value{};
         {
@@ -26,10 +25,8 @@ tello::StatusResponse::StatusResponse(const string& response) :
 }
 
 
-float tello::StatusResponse::readFloat(string&& key, float defaultValue)
-{
-    if (values.empty())
-    {
+float tello::StatusResponse::readFloat(string &&key, float defaultValue) const {
+    if (values.empty()) {
         return defaultValue;
     }
 
@@ -38,10 +35,8 @@ float tello::StatusResponse::readFloat(string&& key, float defaultValue)
     return value;
 }
 
-int tello::StatusResponse::readInt(string&& key, int defaultValue)
-{
-    if (values.empty())
-    {
+int tello::StatusResponse::readInt(string &&key, int defaultValue) const {
+    if (values.empty()) {
         return defaultValue;
     }
 
@@ -51,95 +46,97 @@ int tello::StatusResponse::readInt(string&& key, int defaultValue)
 }
 
 
-string tello::StatusResponse::get_mpry()
-{
-	//TODO: Hanlde mpry response
+string tello::StatusResponse::get_mpry() const {
+    //TODO: Hanlde mpry response
     return string("TODO");
 }
 
 
-int tello::StatusResponse::get_x() {
+int tello::StatusResponse::get_x() const {
     return readInt(string("x"), 0);
 }
 
-int tello::StatusResponse::get_y() {
+int tello::StatusResponse::get_y() const {
     return readInt(string("y"), 0);
 }
 
-int tello::StatusResponse::get_z() {
+int tello::StatusResponse::get_z() const {
     return readInt(string("z"), 0);
 }
 
 
-int tello::StatusResponse::get_vgx() {
+int tello::StatusResponse::get_vgx() const {
     return readInt(string("vgx"), 0);
 }
 
-int tello::StatusResponse::get_vgy() {
+int tello::StatusResponse::get_vgy() const {
     return readInt(string("vgy"), 0);
 }
 
-int tello::StatusResponse::get_vgz() {
+int tello::StatusResponse::get_vgz() const {
     return readInt(string("vgz"), 0);
 }
 
 
-float tello::StatusResponse::get_agx() {
+float tello::StatusResponse::get_agx() const {
     return readFloat(string("agx"), 0.0f);
 }
 
-float tello::StatusResponse::get_agy() {
+float tello::StatusResponse::get_agy() const {
     return readFloat(string("agy"), 0.0f);
 }
 
-float tello::StatusResponse::get_agz() {
+float tello::StatusResponse::get_agz() const {
     return readFloat(string("agz"), 0.0f);
 }
 
 
-int tello::StatusResponse::get_pitch() {
+int tello::StatusResponse::get_pitch() const {
     return readInt(string("pitch"), 0);
 }
 
-int tello::StatusResponse::get_roll() {
+int tello::StatusResponse::get_roll() const {
     return readInt(string("roll"), 0);
 }
 
-int tello::StatusResponse::get_bat() {
+int tello::StatusResponse::get_bat() const {
     return readInt(string("bat"), 0);
 }
 
-int tello::StatusResponse::get_yaw() {
+int tello::StatusResponse::get_yaw() const {
     return readInt(string("yaw"), 0);
 }
 
-int tello::StatusResponse::get_templ() {
+int tello::StatusResponse::get_templ() const {
     return readInt(string("templ"), 0);
 }
 
-int tello::StatusResponse::get_temph() {
+int tello::StatusResponse::get_temph() const {
     return readInt(string("temph"), 0);
 }
 
 
-int tello::StatusResponse::get_tof() {
+int tello::StatusResponse::get_tof() const {
     return readInt(string("tof"), 0);
 }
 
-int tello::StatusResponse::get_h() {
+int tello::StatusResponse::get_h() const {
     return readInt(string("h"), 0);
 }
 
-float tello::StatusResponse::get_baro() {
+float tello::StatusResponse::get_baro() const {
     return readFloat(string("baro"), 0);
 }
 
-int tello::StatusResponse::get_time() {
+int tello::StatusResponse::get_time() const {
     return readInt(string("time"), 0);
 }
 
 
 int get_pitch();
+
 int get_roll();
+
 int get_bat();
+
 int get_yaw();
