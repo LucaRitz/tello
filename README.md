@@ -53,8 +53,9 @@ for(auto& entry : response_futures) {
 ```
 
 ## Third-party libs
-For logging, the library spdlog is used.
-https://github.com/gabime/spdlog
+- Logging: spdlog (https://github.com/gabime/spdlog)
+- Thread-pooling: ctpl (https://github.com/vit-vit/CTPL)
+- Testing: googletest (https://github.com/google/googletest)
 
 # Tello SDK 2.0
 
