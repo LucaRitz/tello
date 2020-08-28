@@ -52,6 +52,11 @@ for(auto& entry : response_futures) {
 // ...
 ```
 
+## Build
+Defaultly a static library is built. One can set the option
+'OPTION_BUILD_SHARED_LIBS' to ON to build a shared library.<br>
+Note: The tests cannot be built with this option on.
+
 ## Third-party libs
 - Logging: spdlog (https://github.com/gabime/spdlog)
 - Thread-pooling: ctpl (https://github.com/vit-vit/CTPL)

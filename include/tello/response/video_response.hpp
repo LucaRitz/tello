@@ -2,12 +2,13 @@
 #include "../response.hpp"
 
 #include <string>
+#include "../macro_definition.hpp"
 
 using std::string;
 
 namespace tello {
 
-    class VideoResponse : public Response {
+    class EXPORT VideoResponse : public Response {
     public:
         VideoResponse(unsigned char* videoFrame, unsigned int length);
         VideoResponse(const VideoResponse& other);

@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include <mutex>
+#include "macro_definition.hpp"
 
 using std::unordered_map;
 using std::string;
@@ -16,14 +17,14 @@ namespace tello {
 
 namespace tello {
 
-    enum class Status {
+    enum class EXPORT Status {
         OK,
         FAIL,
         TIMEOUT,
         UNKNOWN
     };
 
-    class Response {
+    class EXPORT Response {
     public:
         Response() : _status(Status::UNKNOWN){}
         explicit Response(const string& value);

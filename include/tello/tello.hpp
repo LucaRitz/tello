@@ -9,6 +9,7 @@
 #include "tello_interface.hpp"
 #include <future>
 #include <functional>
+#include "macro_definition.hpp"
 
 using std::shared_ptr;
 using std::unordered_map;
@@ -27,7 +28,7 @@ namespace tello {
     using status_handler = std::function<void(const StatusResponse&)>;
     using video_handler = std::function<void(const VideoResponse& frame)>;
 
-    class Tello : public TelloInterface<future<Response>, future<QueryResponse>> {
+    class EXPORT Tello : public TelloInterface<future<Response>, future<QueryResponse>> {
     public:
         explicit Tello(ip_address telloIp);
         ~Tello();

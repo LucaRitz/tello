@@ -11,6 +11,7 @@
 #include "udp_command_listener.hpp"
 #include "../thread/thread_pool.hpp"
 #include <vector>
+#include "../macro_definition.hpp"
 
 using tello::ConnectionData;
 using std::optional;
@@ -28,7 +29,7 @@ using tello::threading::Threadpool;
 
 namespace tello {
 
-    class Network {
+    class EXPORT Network {
     public:
         Network() = delete;
         Network(const Network&) = delete;
