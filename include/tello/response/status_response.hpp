@@ -1,10 +1,11 @@
 #pragma once
 
 #include <tello/response.hpp>
+#include "../macro_definition.hpp"
 
 namespace tello {
 
-    class StatusResponse : public Response {
+    class EXPORT StatusResponse : public Response {
 
     public:
         explicit StatusResponse(const string& response);

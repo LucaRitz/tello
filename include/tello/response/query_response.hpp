@@ -2,12 +2,13 @@
 #include "../response.hpp"
 
 #include <string>
+#include "../macro_definition.hpp"
 
 using std::string;
 
 namespace tello {
 
-    class QueryResponse : public Response {
+    class EXPORT QueryResponse : public Response {
     public:
         QueryResponse() : Response(Status::UNKNOWN), _value(-1) {}
         explicit QueryResponse(const string& value);
