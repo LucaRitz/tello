@@ -1,5 +1,4 @@
-#include <tello/connection/udp_command_listener.hpp>
-#include <tello/response.hpp>
+#include "udp_command_listener.hpp"
 #include <tello/response/query_response.hpp>
 
 tello::UdpCommandListener::UdpCommandListener(const tello::ConnectionData& connectionData,
@@ -31,7 +30,9 @@ vector<shared_ptr<tello::ResponseMapping>> tello::UdpCommandListener::cleanMappi
         unordered_map<ip_address, vector<shared_ptr<ResponseMapping>>>& mapping)  {
     time_t now = currentTime();
     vector<shared_ptr<ResponseMapping>> removed;
-    for (auto entry = mapping.begin(); entry != mapping.end(); ++entry) {
+
+    auto entry = mapping.begin();
+    while(entry != mapping.end()) {
         shared_ptr<ResponseMapping> response = entry->second.at(0);
         if (now - response->_insertDate >= 15) {
             removed.push_back(response);
@@ -39,9 +40,12 @@ vector<shared_ptr<tello::ResponseMapping>> tello::UdpCommandListener::cleanMappi
         }
 
         if (entry->second.empty()) {
-            mapping.erase(entry->first);
+            entry = mapping.erase(entry);
+        } else {
+            ++entry;
         }
     }
+
     return removed;
 }
 
@@ -81,6 +85,7 @@ void tello::UdpCommandListener::listen(const tello::ConnectionData& connectionDa
             if (sender->second.empty()) {
                 mapping.erase(sender->first);
             }
+
             response->set_value(answer);
         }
 

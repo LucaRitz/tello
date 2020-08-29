@@ -1,6 +1,5 @@
 #include <tello/tello.hpp>
-#include <tello/command.hpp>
-#include <tello/connection/network.hpp>
+#include "connection/network.hpp"
 
 #include "command/command_command.hpp"
 #include "command/takeoff_command.hpp"

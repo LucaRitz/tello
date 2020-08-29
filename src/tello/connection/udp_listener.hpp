@@ -4,8 +4,8 @@
 #include <thread>
 #include <future>
 #include <string>
-#include "../logger/logger.hpp"
-#include "../native/network_interface.hpp"
+#include "tello/logger/logger.hpp"
+#include "tello/native/network_interface.hpp"
 #include <mutex>
 #include <shared_mutex>
 #include <memory>

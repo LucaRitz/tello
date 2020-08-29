@@ -3,12 +3,13 @@
 #include <string>
 #include <spdlog/spdlog.h>
 #include <spdlog/logger.h>
+#include "../macro_definition.hpp"
 
 using std::string;
 using spdlog::logger;
 
 namespace tello {
-    struct LoggerSettings {
+    struct EXPORT LoggerSettings {
     public:
         LoggerSettings(string commandFileLocation, string videoFileLocation,
                        string statusFileLocation);
@@ -24,15 +25,14 @@ namespace tello {
         STATUS
     };
 
-    class Logger {
+    class EXPORT Logger {
     public:
+        Logger() = delete;
         [[nodiscard]]
         static std::shared_ptr<logger> get(const LoggerType& loggerType);
         static void initialize(const LoggerSettings& settings);
 
     private:
-        Logger() = delete;
-
         static std::shared_ptr<logger> _commandLogger;
         static std::shared_ptr<logger> _videoLogger;
         static std::shared_ptr<logger> _statusLogger;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tello/command.hpp>
+#include "command.hpp"
 
 namespace tello::command {
     class CommandCommand : public Command {

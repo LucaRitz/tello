@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <tello/command.hpp>
+#include "command.hpp"
 
 using std::unique_ptr;
 

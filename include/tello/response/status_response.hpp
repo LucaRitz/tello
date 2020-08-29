@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tello/response.hpp>
+#include "../response.hpp"
 #include "../macro_definition.hpp"
 
 namespace tello {

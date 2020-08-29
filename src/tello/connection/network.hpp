@@ -2,16 +2,15 @@
 
 #include <optional>
 #include "udp_listener.hpp"
-#include "../response/status_response.hpp"
+#include "tello/response/status_response.hpp"
 #include <memory>
-#include "../native/network_interface.hpp"
-#include "../video_analyzer.hpp"
-#include "../command.hpp"
-#include "../logger/logger.hpp"
+#include "tello/native/network_interface.hpp"
+#include "tello/video_analyzer.hpp"
+#include "../command/command.hpp"
+#include "tello/logger/logger.hpp"
 #include "udp_command_listener.hpp"
 #include "../thread/thread_pool.hpp"
 #include <vector>
-#include "../macro_definition.hpp"
 
 using tello::ConnectionData;
 using std::optional;
@@ -29,7 +28,7 @@ using tello::threading::Threadpool;
 
 namespace tello {
 
-    class EXPORT Network {
+    class Network {
     public:
         Network() = delete;
         Network(const Network&) = delete;

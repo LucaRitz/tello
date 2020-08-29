@@ -17,7 +17,7 @@ namespace tello {
 
 namespace tello {
 
-    enum class EXPORT Status {
+    enum class Status {
         OK,
         FAIL,
         TIMEOUT,
