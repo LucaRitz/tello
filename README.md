@@ -14,7 +14,7 @@ using tello::Response;
 
 #define TELLO_IP_ADDRESS (ip_address)0xC0A80A01 // 192.168.10.1
 
-void main() {
+int main() {
     // Initialize logging
     LoggerSettings settings {"./log/command_log.log", "./log/video_log.log", "./log/status_log.log"};
     Logger::initialize(settings);
@@ -52,7 +52,7 @@ Another possibility is the setup of a swarm.
 
 using tello::Swarm;
 
-void main() {
+int main() {
     // setup ...
 
     // Create tello drones object for interaction
