@@ -7,7 +7,7 @@ LoggerSettings settings {"./log/command_log.log", "./log/video_log.log", "./log/
 Logger::initialize(settings);
 
 // Setup connection
-const bool isConnected = Network::connect();
+const bool isConnected = TelloNetwork::connect();
 assert(isConnected);
 
 // Create a tello drone object for interaction
@@ -23,7 +23,7 @@ command_future.wait();
 // ...
 
 // At least, the connections have to be closed.
-Network::disconnect();
+TelloNetwork::disconnect();
 ```
 
 Another possibility is the setup of a swarm.
