@@ -2,60 +2,87 @@
 The intent of this library is its simplicity to use.
 The following code section shows a basic setup for one Tello-drone.
 ```cpp
-// Initialize logging
-LoggerSettings settings {"./log/command_log.log", "./log/video_log.log", "./log/status_log.log"};
-Logger::initialize(settings);
+#include <tello/logger/logger.hpp>
+#include <tello/connection/tello_network.hpp>
+#include <tello/tello.hpp>
 
-// Setup connection
-const bool isConnected = TelloNetwork::connect();
-assert(isConnected);
+using tello::LoggerSettings;
+using tello::Logger;
+using tello::TelloNetwork;
+using tello::Tello;
+using tello::Response;
 
-// Create a tello drone object for interaction
-Tello tello(TELLO_IP_ADDRESS);
+#define TELLO_IP_ADDRESS (ip_address)0xC0A80A01 // 192.168.10.1
 
-// Enter command mode.
-future<Response> command_future = tello.command();
-// You don't have to wait for a response.
-// A response is timed-out after 15 seconds.
-command_future.wait();
+void main() {
+    // Initialize logging
+    LoggerSettings settings {"./log/command_log.log", "./log/video_log.log", "./log/status_log.log"};
+    Logger::initialize(settings);
+    
+    // Setup connection
+    const bool isConnected = TelloNetwork::connect();
+    assert(isConnected);
+    
+    // Create a tello drone object for interaction
+    Tello tello(TELLO_IP_ADDRESS);
+    
+    // Enter command mode.
+    future<Response> command_future = tello.command();
+    // You don't have to wait for a response.
+    // A response is timed-out after 15 seconds.
+    command_future.wait();
 
-// More commands
-// ...
-
-// At least, the connections have to be closed.
-TelloNetwork::disconnect();
+    // There are some commands, which don't wait to a response
+    // The status of the response will be 'UNKNOWN'
+    future<Response> rc_future = tello.rc_control(10, -10, 0, 0);
+    
+    // More commands
+    // ...
+    
+    // At least, the connections have to be closed.
+    TelloNetwork::disconnect();
+}
 ```
 
 Another possibility is the setup of a swarm.
 ```cpp
-// setup ...
+// includes ...
+#include <tello/swarm.hpp>
+// usings ...
 
-// Create tello drones object for interaction
-Tello tello_1(TELLO_IP_ADDRESS_1);
-Tello tello_2(TELLO_IP_ADDRESS_2);
-// ...
-Tello tello_n(TELLO_IP_ADDRESS_n);
+using tello::Swarm;
 
-// Create a swarm object and add tellos
-Swarm swarm;
-swarm << tello_1 << tello_2 << ... << tello_n;
+void main() {
+    // setup ...
 
-// Enter command mode
-unordered_map<ip_address, future<Response>> response_futures = swarm.command();
-for(auto& entry : response_futures) {
-    entry.second.wait();
+    // Create tello drones object for interaction
+    Tello tello_1(TELLO_IP_ADDRESS_1);
+    Tello tello_2(TELLO_IP_ADDRESS_2);
+    // ...
+    Tello tello_n(TELLO_IP_ADDRESS_n);
+     
+    // Create a swarm object and add tellos
+    Swarm swarm;
+    swarm << tello_1 << tello_2 << ... << tello_n;
+     
+    // Enter command mode
+    unordered_map<ip_address, future<Response>> response_futures = swarm.command();
+    for(auto& entry : response_futures) {
+        entry.second.wait();
+    }
+    // May repeate command for a single tello if one failed.
+     
+     
+    // More commands and tear down
+    // ...   
 }
-// May repeate command for a single tello if one failed.
-
-
-// More commands and tear down
-// ...
 ```
 
 ## Build
-Defaultly a static library is built. One can set the option
-'OPTION_BUILD_SHARED_LIBS' to ON to build a shared library.<br>
-Note: The tests cannot be built with this option on.<br>
+Per default, a static library is built. One can set the option<br>
+'TELLO_BUILD_SHARED_LIBS' to ON to build a shared library.<br>
+Note: The target 'tello_test' cannot be built with this option on,<br>
+because there are some usages, which are not exported (e.g. command_test.cpp).<br>
 Use the target 'shared_linking_test' instead.
 
 ## Third-party libs
