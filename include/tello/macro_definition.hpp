@@ -1,10 +1,10 @@
 #pragma once
 #if defined(_MSC_VER)
 // Windows
-    #ifdef IMPORT_DLL
-        #define EXPORT __declspec(dllimport)
-    #else
+    #ifdef MAKE_DLL
         #define EXPORT __declspec(dllexport)
+    #else
+        #define EXPORT __declspec(dllimport)
     #endif
 #elif defined(__GNUC__)
 //  GCC

@@ -4,15 +4,15 @@
 #include <thread>
 #include <future>
 #include <string>
-#include "../logger/logger.hpp"
-#include "../native/network_interface.hpp"
+#include "tello/logger/logger.hpp"
+#include "tello/native/network_interface.hpp"
 #include <mutex>
 #include <shared_mutex>
 #include <memory>
 #include <vector>
 #include <chrono>
-#include "../response.hpp"
-#include "../response/query_response.hpp"
+#include "tello/response.hpp"
+#include "tello/response/query_response.hpp"
 
 using ip_address = unsigned long;
 using std::unordered_map;

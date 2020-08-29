@@ -2,6 +2,7 @@
 
 #include <string>
 #include <optional>
+#include "../macro_definition.hpp"
 
 #define SEND_ERROR_CODE -1
 
@@ -17,7 +18,7 @@ namespace tello {
         I_AF_INET
     };
 
-    struct NetworkData {
+    struct EXPORT NetworkData {
         NetworkData() = default;
         NetworkData(SIN_FAM sinFam, unsigned short port, ip_address ip);
 

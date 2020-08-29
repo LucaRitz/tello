@@ -25,7 +25,7 @@ namespace tello {
     class Network;
     class QueryResponse;
 
-    using status_handler = std::function<void(const StatusResponse&)>;
+    using status_handler = std::function<void(const StatusResponse& status)>;
     using video_handler = std::function<void(const VideoResponse& frame)>;
 
     class EXPORT Tello : public TelloInterface<future<Response>, future<QueryResponse>> {

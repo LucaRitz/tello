@@ -1,5 +1,5 @@
 #include <tello/swarm.hpp>
-#include <tello/connection/network.hpp>
+#include "connection/network.hpp"
 #include <tello/tello.hpp>
 
 #include "command/command_command.hpp"

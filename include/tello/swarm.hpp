@@ -5,6 +5,7 @@
 #include "tello_interface.hpp"
 #include "native/network_interface.hpp"
 #include <future>
+#include "macro_definition.hpp"
 
 using std::unordered_map;
 using std::shared_ptr;
@@ -18,7 +19,7 @@ namespace tello {
 
     class Command;
 
-    class Swarm
+    class EXPORT Swarm
             : public TelloInterface<unordered_map<ip_address, future<Response>>, unordered_map<ip_address, future<QueryResponse>>> {
     public:
         Swarm() = default;

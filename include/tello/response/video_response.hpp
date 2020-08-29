@@ -1,6 +1,6 @@
 #pragma once
-#include "../response.hpp"
 
+#include "../response.hpp"
 #include <string>
 #include "../macro_definition.hpp"
 

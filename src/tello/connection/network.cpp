@@ -1,4 +1,4 @@
-#include <tello/connection/network.hpp>
+#include "network.hpp"
 #include <tello/tello.hpp>
 #include "../native/network_interface_factory.hpp"
 

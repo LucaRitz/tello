@@ -1,4 +1,8 @@
 target_sources(${PROJECT_NAME} PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/command.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/command.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/command_type.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/command_type.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/command_command.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/command_command.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/takeoff_command.hpp

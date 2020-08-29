@@ -6,7 +6,8 @@ set(PROJECT_VERSION 2.0)
 
 set(TELLO_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-option(OPTION_BUILD_SHARED_LIBS OFF "Build shared libraries")
+option(OPTION_BUILD_SHARED_LIBS "Build shared libraries" OFF)
+option(OPTION_MAKE_DLL "Make DLL" ON)
 
 if (OPTION_BUILD_SHARED_LIBS)
     message(STATUS "Tello -- Build shared libs")
@@ -15,6 +16,11 @@ else()
     message(STATUS "Tello -- Build static libs")
     add_library(tello STATIC)
 endif ()
+
+if (OPTION_MAKE_DLL)
+    message(STATUS "Tello -- Export")
+    target_compile_definitions(tello PUBLIC -DMAKE_DLL)
+endif()
 
 set_target_properties(tello PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION 1)
 
