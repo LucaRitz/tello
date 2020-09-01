@@ -85,6 +85,14 @@ Note: The target 'tello_test' cannot be built with this option on,<br>
 because there are some usages, which are not exported (e.g. command_test.cpp).<br>
 Use the target 'shared_linking_test' instead.
 
+### OS & Compiler
+OS
+- Windows
+
+Compiler
+- nmake
+- mingw/g++
+
 ## Third-party libs
 - Logging: spdlog (https://github.com/gabime/spdlog)
 - Thread-pooling: ctpl (https://github.com/vit-vit/CTPL)

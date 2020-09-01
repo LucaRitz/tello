@@ -2,14 +2,14 @@
 #include <tello/tello.hpp>
 #include <chrono>
 #include <thread>
-#include <tello/logger/logger.hpp>
+#include <tello/logger/logger_interface.hpp>
 
 #define TELLO_IP_ADDRESS (ip_address)0xC0A80A01 // 192.168.10.1
 
 using tello::Tello;
 using tello::Response;
 using tello::Status;
-using tello::Logger;
+using tello::LoggerInterface;
 using tello::LoggerType;
 using std::string;
 
@@ -39,7 +39,7 @@ TEST(Tello, SimpleCaseBergerVideo) {
 }
 
 void handler(const VideoResponse& response) {
-    Logger::get(LoggerType::VIDEO)->info("VIDEO: {}",
+    LoggerInterface::info(LoggerType::VIDEO, "VIDEO: {}",
                                          std::string(reinterpret_cast<const char*>(response.videoFrame()),
                                                      response.length()));
     handlerCallCount++;

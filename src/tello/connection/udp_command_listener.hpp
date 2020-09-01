@@ -4,7 +4,7 @@
 #include <thread>
 #include <future>
 #include <string>
-#include "tello/logger/logger.hpp"
+#include "tello/logger/logger_interface.hpp"
 #include "tello/native/network_interface.hpp"
 #include <mutex>
 #include <shared_mutex>
@@ -19,7 +19,7 @@ using std::unordered_map;
 using std::thread;
 using std::promise;
 using std::future;
-using tello::Logger;
+using tello::LoggerInterface;
 using tello::LoggerType;
 using std::shared_ptr;
 using std::vector;

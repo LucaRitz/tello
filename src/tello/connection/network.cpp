@@ -38,27 +38,27 @@ bool tello::Network::connect() {
         _connectionMutex.lock();
         _commandConnection = command.value();
         _connectionMutex.unlock();
-        Logger::get(LoggerType::COMMAND)->info(string("Command-Port connected"));
+        LoggerInterface::info(LoggerType::COMMAND, string("Command-Port connected"), "");
     } else {
-        Logger::get(LoggerType::COMMAND)->info(string("Command-Port not connected"));
+        LoggerInterface::info(LoggerType::COMMAND, string("Command-Port not connected"), "");
     }
 
     if (status) {
         _connectionMutex.lock();
         _statusConnection = status.value();
         _connectionMutex.unlock();
-        Logger::get(LoggerType::STATUS)->info(string("Status-Port connected"));
+        LoggerInterface::info(LoggerType::STATUS, string("Status-Port connected"), "");
     } else {
-        Logger::get(LoggerType::STATUS)->info(string("Status-Port not connected"));
+        LoggerInterface::info(LoggerType::STATUS, string("Status-Port not connected"), "");
     }
 
     if (video) {
         _connectionMutex.lock();
         _videoConnection = video.value();
         _connectionMutex.unlock();
-        Logger::get(LoggerType::VIDEO)->info(string("Video-Port connected"));
+        LoggerInterface::info(LoggerType::VIDEO, string("Video-Port connected"), "");
     } else {
-        Logger::get(LoggerType::VIDEO)->info(string("Video-Port not connected"));
+        LoggerInterface::info(LoggerType::VIDEO, string("Video-Port not connected"), "");
     }
 
     return isConnected;
@@ -86,7 +86,7 @@ void tello::Network::disconnect() {
 optional<ConnectionData>
 tello::Network::connectToPort(unsigned short port, const ConnectionData& data, const LoggerType& loggerType) {
     if (data._fileDescriptor != -1) {
-        Logger::get(loggerType)->warn(string("Is already connected!"));
+        LoggerInterface::warn(loggerType, string("Is already connected!"), "");
         return std::make_optional<ConnectionData>(data);
     }
 
@@ -96,10 +96,10 @@ tello::Network::connectToPort(unsigned short port, const ConnectionData& data, c
 void tello::Network::disconnect(ConnectionData& connectionData, const LoggerType& loggerType) {
     bool disconnected = networkInterface->disconnect(connectionData._fileDescriptor);
     if (disconnected) {
-        Logger::get(loggerType)->info(string("Socket closed"));
+        LoggerInterface::info(loggerType, string("Socket closed"), "");
         _commandConnection._fileDescriptor = -1;
     } else {
-        Logger::get(loggerType)->error(string("Socket not closed"));
+        LoggerInterface::error(loggerType, string("Socket not closed"), "");
     }
 }
 

@@ -34,5 +34,4 @@ add_subdirectory(lib)
 add_subdirectory(src)
 add_subdirectory(test)
 
-target_link_libraries(tello PUBLIC spdlog)
-target_link_libraries(tello PRIVATE ws2_32 ctpl)
+target_link_libraries(tello PRIVATE ws2_32 ctpl spdlog)

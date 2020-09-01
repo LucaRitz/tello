@@ -26,7 +26,7 @@
 
 using tello::Response;
 using tello::ConnectionData;
-using tello::Logger;
+using tello::LoggerInterface;
 using tello::Status;
 
 using namespace tello::command;
