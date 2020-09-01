@@ -4,7 +4,7 @@
 #include <thread>
 #include <future>
 #include <string>
-#include "tello/logger/logger.hpp"
+#include "tello/logger/logger_interface.hpp"
 #include "tello/native/network_interface.hpp"
 #include <mutex>
 #include <shared_mutex>
@@ -15,7 +15,7 @@ using std::unordered_map;
 using std::thread;
 using std::promise;
 using std::future;
-using tello::Logger;
+using tello::LoggerInterface;
 using tello::LoggerType;
 using std::shared_ptr;
 
@@ -56,12 +56,12 @@ namespace tello {
                     connectionMutex.unlock_shared();
                     continue;
                 } else if (isFirstAccessToFileDescriptor) {
-                    Logger::get(loggerType)->info(string("Start listen to port {0:d}"),
-                                                  connectionData._networkData._port);
+                    LoggerInterface::info(loggerType, string("Start listen to port {}"),
+                                                           std::to_string(connectionData._networkData._port));
                     isFirstAccessToFileDescriptor = false;
                 }
 
-                NetworkResponse& networkResponse = networkInterface->read(connectionData._fileDescriptor);
+                NetworkResponse networkResponse = networkInterface->read(connectionData._fileDescriptor);
                 connectionMutex.unlock_shared();
 
                 telloMappingMutex.lock_shared();
@@ -70,14 +70,14 @@ namespace tello {
                 if (telloIt != telloMapping.end()) {
                     invoke(networkResponse, telloIt->second);
                 } else if (networkResponse._length > 0) {
-                    Logger::get(loggerType)->warn(string("Received data {0} from unknown Tello {1:x}"),
-                                                  networkResponse.response(), networkResponse._sender._ip);
+                    LoggerInterface::warn(loggerType, string("Received data {0} from unknown Tello {1}"),
+                                                           networkResponse.response(), std::to_string(networkResponse._sender._ip));
                 }
                 telloMappingMutex.unlock_shared();
             }
 
-            Logger::get(loggerType)->info(string("Stop listen to port {0:d}"),
-                                          connectionData._networkData._port);
+            LoggerInterface::info(loggerType, string("Stop listen to port {0}"),
+                                                   std::to_string(connectionData._networkData._port));
         }
     };
 }

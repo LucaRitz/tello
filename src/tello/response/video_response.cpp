@@ -1,5 +1,7 @@
 #include <tello/response/video_response.hpp>
 
+#include <cstring>
+
 tello::VideoResponse::VideoResponse(unsigned char* videoFrame, unsigned int length) :
         Response(Status::OK),
         _videoFrame(reinterpret_cast<unsigned char*>(std::memcpy(new unsigned char[length], videoFrame, length))),

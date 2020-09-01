@@ -7,9 +7,10 @@
 #include "tello/native/network_interface.hpp"
 #include "tello/video_analyzer.hpp"
 #include "../command/command.hpp"
-#include "tello/logger/logger.hpp"
+#include "tello/logger/logger_interface.hpp"
 #include "udp_command_listener.hpp"
 #include "../thread/thread_pool.hpp"
+#include <tello/tello.hpp>
 #include <vector>
 
 using tello::ConnectionData;
@@ -21,7 +22,7 @@ using std::unique_ptr;
 using tello::NetworkInterface;
 using tello::VideoAnalyzer;
 using tello::Command;
-using tello::Logger;
+using tello::LoggerInterface;
 using tello::UdpCommandListener;
 using std::vector;
 using tello::threading::Threadpool;
@@ -84,12 +85,12 @@ namespace tello {
         unordered_map<ip_address, future<CommandResponse>> responses{};
         string errorMessage = command.validate();
         if (!errorMessage.empty()) {
-            Logger::get(LoggerType::COMMAND)->error(
+            LoggerInterface::error(LoggerType::COMMAND,
                     string("Command of type [{}] is not valid"), NAMES.find(command.type())->second);
-            Logger::get(LoggerType::COMMAND)->error(string("Message is: {}"), errorMessage);
+            LoggerInterface::error(LoggerType::COMMAND, string("Message is: {}"), errorMessage);
 
             for (auto tello : tellos) {
-                CommandResponse& response = CommandResponse{Status::FAIL};
+                CommandResponse response = CommandResponse{Status::FAIL};
                 promise<CommandResponse> errorProm{};
                 errorProm.set_value(response);
                 responses[tello.first] = std::move(errorProm.get_future());
@@ -106,7 +107,7 @@ namespace tello {
                                                 commandString);
             _connectionMutex.unlock_shared();
             if (result == SEND_ERROR_CODE) {
-                Logger::get(LoggerType::COMMAND)->info(
+                LoggerInterface::info(LoggerType::COMMAND,
                         string("Command of type [{}] is not sent cause of socket error!"),
                         NAMES.find(command.type())->second);
 
@@ -117,14 +118,15 @@ namespace tello {
 
                 tellos.erase(tello->first);
             } else {
-                Logger::get(LoggerType::COMMAND)->info(
-                        string("Command of type [{0}] is sent to {1:x}!"), NAMES.find(command.type())->second,
-                        tello->second->_clientaddr._ip);
+                LoggerInterface::info(LoggerType::COMMAND,
+                        string("Command of type [{0}] is sent to {1}!"), NAMES.find(command.type())->second,
+                        std::to_string(tello->second->_clientaddr._ip));
             }
         }
 
         if (command.hasResponse()) {
             vector<ip_address> openResponses{};
+            openResponses.reserve(tellos.size());
             for(auto aTello : tellos) {
                 openResponses.push_back(aTello.first);
             }

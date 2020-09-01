@@ -62,8 +62,8 @@ void tello::UdpCommandListener::listen(const tello::ConnectionData& connectionDa
             connectionMutex.unlock_shared();
             continue;
         } else if (isFirstAccessToFileDescriptor) {
-            Logger::get(LoggerType::COMMAND)->info(string("Start listen to port {0:d}"),
-                                                   connectionData._networkData._port);
+            LoggerInterface::info(LoggerType::COMMAND, string("Start listen to port {0}"),
+                                                            std::to_string(connectionData._networkData._port));
             isFirstAccessToFileDescriptor = false;
         }
 
@@ -76,8 +76,8 @@ void tello::UdpCommandListener::listen(const tello::ConnectionData& connectionDa
         bool correctSender = sender != mapping.end();
 
         if (!correctSender) {
-            Logger::get(LoggerType::COMMAND)->error(
-                    string("Answer from wrong tello received {0:x}"), senderIp);
+            LoggerInterface::error(LoggerType::COMMAND,
+                    string("Answer from wrong tello received {0}"), std::to_string(senderIp));
         } else {
             string answer = networkResponse.response();
             shared_ptr<ResponseMapping> response = sender->second.at(0);
@@ -98,8 +98,8 @@ void tello::UdpCommandListener::listen(const tello::ConnectionData& connectionDa
         }
     }
 
-    Logger::get(LoggerType::COMMAND)->info(string("Stop listen to port {0:d}"),
-                                           connectionData._networkData._port);
+    LoggerInterface::info(LoggerType::COMMAND, string("Stop listen to port {0}"),
+                                                    std::to_string(connectionData._networkData._port));
 }
 
 time_t tello::UdpCommandListener::currentTime() {

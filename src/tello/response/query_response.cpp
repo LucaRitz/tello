@@ -1,7 +1,7 @@
 #include <tello/response/query_response.hpp>
-#include <tello/logger/logger.hpp>
+#include <tello/logger/logger_interface.hpp>
 
-using tello::Logger;
+using tello::LoggerInterface;
 using tello::LoggerType;
 
 tello::QueryResponse::QueryResponse(const Status& status) : Response(status),
@@ -22,18 +22,18 @@ int tello::QueryResponse::QueryResponse::convert(const string& stringValue) {
     }
 
     catch (const std::invalid_argument& ia) {
-        Logger::get(LoggerType::COMMAND)->error(string("Cannot parse query - 'invalid arg' [{}]"), stringValue);
+        LoggerInterface::error(LoggerType::COMMAND, string("Cannot parse query - 'invalid arg' [{}]"), stringValue);
         return -1;
     }
 
     catch (const std::out_of_range& oor) {
-        Logger::get(LoggerType::COMMAND)->error(string("Cannot parse query - 'out of range' [{}]"), stringValue);
+        LoggerInterface::error(LoggerType::COMMAND, string("Cannot parse query - 'out of range' [{}]"), stringValue);
         return -2;
     }
 
     catch (...)
     {
-        Logger::get(LoggerType::COMMAND)->error(string("Cannot parse query - 'exception' [{}]"), stringValue);
+        LoggerInterface::error(LoggerType::COMMAND, string("Cannot parse query - 'exception' [{}]"), stringValue);
         return -3;
     }
 }

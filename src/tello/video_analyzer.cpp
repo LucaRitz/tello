@@ -1,5 +1,5 @@
 #include "tello/video_analyzer.hpp"
-#include "tello/logger/logger.hpp"
+#include "tello/logger/logger_interface.hpp"
 #include <tello/native/network_interface.hpp>
 #include <string>
 

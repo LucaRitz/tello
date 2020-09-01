@@ -1,12 +1,12 @@
 #include "network_impl.hpp"
-#include <tello/logger/logger.hpp>
+#include <tello/logger/logger_interface.hpp>
 
 #define BUFFER_LENGTH 2048
 
 using tello::NetworkData;
 using tello::NetworkResponse;
 using tello::LoggerType;
-using tello::Logger;
+using tello::LoggerInterface;
 using tello::SIN_FAM;
 using tello::ConnectionData;
 
@@ -20,7 +20,7 @@ optional<ConnectionData> tello::windows::NetworkImpl::connect(const NetworkData&
     if (!_initializedConnection) {
         int result = WSAStartup(MAKEWORD(2, 2), &_wsaData);
         if (result != 0) {
-            Logger::get(logger)->info(string("Cannot initialize windows socket"));
+            LoggerInterface::info(logger, string("Cannot initialize windows socket"), "");
             return std::nullopt;
         }
         _initializedConnection = true;
@@ -31,8 +31,8 @@ optional<ConnectionData> tello::windows::NetworkImpl::connect(const NetworkData&
     memset(&servaddr, 0, sizeof(servaddr));
 
     if ((fileDescriptor = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
-        Logger::get(LoggerType::COMMAND)->error(
-                std::string("Socket creation failed. Port {0:d}"), data._port);
+        LoggerInterface::error(LoggerType::COMMAND,
+                std::string("Socket creation failed. Port {0}"), std::to_string(data._port));
         return std::nullopt;
     }
 
@@ -41,8 +41,8 @@ optional<ConnectionData> tello::windows::NetworkImpl::connect(const NetworkData&
     servaddr.sin_port = htons(data._port);
 
     if (bind(fileDescriptor, (const struct sockaddr*) &servaddr, sizeof(servaddr)) < 0) {
-        Logger::get(logger)->error(
-                string("Bind failed. Port {0:d}"), data._port);
+        LoggerInterface::error(logger,
+                string("Bind failed. Port {0}"), std::to_string(data._port));
         closesocket(fileDescriptor);
         return std::nullopt;
     }
@@ -70,8 +70,8 @@ bool tello::windows::NetworkImpl::setTimeout(const int& fileDescriptor, const un
                    (const char*) &timeoutD,
                    sizeof(DWORD)
     ) < 0) {
-        Logger::get(logger)->error(
-                std::string("Cannot set receive timeout of {0:d}"), timeout);
+        LoggerInterface::error(logger,
+                std::string("Cannot set receive timeout of {}"), std::to_string(timeout));
         return false;
     }
     return true;

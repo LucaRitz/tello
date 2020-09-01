@@ -1,9 +1,9 @@
 #include "environment.hpp"
-#include <tello/logger/logger.hpp>
+#include <tello/logger/logger_interface.hpp>
 #include <tello/connection/tello_network.hpp>
 
 using tello::LoggerSettings;
-using tello::Logger;
+using tello::LoggerInterface;
 using tello::TelloNetwork;
 
 tello::Environment::~Environment() {
@@ -11,7 +11,7 @@ tello::Environment::~Environment() {
 
 void tello::Environment::Environment::SetUp() {
     LoggerSettings settings {"./log/command_log.log", "./log/video_log.log", "./log/status_log.log"};
-    Logger::initialize(settings);
+    LoggerInterface::initialize(settings);
 
     const bool isConnected = TelloNetwork::connect();
     assert(isConnected);

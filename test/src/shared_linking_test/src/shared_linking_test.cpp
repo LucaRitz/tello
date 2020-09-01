@@ -4,7 +4,7 @@
 #include <future>
 #include <tello/response/query_response.hpp>
 #include <tello/response/status_response.hpp>
-#include <tello/logger/logger.hpp>
+#include <tello/logger/logger_interface.hpp>
 
 #define TELLO_IP_ADDRESS (ip_address)0xC0A80A01 // 192.168.10.1
 #define TELLO1_IP_ADDRESS (ip_address)0xC0A80A01 // 192.168.10.1
@@ -20,7 +20,7 @@ using std::promise;
 using std::future;
 using tello::QueryResponse;
 using tello::Swarm;
-using tello::Logger;
+using tello::LoggerInterface;
 using tello::LoggerType;
 
 TEST(SHARED_TEST, BasicFlightCommands) {
@@ -147,12 +147,12 @@ TEST(SHARED_TEST, SimpleCaseBergerStatus) {
 }
 
 void handler(const VideoResponse& response) {
-    Logger::get(LoggerType::VIDEO)->info("VIDEO: {}",
-                                         std::to_string(response.length()));
+    LoggerInterface::info(LoggerType::VIDEO, "VIDEO: {}",
+                                                  std::to_string(response.length()));
     handlerCallCount++;
 }
 
 void statusHandler(const StatusResponse& response) {
-    Logger::get(LoggerType::STATUS)->info("STATUS: {}", std::to_string(response.get_agx()));
+    LoggerInterface::info(LoggerType::STATUS, "STATUS: {}", std::to_string(response.get_agx()));
     statusHandlerCallCount++;
 }

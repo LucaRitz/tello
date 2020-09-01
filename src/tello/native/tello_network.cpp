@@ -1,5 +1,7 @@
 #include "tello/native/network_interface.hpp"
 
+#include <cstring>
+
 tello::NetworkData::NetworkData(const tello::SIN_FAM sinFam, const unsigned short port, const ip_address ip) :
         _sinFam(sinFam),
         _port(port),
