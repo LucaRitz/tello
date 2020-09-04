@@ -7,8 +7,6 @@ using std::string;
 
 namespace tello {
 
-    class Logger;
-
     struct EXPORT LoggerSettings {
     public:
         LoggerSettings(string commandFileLocation, string videoFileLocation,
