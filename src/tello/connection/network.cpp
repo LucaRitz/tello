@@ -86,7 +86,7 @@ void tello::Network::disconnect() {
 optional<ConnectionData>
 tello::Network::connectToPort(unsigned short port, const ConnectionData& data, const LoggerType& loggerType) {
     if (data._fileDescriptor != -1) {
-        LoggerInterface::warn(loggerType, string("Is already connected!"), "");
+        LoggerInterface::warn(loggerType, string("Is already connected!"));
         return std::make_optional<ConnectionData>(data);
     }
 

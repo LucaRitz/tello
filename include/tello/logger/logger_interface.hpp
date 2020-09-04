@@ -29,9 +29,12 @@ namespace tello {
     public:
         LoggerInterface() = delete;
 
-        static void info(const LoggerType& loggerType, const string& message, const string& params...);
-        static void error(const LoggerType& loggerType, const string& message, const string& params...);
-        static void warn(const LoggerType& loggerType, const string& message, const string& params...);
+        static void info(const LoggerType& loggerType, const string& message, const string& param1 = "",
+                         const string& param2 = "");
+        static void error(const LoggerType& loggerType, const string& message, const string& param1 = "",
+                          const string& param2 = "");
+        static void warn(const LoggerType& loggerType, const string& message, const string& param1 = "",
+                         const string& param2 = "");
         static void initialize(const LoggerSettings& settings);
     };
 }

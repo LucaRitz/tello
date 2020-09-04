@@ -1,7 +1,9 @@
 #include "gtest/gtest.h"
 #include "environment.hpp"
 
-#define NDEBUG
+#ifndef NDEBUG
+    #define NDEBUG
+#endif
 
 using tello::Environment;
 

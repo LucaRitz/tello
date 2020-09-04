@@ -86,12 +86,14 @@ because there are some usages, which are not exported (e.g. command_test.cpp).<b
 Use the target 'shared_linking_test' instead.
 
 ### OS & Compiler
+C++ 17
+
 OS
 - Windows
 
 Compiler
 - nmake
-- mingw/g++
+- mingw/g++ 8.1.0 - Windows MSYS2
 
 ## Third-party libs
 - Logging: spdlog (https://github.com/gabime/spdlog)
