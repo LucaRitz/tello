@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include <tello/logger/logger_interface.hpp>
 
 using std::string;
 
@@ -14,15 +15,18 @@ using spdlog::logger;
 namespace tello {
 
     enum class LoggerType;
-    class LoggerSettings;
 
     class Logger {
     public:
         Logger() = delete;
 
-        static void info(const LoggerType& loggerType, const string& message, const string& params...);
-        static void error(const LoggerType& loggerType, const string& message, const string& params...);
-        static void warn(const LoggerType& loggerType, const string& message, const string& params...);
+
+        static void info(const LoggerType& loggerType, const string& message, const string& param1 = "",
+                         const string& param2 = "");
+        static void error(const LoggerType& loggerType, const string& message, const string& param1 = "",
+                         const string& param2 = "");
+        static void warn(const LoggerType& loggerType, const string& message, const string& param1 = "",
+                const string& param2 = "");
         static void initialize(const LoggerSettings& settings);
 
     private:

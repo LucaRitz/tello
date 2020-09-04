@@ -16,20 +16,23 @@ void tello::Logger::initialize(const tello::LoggerSettings& settings) {
     _statusLogger->flush_on(spdlog::level::err);
 }
 
-
-void tello::Logger::info(const LoggerType& loggerType, const string& message, const string& params...) {
+void
+tello::Logger::info(const LoggerType& loggerType, const string& message, const string& param1, const string& param2) {
     auto logger = tello::Logger::logger(loggerType);
-    logger->info(message, params);
+    logger->info(message, param1, param2);
 }
 
-void tello::Logger::error(const LoggerType& loggerType, const string& message, const string& params...) {
+void
+tello::Logger::error(const LoggerType& loggerType, const string& message, const string& param1, const string& param2) {
     auto logger = tello::Logger::logger(loggerType);
-    logger->error(message, params);
+    logger->error(message, param1, param2);
 }
 
-void tello::Logger::warn(const LoggerType& loggerType, const string& message, const string& params...) {
+void
+tello::Logger::warn(const LoggerType& loggerType, const string& message, const string& param1, const string& param2) {
     auto logger = tello::Logger::logger(loggerType);
-    logger->warn(message, params);
+    logger->warn(message, param1, param2);
+    logger->flush();
 }
 
 std::shared_ptr<logger> tello::Logger::logger(const LoggerType& loggerType) {
