@@ -2,12 +2,12 @@
 The intent of this library is its simplicity to use.
 The following code section shows a basic setup for one Tello-drone.
 ```cpp
-#include <tello/logger/logger.hpp>
+#include <tello/logger/logger_interface.hpp>
 #include <tello/connection/tello_network.hpp>
 #include <tello/tello.hpp>
 
 using tello::LoggerSettings;
-using tello::Logger;
+using tello::LoggerInterface;
 using tello::TelloNetwork;
 using tello::Tello;
 using tello::Response;
@@ -17,7 +17,7 @@ using tello::Response;
 int main() {
     // Initialize logging
     LoggerSettings settings {"./log/command_log.log", "./log/video_log.log", "./log/status_log.log"};
-    Logger::initialize(settings);
+    LoggerInterface::initialize(settings);
     
     // Setup connection
     const bool isConnected = TelloNetwork::connect();
